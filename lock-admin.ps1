@@ -13,15 +13,27 @@ $ErrorActionPreference = "Stop"
 $root = $PSScriptRoot
 $src = Join-Path $root "admin-src"
 
+$log = Join-Path $root "lock-admin.log"   # natija yoziladi (parol emas!)
+trap {
+  "$(Get-Date -Format s)  XATO: $($_.Exception.Message)" | Out-File $log -Append -Encoding utf8
+  Write-Host ""
+  Write-Host "XATO: $($_.Exception.Message)" -ForegroundColor Red
+  break
+}
+
 if (-not $Password) {
   Write-Host ""
   Write-Host "OPUS FOOD admin paneli uchun parol o'rnatish" -ForegroundColor Yellow
-  Write-Host "(kiritayotganingizda belgilar ko'rinmaydi — bu normal)"
+  Write-Host "(kiritayotganingizda belgilar ko'rinmaydi — bu normal, yozib Enter bosing)"
   $plain = { param($s) [Runtime.InteropServices.Marshal]::PtrToStringBSTR([Runtime.InteropServices.Marshal]::SecureStringToBSTR($s)) }
-  $a = & $plain (Read-Host "Yangi parol (kamida 8 belgi)" -AsSecureString)
-  $b = & $plain (Read-Host "Parolni takrorlang" -AsSecureString)
-  if ($a -ne $b) { throw "Parollar bir xil emas. Qaytadan urinib ko'ring." }
-  if ($a.Length -lt 8) { throw "Parol kamida 8 belgidan iborat bo'lsin." }
+  while ($true) {
+    Write-Host ""
+    $a = & $plain (Read-Host "Yangi parol (kamida 8 belgi)" -AsSecureString)
+    if ($a.Length -lt 8) { Write-Host "Parol juda qisqa ($($a.Length) belgi). Kamida 8 belgi kiriting." -ForegroundColor Red; continue }
+    $b = & $plain (Read-Host "Parolni takrorlang" -AsSecureString)
+    if ($a -ne $b) { Write-Host "Ikkala parol bir xil emas. Qaytadan kiriting." -ForegroundColor Red; continue }
+    break
+  }
   $Password = $a
 }
 
@@ -158,8 +170,18 @@ $out = Join-Path $root "admin.html"
 $Password = $null; $a = $null; $b = $null
 Write-Host ""
 Write-Host "Admin panel shifrlandi: admin.html ($([math]::Round((Get-Item $out).Length / 1KB)) KB)" -ForegroundColor Green
+"$(Get-Date -Format s)  shifrlandi" | Out-File $log -Append -Encoding utf8
 
 if ($Publish) {
   Write-Host "GitHub'ga yuklanmoqda..."
   & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $root "publish-github.ps1") -Message "Admin panel parolini yangilash"
+  $ok = $LASTEXITCODE -eq 0
+  "$(Get-Date -Format s)  yuklash: $(if ($ok) { 'muvaffaqiyatli' } else { 'XATO' })" | Out-File $log -Append -Encoding utf8
+  Write-Host ""
+  if ($ok) {
+    Write-Host "TAYYOR! 1-2 daqiqadan keyin oching: https://javohir877.github.io/OPUS-FOOD/admin.html" -ForegroundColor Green
+    Write-Host "Bu oynani yopishingiz mumkin."
+  } else {
+    Write-Host "Yuklashda xato bo'ldi — yuqoridagi yozuvni ko'ring." -ForegroundColor Red
+  }
 }
