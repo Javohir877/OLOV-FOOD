@@ -29,7 +29,7 @@ if ($LASTEXITCODE -ne 0) {
 $skip = @(".claude", ".git", "admin-src")
 $files = Get-ChildItem -Path $root -Recurse -File -Force | Where-Object {
   $rel = $_.FullName.Substring($root.Length + 1)
-  -not ($skip | Where-Object { $rel -like "$_\*" })
+  -not ($skip | Where-Object { $rel -like "$_\*" }) -and $rel -ne "lock-admin.log"
 }
 $adminFile = Join-Path $root "admin.html"
 if (-not (Test-Path $adminFile)) {
