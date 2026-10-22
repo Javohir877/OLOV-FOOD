@@ -16,8 +16,18 @@ Build kerak emas: oddiy HTML, CSS va JavaScript.
 
 ## 🛠 Admin panel — `admin.html`
 
-Manzil: `sayt-manzili/admin.html` (saytda havola yo'q, qidiruv tizimlaridan yashirilgan).
-**Standart parol: `opus2026`** — birinchi kirishdan keyin *Sozlamalar → Parolni almashtirish* orqali o'zgartiring.
+🔒 **Panel shifrlangan.** Saytdagi `admin.html` ichida panelning o'zi emas, faqat parol so'raydigan oyna va
+AES-256 bilan shifrlangan ma'lumot bor. Parolsiz panelning na ko'rinishi, na kodi ochiladi; parol hech qayerda
+(repoda ham) saqlanmaydi. Panelning ochiq manbasi `admin-src/` papkasida — u faqat egasining kompyuterida turadi
+va GitHub'ga **hech qachon yuklanmaydi**.
+
+**Parol qo'yish yoki almashtirish** (loyiha papkasida; parolni so'raydi, shifrlaydi va saytga yuklaydi):
+
+```
+powershell -ExecutionPolicy Bypass -File lock-admin.ps1 -Publish
+```
+
+Parolni unutsangiz — shu buyruqni qayta ishga tushirib yangisini qo'ying.
 
 | Bo'lim | Imkoniyatlar |
 |---|---|
@@ -25,11 +35,11 @@ Manzil: `sayt-manzili/admin.html` (saytda havola yo'q, qidiruv tizimlaridan yash
 | 🧾 Buyurtmalar | Holat bo'yicha filtr, qidiruv; holatni o'zgartirish (mijoz saytda jonli ko'radi); tafsilot paneli; bekor qilish; yangi buyurtmada 🔔 ovoz va bildirishnoma |
 | 🍔 Menyu | Taom qo'shish/tahrirlash/o'chirish, narx, rasm (galereyadan, yuklash yoki havola), belgi (Hit/Yangi/Achchiq), stop-list |
 | 🎟 Promokodlar | Foizli yoki bepul yetkazish kodlari, minimal summa, necha marta ishlatilgani |
-| ⚙️ Sozlamalar | Yetkazish narxi, bepul yetkazish chegarasi, minimal buyurtma, kombo chegirmasi, demo rejim, parol, zaxira (JSON eksport/import), demo buyurtmalar |
+| ⚙️ Sozlamalar | Yetkazish narxi, bepul yetkazish chegarasi, minimal buyurtma, kombo chegirmasi, demo rejim, zaxira (JSON eksport/import), demo buyurtmalar |
 
 > ⚠️ Hozircha ma'lumotlar **brauzer xotirasida** (localStorage) saqlanadi: admin panel va sayt **bitta brauzerda** ochilganda
-> to'liq ishlaydi. Boshqa qurilmalardagi mijozlar buyurtmalarini qabul qilish va parolni haqiqiy himoyalash uchun
-> backend (masalan, Firebase yoki Supabase) ulash kerak.
+> to'liq ishlaydi. Boshqa qurilmalardagi mijozlar buyurtmalarini qabul qilish uchun backend (masalan, Firebase yoki
+> Supabase) ulash kerak.
 
 ## 🌐 Sayt manzili
 
@@ -46,12 +56,13 @@ powershell -ExecutionPolicy Bypass -File publish-github.ps1 -Message "Nima o'zga
 
 ```
 index.html          — sahifa
-admin.html          — boshqaruv paneli
+admin.html          — shifrlangan boshqaruv paneli (lock-admin.ps1 yasaydi)
 css/style.css       — sayt dizayni
-css/admin.css       — admin panel dizayni
 js/data.js          — menyu, sozlamalar, kombo, promokodlar, to'lov usullari, Store (sayt va admin uchun umumiy)
 js/app.js           — savat, checkout, to'lov, kuzatish, animatsiyalar
-js/admin.js         — admin panel logikasi
+admin-src/          — panelning ochiq manbasi (faqat lokal, GitHub'ga yuklanmaydi)
+lock-admin.ps1      — panelni parol bilan shifrlaydi
+publish-github.ps1  — saytni GitHub'ga yuklaydi
 assets/img/         — taom rasmlari
 assets/pay/         — Click va Uzcard logotiplari (SVG)
 ```
