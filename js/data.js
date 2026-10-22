@@ -96,6 +96,48 @@ const PROMO_CODES = {
 
 const DELIVERY = { fee: 12000, freeFrom: 150000, minOrder: 30000 };
 
+// Opus Bonus: har buyurtmadan keshbek; bonus bilan buyurtmaning ko'pi bilan maxShare foizini to'lash mumkin
+const BONUS = { rate: 5, maxShare: 50 };
+
+// Omad g'ildiragi — kuniga bir marta. weight: tushish ehtimoli (kattasi — tez-tez tushadi)
+const WHEEL_PRIZES = [
+  { label: "−5%", type: "promo", code: "OMAD5", weight: 22 },
+  { label: "+3 000", sub: "bonus", type: "bonus", value: 3000, weight: 20 },
+  { label: "Bepul", sub: "yetkazish", type: "promo", code: "OMADYOL", weight: 14 },
+  { label: "−10%", type: "promo", code: "OMAD10", weight: 12 },
+  { label: "+5 000", sub: "bonus", type: "bonus", value: 5000, weight: 14 },
+  { label: "−15%", type: "promo", code: "OMAD15", weight: 5 },
+  { label: "+10 000", sub: "bonus", type: "bonus", value: 10000, weight: 5 },
+  { label: "−7%", type: "promo", code: "OMAD7", weight: 8 },
+];
+// G'ildirak kodlari admin promokodlaridan alohida — admin ro'yxatini o'zgartirsa ham ishlayveradi
+const WHEEL_PROMOS = {
+  OMAD5: { type: "percent", value: 5, label: "−5% (omad)" },
+  OMAD7: { type: "percent", value: 7, label: "−7% (omad)" },
+  OMAD10: { type: "percent", value: 10, label: "−10% (omad)" },
+  OMAD15: { type: "percent", value: 15, label: "−15% (omad)" },
+  OMADYOL: { type: "delivery", label: "Bepul yetkazish (omad)" },
+};
+
+// open/close: "HH:MM"; yopilish vaqti ochilishdan kichik bo'lsa — yarim tundan keyin yopiladi
+const BRANCHES = [
+  { id: "markaz", name: "OPUS Markaz", area: "Yunusobod / Markaz", address: "Amir Temur ko'chasi, 1", phone: "+998 90 123 45 67", open: "10:00", close: "03:00", img: img("1561758033-d89a9ad46330"), perks: ["Ochiq oshxona", "Drive-thru", "Wi-Fi"] },
+  { id: "chilonzor", name: "OPUS Chilonzor", area: "Chilonzor", address: "Bunyodkor shoh ko'chasi, 42", phone: "+998 90 123 45 68", open: "09:00", close: "02:00", img: img("1513104890138-7c749659a591"), perks: ["Bolalar burchagi", "Avtoturargoh"] },
+  { id: "yunusobod", name: "OPUS Sergeli", area: "Sergeli", address: "Yangi Sergeli ko'chasi, 7", phone: "+998 90 123 45 69", open: "10:00", close: "00:00", img: img("1567620832903-9fc6debc209f"), perks: ["Yozgi terassa", "Karaoke juma kuni"] },
+];
+
+const REVIEWS = [
+  { name: "Aziz R.", area: "Chilonzor", stars: 5, dish: "burger-double", text: "Toshkentdagi eng shirali burger! Opus Double'ni bir marta yeb ko'rgandan keyin boshqasiga qaramayman." },
+  { name: "Madina K.", area: "Yunusobod", stars: 5, dish: "pizza-pepperoni", text: "25 daqiqada yetib keldi, pitsa hali issiq edi. Payme orqali to'lash juda qulay." },
+  { name: "Jasur T.", area: "Mirzo Ulug'bek", stars: 5, dish: "wings-hot", text: "Achchiq qanotchalar — ofisdagi hamma uchun har juma kuni buyurtma qilamiz. Sous zo'r!" },
+  { name: "Dilnoza A.", area: "Sergeli", stars: 4, dish: "lavash-cheese", text: "Pishloqli lavash juda to'yimli. Faqat ba'zan kuryer biroz kechikadi, lekin taom baribir issiq." },
+  { name: "Sardor M.", area: "Yakkasaroy", stars: 5, dish: "bucket", text: "Oilaviy kechaga Opus Bucket oldik — bolalar xursand. Kombo yig'ish funksiyasi juda qulay ekan." },
+  { name: "Kamola U.", area: "Shayxontohur", stars: 5, dish: "milkshake", text: "Milksheyk qalin va mazali, desertlar ham yaxshi. Omad g'ildiragidan −10% yutdim 😄" },
+  { name: "Otabek N.", area: "Olmazor", stars: 5, dish: "burger-fire", text: "Fire Burger haqiqatan ham olovdek! Achchiqni yaxshi ko'radiganlarga tavsiya qilaman." },
+  { name: "Nilufar S.", area: "Mirobod", stars: 4, dish: "fries", text: "Fri har doim qarsildoq. Bonus tizimi yoqdi — har buyurtmadan keshbek tushib turadi." },
+];
+const RATING = { avg: 4.9, count: 2340, dist: [86, 9, 3, 1, 1] }; // 5★ dan 1★ gacha, foizda
+
 const PAY_LOGOS = {
   click: "assets/pay/click.svg",
   payme: "assets/pay/payme.png",
