@@ -25,6 +25,9 @@
       .filter((l) => (l.kind === "combo" ? l.items : [l.id]).every((id) => byId[id] && !byId[id].hidden))
       .map((l) => ({ ...l, unit: l.kind === "combo" ? comboUnit(l.items) : dishUnit(byId[l.id], l.size, l.extras) })),
     promo: Store.get("opus_promo", null),
+    sort: "",
+    tag: "",
+    useBonus: false,
     orderType: "delivery",
     payMethod: "click",
     combo: Object.fromEntries(COMBO.groups.map((g) => [g.id, comboItems(g)[0]])),
@@ -129,15 +132,22 @@
     Store.set("opus_promo", state.promo);
   }
 
+  // Admin promokodlari + omad g'ildiragi kodlari
+  const promoOf = (code) => (code && (PROMO_CODES[code] || WHEEL_PROMOS[code])) || null;
+  const bonusBalance = () => Math.max(0, Math.round(Store.get("opus_bonus", 0)));
+
   function totals() {
     const subtotal = state.cart.reduce((s, l) => s + l.unit * l.qty, 0);
     const count = state.cart.reduce((s, l) => s + l.qty, 0);
-    const promo = state.promo && PROMO_CODES[state.promo];
+    const promo = promoOf(state.promo);
     const promoOk = promo && !(promo.min && subtotal < promo.min);
     const discount = promoOk && promo.type === "percent" ? Math.round(subtotal * promo.value / 100) : 0;
     const free = subtotal >= DELIVERY.freeFrom || (promoOk && promo.type === "delivery");
     const delivery = !count || state.orderType === "pickup" || free ? 0 : DELIVERY.fee;
-    return { subtotal, count, promo, promoOk, discount, delivery, total: subtotal - discount + delivery };
+    // Bonus bilan taomlar narxining ko'pi bilan BONUS.maxShare foizini to'lash mumkin (100 so'mgacha yaxlitlab)
+    const bonusMax = Math.floor(((subtotal - discount) * BONUS.maxShare) / 100 / 100) * 100;
+    const bonusUsed = state.useBonus ? Math.min(bonusBalance(), bonusMax) : 0;
+    return { subtotal, count, promo, promoOk, discount, delivery, bonusMax, bonusUsed, total: subtotal - discount - bonusUsed + delivery };
   }
 
   /* =========================================================
@@ -145,8 +155,15 @@
      ========================================================= */
   function visibleProducts() {
     const q = state.query.trim().toLowerCase();
-    return products.filter((p) => !p.hidden && (!q || p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q)));
+    const tagOk = (p) => !state.tag || (state.tag === "light" ? p.kcal > 0 && p.kcal <= 600 : p.badge === state.tag);
+    return products.filter((p) => !p.hidden && tagOk(p) && (!q || p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q)));
   }
+
+  const SORTS = {
+    rating: (a, b) => b.rating - a.rating,
+    cheap: (a, b) => a.price - b.price,
+    pricey: (a, b) => b.price - a.price,
+  };
 
   function renderRail() {
     const list = visibleProducts();
@@ -165,6 +182,7 @@
 
     const blocks = CATEGORIES.map((c) => {
       const items = list.filter((p) => p.cat === c.id);
+      if (state.sort) items.sort(SORTS[state.sort]);
       if (!items.length) return "";
       return `<section class="cat-block" id="cat-${c.id}">
         <div class="cat-head">
@@ -190,7 +208,7 @@
       </section>`;
     }).join("");
 
-    $("#menuList").innerHTML = blocks || `<p class="empty">"${esc(state.query)}" bo'yicha hech narsa topilmadi 😕</p>`;
+    $("#menuList").innerHTML = blocks || `<p class="empty">Bu filtr bo'yicha hech narsa topilmadi 😕<br><button class="btn btn--cream" data-reset-filters style="margin-top:14px">Filtrlarni tozalash</button></p>`;
   }
 
   // Qaysi kategoriya ko'rinib turganini aniqlash
@@ -219,6 +237,10 @@
     $("#cartbarTotal").textContent = som(t.total);
     $("#cartbar").hidden = !t.count || window.innerWidth > 1280;
     $("#ticketFoot").hidden = !t.count;
+    const bal = bonusBalance();
+    $("#bonusChip").textContent = bal ? `💎 Bonus: ${som(bal)}` : "";
+    $("#bonusChip").hidden = !bal;
+    renderUpsell();
 
     if (!t.count) {
       $("#ticketItems").innerHTML = `<div class="ticket-empty"><div>🍔</div><p>Chek hali bo'sh.<br>Menyudan biror mazali narsa tanlang!</p></div>`;
@@ -244,10 +266,32 @@
       <div class="totals" style="margin-top:12px">
         <div><span>Taomlar (${t.count})</span><span>${som(t.subtotal)}</span></div>
         ${t.promo ? `<div class="is-green"><span>${esc(state.promo)} ${t.promo.label}</span><span>${t.discount ? "−" + som(t.discount) : t.promoOk ? "✓" : "min. " + som(t.promo.min)}</span></div>` : ""}
+        ${t.bonusUsed ? `<div class="is-green"><span>💎 Bonusdan</span><span>−${som(t.bonusUsed)}</span></div>` : ""}
         <div><span>Yetkazib berish</span><span>${t.delivery ? som(t.delivery) : "Bepul"}</span></div>
         <div class="grand"><span>Jami</span><b>${som(t.total)}</b></div>
       </div>`;
     $("#promoInput").value = state.promo || "";
+  }
+
+  /* ---------- "Bunga mos keladi" — savatga qo'shimcha takliflar ---------- */
+  function renderUpsell() {
+    const box = $("#ticketUpsell");
+    if (!state.cart.length) { box.hidden = true; return; }
+    const inCart = new Set(state.cart.flatMap((l) => (l.kind === "combo" ? l.items : [l.id])));
+    const cats = new Set([...inCart].map((id) => byId[id].cat));
+    // Ichimlik yo'q bo'lsa — avval ichimlik, gazak yo'q bo'lsa — gazak, keyin desert
+    const order = ["drink", "snack", "dessert"].sort((a, b) => cats.has(a) - cats.has(b));
+    const picks = order
+      .flatMap((cat) => products.filter((p) => p.cat === cat && !p.hidden && !inCart.has(p.id)).sort((a, b) => b.rating - a.rating).slice(0, 2))
+      .slice(0, 3);
+    box.hidden = !picks.length;
+    box.innerHTML = `<h4>Bunga juda mos keladi 👌</h4><div class="upsell__row">${picks.map((p) => `
+      <div class="upsell__item">
+        <div class="upsell__img">${imgTag(p, 'loading="lazy"')}</div>
+        <b>${esc(p.name)}</b>
+        <span>${fmt(p.price)} so'm</span>
+        <button class="upsell__add" data-quick="${p.id}" aria-label="${esc(p.name)} qo'shish">+</button>
+      </div>`).join("")}</div>`;
   }
 
   /* =========================================================
@@ -444,6 +488,14 @@
             </div>
             <div class="paydetails" id="payDetails"></div>
           </section>
+
+          ${bonusBalance() ? `<section class="co-card co-bonus">
+            <label class="bonus-toggle">
+              <span class="bonus-toggle__icon">💎</span>
+              <span><b>Opus Bonus bilan to'lash</b><small>Balans: ${som(bonusBalance())} · buyurtmaning ${BONUS.maxShare}% gacha</small></span>
+              <input type="checkbox" name="useBonus" ${state.useBonus ? "checked" : ""}><i class="sw"></i>
+            </label>
+          </section>` : ""}
         </div>
 
         <aside class="co-side">
@@ -472,6 +524,7 @@
         renderTicket();
       }
       if (e.target.name === "method") { state.payMethod = e.target.value; renderPayDetails(); renderCoTotals(); }
+      if (e.target.name === "useBonus") { state.useBonus = e.target.checked; renderCoTotals(); renderTicket(); }
     });
     form.addEventListener("submit", (e) => { e.preventDefault(); submitCheckout(form); });
 
@@ -486,8 +539,10 @@
     $("#coTotals").innerHTML = `
       <div><span>Taomlar</span><span>${som(t.subtotal)}</span></div>
       ${t.discount ? `<div class="is-green"><span>Chegirma ${esc(state.promo)}</span><span>−${som(t.discount)}</span></div>` : ""}
+      ${t.bonusUsed ? `<div class="is-green"><span>💎 Bonusdan</span><span>−${som(t.bonusUsed)}</span></div>` : ""}
       <div><span>${state.orderType === "pickup" ? "Olib ketish" : "Yetkazib berish"}</span><span>${t.delivery ? som(t.delivery) : "Bepul"}</span></div>
-      <div class="grand"><span>To'lov</span><b>${som(t.total)}</b></div>`;
+      <div class="grand"><span>To'lov</span><b>${som(t.total)}</b></div>
+      <div class="earn">💎 Bu buyurtmadan +${som(Math.round((t.total * BONUS.rate) / 100 / 100) * 100)} bonus olasiz</div>`;
     $("#coSubmit").textContent = state.payMethod === "cash" ? "Buyurtmani tasdiqlash ✓" : `${som(t.total)} to'lash →`;
   }
 
@@ -649,20 +704,29 @@
 
   function placeOrder(customer, payLabel) {
     const t = totals();
+    const earned = Math.round((t.total * BONUS.rate) / 100 / 100) * 100;
     const order = {
       id: "OP-" + String(Date.now()).slice(-6),
       createdAt: new Date().toISOString(),
-      items: state.cart.map((l) => { const i = lineInfo(l); return { name: i.name, sub: i.sub, qty: l.qty, price: l.unit }; }),
+      // ref — "Qayta buyurtma" uchun aynan qaysi taom va variant ekanini saqlaymiz
+      items: state.cart.map((l) => {
+        const i = lineInfo(l);
+        const ref = l.kind === "combo" ? { kind: "combo", items: l.items } : { kind: "dish", id: l.id, size: l.size, extras: l.extras };
+        return { name: i.name, sub: i.sub, qty: l.qty, price: l.unit, ref };
+      }),
       customer,
       payment: { method: state.payMethod, label: payLabel, paid: state.payMethod !== "cash" },
       promo: state.promo,
-      subtotal: t.subtotal, discount: t.discount, delivery: t.delivery, total: t.total,
+      subtotal: t.subtotal, discount: t.discount, bonusUsed: t.bonusUsed, bonusEarned: earned, delivery: t.delivery, total: t.total,
       status: "new",
     };
     Store.saveOrder(order);
+    Store.set("opus_bonus", bonusBalance() - t.bonusUsed + earned);
     state.cart = [];
     state.promo = null;
+    state.useBonus = false;
     saveCart();
+    setTimeout(() => toast(`💎 +${som(earned)} bonus hisobingizga tushdi`), 1200);
     renderAll();
     closeSheet($("#paySheet"));
     closeSheet($("#checkout"));
@@ -742,6 +806,7 @@
         </div>
         <div class="tr-actions">
           <a class="btn btn--cream" href="tel:+998901234567">☎ Qo'ng'iroq</a>
+          ${idx === 3 ? `<button class="btn btn--cream" data-reorder="${esc(o.id)}">🔁 Qayta buyurtma</button>` : ""}
           <button class="btn btn--ink" data-close-sheet>Yaxshi!</button>
         </div>`;
       if (idx === 3) stopTracker();
@@ -752,6 +817,147 @@
     trackerTimer = setInterval(draw, 2000);
     openSheet($("#trackerSheet"));
     renderRecent();
+  }
+
+  // Avvalgi buyurtmani savatga qayta qo'shish (stop-listdagi taomlar o'tkazib yuboriladi)
+  function reorder(id) {
+    const o = Store.orders().find((x) => x.id === id);
+    if (!o) return;
+    const byName = Object.fromEntries(products.map((p) => [p.name, p]));
+    let added = 0, skipped = 0;
+    o.items.forEach((it) => {
+      const r = it.ref || (byName[it.name] ? { kind: "dish", id: byName[it.name].id, size: defaultSize(byName[it.name].cat), extras: [] } : null);
+      const ids = r ? (r.kind === "combo" ? r.items : [r.id]) : [];
+      if (!r || !ids.every((x) => byId[x] && !byId[x].hidden)) { skipped += 1; return; }
+      const line = r.kind === "combo"
+        ? { key: "combo|" + r.items.join("+"), kind: "combo", items: r.items, qty: it.qty, unit: comboUnit(r.items) }
+        : { key: [r.id, r.size, (r.extras || []).join("+")].join("|"), kind: "dish", id: r.id, size: r.size, extras: r.extras || [], qty: it.qty, unit: dishUnit(byId[r.id], r.size, r.extras || []) };
+      const found = state.cart.find((l) => l.key === line.key);
+      if (found) found.qty += line.qty; else state.cart.push(line);
+      added += 1;
+    });
+    saveCart();
+    renderAll();
+    closeSheet($("#trackerSheet"));
+    if (added) { toast(`🔁 ${added} ta taom savatga qo'shildi${skipped ? ` (${skipped} tasi hozir mavjud emas)` : ""}`); openTicket(); }
+    else toast("Bu buyurtmadagi taomlar hozir mavjud emas", true);
+  }
+
+  /* =========================================================
+     OMAD G'ILDIRAGI
+     ========================================================= */
+  const todayKey = () => new Date().toDateString();
+  let wheelAngle = 0;
+
+  function renderWheel() {
+    const n = WHEEL_PRIZES.length, step = 360 / n, r = 150, c = 160;
+    const colors = ["#FF5A1A", "#2A1D17", "#FFB547", "#3A2418"];
+    const pt = (deg, rad) => [c + rad * Math.sin((deg * Math.PI) / 180), c - rad * Math.cos((deg * Math.PI) / 180)];
+    const slices = WHEEL_PRIZES.map((p, i) => {
+      const a0 = i * step, a1 = a0 + step;
+      const [x0, y0] = pt(a0, r), [x1, y1] = pt(a1, r);
+      const fill = colors[i % colors.length];
+      const ink = i % 2 ? "#FFF4EA" : "#1A0F08";
+      const mid = a0 + step / 2;
+      return `<path d="M${c},${c} L${x0.toFixed(1)},${y0.toFixed(1)} A${r},${r} 0 0 1 ${x1.toFixed(1)},${y1.toFixed(1)} Z" fill="${fill}" stroke="#0C0A09" stroke-width="2"/>
+        <g transform="rotate(${mid} ${c} ${c})"><text x="${c}" y="${c - r + 42}" text-anchor="middle" fill="${ink}" class="wheel__lbl">${esc(p.label)}</text>
+        ${p.sub ? `<text x="${c}" y="${c - r + 60}" text-anchor="middle" fill="${ink}" class="wheel__sub">${esc(p.sub)}</text>` : ""}</g>`;
+    }).join("");
+    const dots = Array.from({ length: n * 2 }, (_, i) => { const [x, y] = pt(i * (step / 2), r + 6); return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.5" fill="${i % 2 ? "#FFB547" : "#FFF4EA"}"/>`; }).join("");
+    $("#wheelDisc").innerHTML = `<svg viewBox="0 0 320 320" aria-label="Omad g'ildiragi"><circle cx="160" cy="160" r="159" fill="#120D0A"/><g id="wheelRotor" style="transform:rotate(${wheelAngle}deg)">${slices}</g>${dots}<circle cx="160" cy="160" r="30" fill="#0C0A09" stroke="#FFB547" stroke-width="3"/><text x="160" y="168" text-anchor="middle" class="wheel__hub">🔥</text></svg>`;
+    updateWheelState();
+  }
+
+  function updateWheelState() {
+    const last = Store.get("opus_spin", null);
+    const done = last && last.day === todayKey();
+    $("#spinBtn").disabled = !!done;
+    $("#spinBtn").textContent = done ? "ERTAGA" : "AYLANTIR";
+    $("#wheelNote").innerHTML = done ? `Bugungi yutuq: <b>${esc(last.label)}</b>. Ertaga yana keling!` : "Bugun 1 ta urinishingiz bor 🎯";
+    $("#bonusBalance").textContent = som(bonusBalance());
+    $("#bonusRate").textContent = BONUS.rate + "%";
+  }
+
+  function spin() {
+    const last = Store.get("opus_spin", null);
+    if (last && last.day === todayKey()) return;
+    const total = WHEEL_PRIZES.reduce((s, p) => s + p.weight, 0);
+    let roll = Math.random() * total, idx = 0;
+    while (roll >= WHEEL_PRIZES[idx].weight) { roll -= WHEEL_PRIZES[idx].weight; idx += 1; }
+    const prize = WHEEL_PRIZES[idx];
+    const step = 360 / WHEEL_PRIZES.length;
+    // Ko'rsatkich tepada: tanlangan bo'lak markazi 0° ga kelishi kerak (+ bo'lak ichida kichik tasodifiy siljish)
+    const target = 360 - (idx * step + step / 2) + (Math.random() - .5) * step * .6;
+    wheelAngle += 360 * 6 + ((target - (wheelAngle % 360)) + 360) % 360;
+    const rotor = $("#wheelRotor");
+    $("#spinBtn").disabled = true;
+    rotor.style.transition = "transform 5s cubic-bezier(.12,.75,.1,1)";
+    rotor.style.transform = `rotate(${wheelAngle}deg)`;
+    Store.set("opus_spin", { day: todayKey(), label: prize.label + (prize.sub ? " " + prize.sub : "") });
+    setTimeout(() => {
+      if (prize.type === "bonus") {
+        Store.set("opus_bonus", bonusBalance() + prize.value);
+        toast(`🎉 Tabriklaymiz! +${som(prize.value)} bonus yutdingiz`);
+      } else {
+        state.promo = prize.code;
+        saveCart();
+        toast(`🎉 ${esc(WHEEL_PROMOS[prize.code].label)} — savatga qo'llandi!`);
+      }
+      confetti();
+      updateWheelState();
+      renderTicket();
+    }, 5200);
+  }
+
+  /* =========================================================
+     FIKRLAR VA FILIALLAR
+     ========================================================= */
+  function renderReviews() {
+    const stars = (n) => "★".repeat(n) + "☆".repeat(5 - n);
+    $("#ratingBox").innerHTML = `
+      <div class="rating__big"><b>${RATING.avg}</b><span>${stars(5)}</span><small>${fmt(RATING.count)} ta baho</small></div>
+      <div class="rating__bars">${RATING.dist.map((v, i) => `
+        <div><span>${5 - i}★</span><i><em style="width:${v}%"></em></i><small>${v}%</small></div>`).join("")}</div>`;
+    $("#reviewsTrack").innerHTML = REVIEWS.map((r) => {
+      const p = byId[r.dish];
+      return `<figure class="rev">
+        <div class="rev__stars" aria-label="${r.stars} yulduz">${stars(r.stars)}</div>
+        <blockquote>${esc(r.text)}</blockquote>
+        <figcaption>
+          <span class="rev__ava">${esc(r.name[0])}</span>
+          <div><b>${esc(r.name)}</b><small>${esc(r.area)}</small></div>
+          ${p ? `<button class="rev__dish" data-open="${p.id}" title="${esc(p.name)}">${imgTag(p, 'loading="lazy"')}</button>` : ""}
+        </figcaption>
+      </figure>`;
+    }).join("");
+  }
+
+  function branchOpen(b, now = new Date()) {
+    const mins = (s) => { const [h, m] = s.split(":").map(Number); return h * 60 + m; };
+    const t = now.getHours() * 60 + now.getMinutes();
+    const o = mins(b.open), c = mins(b.close);
+    return c > o ? t >= o && t < c : t >= o || t < c; // yarim tundan keyin yopiladigan filial
+  }
+
+  function renderBranches() {
+    $("#branchesGrid").innerHTML = BRANCHES.map((b) => {
+      const open = branchOpen(b);
+      const map = "https://yandex.uz/maps/?text=" + encodeURIComponent("Toshkent, " + b.address);
+      return `<article class="branch">
+        <div class="branch__img"><img src="${esc(b.img)}" alt="" loading="lazy"><span class="branch__status ${open ? "is-open" : ""}">${open ? "● Hozir ochiq" : "● Yopiq"}</span></div>
+        <div class="branch__body">
+          <small>${esc(b.area)}</small>
+          <h3>${esc(b.name)}</h3>
+          <p>📍 ${esc(b.address)}</p>
+          <p>🕙 ${b.open} – ${b.close} · har kuni</p>
+          <div class="branch__perks">${b.perks.map((x) => `<span>${esc(x)}</span>`).join("")}</div>
+          <div class="branch__actions">
+            <a class="btn btn--cream" href="tel:${b.phone.replace(/\s/g, "")}">☎ Qo'ng'iroq</a>
+            <a class="btn btn--fire" href="${map}" target="_blank" rel="noopener">Xaritada →</a>
+          </div>
+        </div>
+      </article>`;
+    }).join("");
   }
 
   function renderRecent() {
@@ -826,6 +1032,28 @@
     if (jump) { $("#cat-" + jump.dataset.jump).scrollIntoView({ behavior: "smooth" }); return; }
     const track = t.closest("[data-track]");
     if (track) { openTracker(track.dataset.track); return; }
+    const re = t.closest("[data-reorder]");
+    if (re) { reorder(re.dataset.reorder); return; }
+    const tag = t.closest("[data-tag]");
+    if (tag) {
+      state.tag = tag.dataset.tag;
+      $$("[data-tag]").forEach((b) => b.classList.toggle("is-on", b === tag));
+      renderMenu(true); renderRail();
+      return;
+    }
+    if (t.closest("[data-reset-filters]")) {
+      state.tag = ""; state.query = ""; state.sort = "";
+      $("#searchInput").value = ""; $("#sortSelect").value = "";
+      $$("[data-tag]").forEach((b) => b.classList.toggle("is-on", !b.dataset.tag));
+      renderMenu(true); renderRail();
+      return;
+    }
+    const rev = t.closest("[data-rev]");
+    if (rev) {
+      const tr = $("#reviewsTrack");
+      tr.scrollBy({ left: +rev.dataset.rev * (tr.firstElementChild.offsetWidth + 16), behavior: "smooth" });
+      return;
+    }
     const close = t.closest("[data-close-sheet]");
     if (close) { closeSheet(close.closest(".sheet")); return; }
     if (t.classList.contains("sheet")) { closeSheet(t); return; }
@@ -867,12 +1095,15 @@
     e.preventDefault();
     const code = $("#promoInput").value.trim().toUpperCase();
     if (!code) { state.promo = null; saveCart(); renderTicket(); return; }
-    if (!PROMO_CODES[code]) { toast("Bunday promokod yo'q", true); return; }
+    if (!promoOf(code)) { toast("Bunday promokod yo'q", true); return; }
     state.promo = code;
     saveCart();
     renderTicket();
-    toast(`Promokod qo'llandi: ${PROMO_CODES[code].label}`);
+    toast(`Promokod qo'llandi: ${esc(promoOf(code).label)}`);
   });
+
+  $("#sortSelect").addEventListener("change", (e) => { state.sort = e.target.value; renderMenu(true); });
+  $("#spinBtn").addEventListener("click", spin);
 
   $("#trackForm").addEventListener("submit", (e) => {
     e.preventDefault();
@@ -906,4 +1137,7 @@
   renderRail();
   renderTicket();
   renderRecent();
+  renderWheel();
+  renderReviews();
+  renderBranches();
 })();
