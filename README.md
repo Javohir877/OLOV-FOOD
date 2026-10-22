@@ -31,6 +31,17 @@ Manzil: `sayt-manzili/admin.html` (saytda havola yo'q, qidiruv tizimlaridan yash
 > to'liq ishlaydi. Boshqa qurilmalardagi mijozlar buyurtmalarini qabul qilish va parolni haqiqiy himoyalash uchun
 > backend (masalan, Firebase yoki Supabase) ulash kerak.
 
+## 🌐 Sayt manzili
+
+- Sayt: https://javohir877.github.io/OPUS-FOOD/
+- Admin: https://javohir877.github.io/OPUS-FOOD/admin.html
+
+**Yangilash** (fayllarni o'zgartirgandan keyin, faqat o'zgargan fayllar yuklanadi; Git kerak emas, GitHub CLI yetarli):
+
+```
+powershell -ExecutionPolicy Bypass -File publish-github.ps1 -Message "Nima o'zgardi"
+```
+
 ## Tuzilma
 
 ```
