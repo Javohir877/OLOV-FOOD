@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OPUS FOOD — Issiq. Shirali. Tez.</title>
+  <meta name="description" content="OPUS FOOD — burgerlar, pitsa, lavash, tovuq va boshqa fast food. 30 daqiqada yetkazib berish. Click, Payme, Uzum, karta yoki naqd to'lov.">
+  <meta name="theme-color" content="#0C0A09">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <span><i class="dot"></i> Hozir ochiq · 10:00–03:00</span>
+    <span class="topbar__mid">🛵 30 daqiqada yetkazamiz · 150 000 so'mdan bepul</span>
+    <a href="tel:+998901234567">☎ +998 90 123 45 67</a>
+  </div>
+
+  <!-- ===== NAV ===== -->
+  <header class="nav" id="nav">
+    <a href="#" class="brand" aria-label="OPUS FOOD">
+      <span class="brand__sticker">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <path d="M10 30 Q10 10 32 9 Q54 10 54 30 Q54 33 51 33 H13 Q10 33 10 30Z" fill="#F2A541" stroke="#1A1210" stroke-width="3"/>
+          <path d="M8 37 Q14 33 20 37 T32 37 T44 37 T56 37 V40 H8Z" fill="#7BC94C" stroke="#1A1210" stroke-width="3" stroke-linejoin="round"/>
+          <rect x="9" y="40" width="46" height="8" rx="4" fill="#6E3B1F" stroke="#1A1210" stroke-width="3"/>
+          <path d="M11 51 H53 Q52 58 44 58 H20 Q12 58 11 51Z" fill="#F2A541" stroke="#1A1210" stroke-width="3"/>
+          <circle cx="25" cy="22" r="2.6" fill="#1A1210"/><circle cx="39" cy="22" r="2.6" fill="#1A1210"/>
+          <path d="M28 27 Q32 30 36 27" stroke="#1A1210" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="brand__name">OPUS<em>FOOD</em></span>
+    </a>
+
+    <nav class="nav__links" id="navLinks">
+      <a href="#menu">Menyu</a>
+      <a href="#combo">Kombo yig'ish</a>
+      <a href="#kitchen">Oshxona</a>
+      <a href="#track">Kuzatish</a>
+    </nav>
+
+    <div class="nav__actions">
+      <a href="#track" class="chip-btn chip-btn--ghost nav__track">📍 Buyurtmam qayerda?</a>
+      <button class="chip-btn" id="cartOpen" aria-label="Savat">
+        <span>🛒</span><span class="hide-sm">Savat</span><b id="cartCount">0</b>
+      </button>
+      <button class="hamburger" id="navToggle" aria-label="Menyu"><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+      <div class="hero__word" aria-hidden="true">OPUS</div>
+      <div class="embers" id="embers" aria-hidden="true"></div>
+
+      <div class="hero__text">
+        <span class="tag tag--tilt">🔥 Grilda, olov ustida</span>
+        <h1>Issiq.<br><span class="outline">Shirali.</span><br>Tez.</h1>
+        <p>Har kuni yangi mol go'shti, yumshoq bulochka va faqat bizda bor OPUS sousi. Buyurtma bering — kuryer 30 daqiqada eshigingizda.</p>
+        <div class="hero__cta">
+          <a href="#menu" class="btn btn--ink">Menyuni ko'rish →</a>
+          <a href="#combo" class="btn btn--cream">Kombo yig'ish</a>
+        </div>
+        <div class="hero__proof">
+          <div class="faces"><span>A</span><span>M</span><span>J</span><span>+</span></div>
+          <p><b>★ 4.9</b> · 50 000+ mamnun mijoz</p>
+        </div>
+      </div>
+
+      <div class="stage" id="stage">
+        <div class="stage__plate"></div>
+
+        <!-- aylanuvchi stiker -->
+        <svg class="spin-badge" viewBox="0 0 200 200" aria-hidden="true">
+          <defs><path id="circ" d="M100,100 m-72,0 a72,72 0 1,1 144,0 a72,72 0 1,1 -144,0"/></defs>
+          <circle cx="100" cy="100" r="96" fill="#FFC229" stroke="#1A1210" stroke-width="5"/>
+          <text><textPath href="#circ" textLength="446" lengthAdjust="spacingAndGlyphs">30 DAQIQADA YETKAZAMIZ ✦ ISSIQ VA MAZALI ✦</textPath></text>
+          <text x="100" y="114" text-anchor="middle" class="spin-badge__mid">30'</text>
+        </svg>
+
+        <!-- uchib yuruvchi ingredientlar -->
+        <svg class="bit bit--tomato" viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="25" fill="#F0452B" stroke="#1A1210" stroke-width="4"/><circle cx="30" cy="30" r="15" fill="#FF7A5C"/><circle cx="24" cy="26" r="3" fill="#FFE1A8"/><circle cx="36" cy="27" r="3" fill="#FFE1A8"/><circle cx="30" cy="37" r="3" fill="#FFE1A8"/></svg>
+        <svg class="bit bit--cheese" viewBox="0 0 60 60" aria-hidden="true"><path d="M6 46 L30 8 L54 46 Z" fill="#FFC229" stroke="#1A1210" stroke-width="4" stroke-linejoin="round"/><circle cx="30" cy="33" r="4" fill="#E9A400"/><circle cx="20" cy="40" r="3" fill="#E9A400"/></svg>
+        <svg class="bit bit--pickle" viewBox="0 0 60 60" aria-hidden="true"><ellipse cx="30" cy="30" rx="24" ry="17" fill="#8DBF3F" stroke="#1A1210" stroke-width="4"/><ellipse cx="30" cy="30" rx="14" ry="9" fill="#C6E27A"/><circle cx="26" cy="29" r="2" fill="#6E9A2A"/><circle cx="34" cy="31" r="2" fill="#6E9A2A"/></svg>
+        <svg class="bit bit--fries" viewBox="0 0 60 70" aria-hidden="true"><rect x="16" y="6" width="7" height="34" rx="2" fill="#FFD24D" stroke="#1A1210" stroke-width="3"/><rect x="26" y="2" width="7" height="38" rx="2" fill="#FFD24D" stroke="#1A1210" stroke-width="3"/><rect x="36" y="8" width="7" height="32" rx="2" fill="#FFD24D" stroke="#1A1210" stroke-width="3"/><path d="M10 30 H50 L45 66 H15 Z" fill="#F0452B" stroke="#1A1210" stroke-width="4" stroke-linejoin="round"/><path d="M22 44 Q30 52 38 44" stroke="#FFF3E3" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+        <svg class="bit bit--chili" viewBox="0 0 60 60" aria-hidden="true"><path d="M14 18 Q40 14 50 44 Q52 52 44 48 Q30 36 12 26 Q6 20 14 18Z" fill="#E8402A" stroke="#1A1210" stroke-width="4" stroke-linejoin="round"/><path d="M14 18 Q8 10 14 6" stroke="#4CAF50" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
+        <svg class="bit bit--seed" viewBox="0 0 30 30" aria-hidden="true"><ellipse cx="15" cy="15" rx="7" ry="11" fill="#FFF4DD" stroke="#1A1210" stroke-width="3" transform="rotate(30 15 15)"/></svg>
+
+        <!-- harakatlanuvchi burger -->
+        <button class="burger" id="burger" aria-label="Burgerni bosing!">
+          <svg viewBox="0 0 420 420" aria-hidden="true">
+            <ellipse class="b-shadow" cx="210" cy="388" rx="140" ry="14" fill="rgba(26,18,16,.22)"/>
+            <g class="b-layer b-bottom">
+              <path d="M62 318 Q62 306 74 306 H346 Q358 306 358 318 Q352 366 300 368 H120 Q68 366 62 318 Z" fill="#F2A541"/>
+              <path d="M96 340 Q120 352 150 352" stroke="#FFD79A" stroke-width="8" fill="none" stroke-linecap="round"/>
+            </g>
+            <g class="b-layer b-patty">
+              <path d="M50 280 Q50 262 72 262 H348 Q370 262 370 280 V286 Q370 304 348 304 H72 Q50 304 50 286 Z" fill="#6E3B1F"/>
+              <path d="M90 276 l22 0 M150 284 l26 0 M220 274 l24 0 M286 284 l22 0" stroke="#A8643A" stroke-width="5" stroke-linecap="round"/>
+            </g>
+            <g class="b-layer b-cheese">
+              <path d="M56 250 H364 L356 262 L334 260 L324 290 L308 262 L272 264 L256 300 L240 264 L184 266 L170 292 L154 264 L104 264 L90 288 L74 262 Z" fill="#FFC229" stroke-linejoin="round"/>
+            </g>
+            <g class="b-layer b-tomato">
+              <rect x="70" y="228" width="134" height="24" rx="12" fill="#F0452B"/>
+              <rect x="216" y="228" width="134" height="24" rx="12" fill="#F0452B"/>
+              <circle cx="110" cy="240" r="4" fill="#FFB199" stroke="none"/><circle cx="160" cy="240" r="4" fill="#FFB199" stroke="none"/>
+              <circle cx="260" cy="240" r="4" fill="#FFB199" stroke="none"/><circle cx="310" cy="240" r="4" fill="#FFB199" stroke="none"/>
+            </g>
+            <g class="b-layer b-lettuce">
+              <path d="M44 222 Q64 204 84 222 T124 222 T164 222 T204 222 T244 222 T284 222 T324 222 T364 222 Q380 232 362 238 H58 Q40 232 44 222Z" fill="#7BC94C" stroke-linejoin="round"/>
+            </g>
+            <g class="b-layer b-top">
+              <path d="M58 204 Q58 82 210 78 Q362 82 362 204 Q362 216 348 216 H72 Q58 216 58 204 Z" fill="#F2A541"/>
+              <path d="M104 132 Q136 104 182 98" stroke="#FFD79A" stroke-width="10" fill="none" stroke-linecap="round"/>
+              <g class="seeds">
+                <ellipse cx="130" cy="160" rx="5" ry="9" transform="rotate(-30 130 160)"/>
+                <ellipse cx="292" cy="150" rx="5" ry="9" transform="rotate(25 292 150)"/>
+                <ellipse cx="210" cy="104" rx="5" ry="9" transform="rotate(80 210 104)"/>
+                <ellipse cx="262" cy="110" rx="5" ry="9" transform="rotate(50 262 110)"/>
+                <ellipse cx="320" cy="188" rx="5" ry="9" transform="rotate(10 320 188)"/>
+                <ellipse cx="96" cy="190" rx="5" ry="9" transform="rotate(-10 96 190)"/>
+              </g>
+              <g class="face">
+                <g class="eyes">
+                  <ellipse cx="180" cy="158" rx="10" ry="12" fill="#1A1210" stroke="none"/>
+                  <ellipse cx="240" cy="158" rx="10" ry="12" fill="#1A1210" stroke="none"/>
+                  <circle cx="183" cy="153" r="3.5" fill="#fff" stroke="none"/>
+                  <circle cx="243" cy="153" r="3.5" fill="#fff" stroke="none"/>
+                </g>
+                <ellipse cx="160" cy="182" rx="12" ry="6" fill="#FF7A5C" stroke="none" opacity=".7"/>
+                <ellipse cx="260" cy="182" rx="12" ry="6" fill="#FF7A5C" stroke="none" opacity=".7"/>
+                <path class="mouth" d="M194 178 Q210 196 226 178" fill="none" stroke-width="6" stroke-linecap="round"/>
+              </g>
+            </g>
+          </svg>
+        </button>
+        <div class="steam" aria-hidden="true"><i></i><i></i><i></i></div>
+        <span class="stage__hint">Meni bosing! 👆</span>
+      </div>
+    </section>
+
+    <!-- ===== KOMBO YIG'UVCHI ===== -->
+    <section class="combo" id="combo">
+      <div class="section-title">
+        <span class="tag">Yangi!</span>
+        <h2>O'z kombongizni <span class="hl">yig'ing</span></h2>
+        <p>Har guruhdan bittadan tanlang — jami narxdan <b>−15%</b> chegirma avtomatik.</p>
+      </div>
+      <div class="combo__grid">
+        <div class="combo__groups" id="comboGroups"></div>
+        <aside class="combo__ticket" id="comboTicket"></aside>
+      </div>
+    </section>
+
+    <!-- ===== MENYU ===== -->
+    <section class="menu" id="menu">
+      <aside class="rail">
+        <h2 class="rail__title">Menyu</h2>
+        <label class="search">
+          <span>🔍</span>
+          <input type="search" id="searchInput" placeholder="Taom qidirish..." autocomplete="off">
+        </label>
+        <nav class="rail__cats" id="railCats"></nav>
+      </aside>
+
+      <div class="menu__list" id="menuList"></div>
+
+      <aside class="ticket" id="ticket" aria-label="Savat">
+        <div class="ticket__paper">
+          <div class="ticket__head">
+            <div>
+              <h3>Sizning chek</h3>
+              <small id="ticketDate"></small>
+            </div>
+            <button class="x-btn ticket__close" id="cartClose" aria-label="Yopish">✕</button>
+          </div>
+          <div class="ticket__items" id="ticketItems"></div>
+          <div class="ticket__foot" id="ticketFoot">
+            <form class="promo" id="promoForm">
+              <input id="promoInput" placeholder="PROMOKOD" autocomplete="off">
+              <button type="submit">OK</button>
+            </form>
+            <div id="ticketTotals"></div>
+            <button class="btn btn--fire btn--block" id="checkoutBtn">Buyurtma berish →</button>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- ===== OSHXONA ===== -->
+    <section class="kitchen" id="kitchen">
+      <div class="kitchen__photos">
+        <figure class="polaroid p1"><img src="assets/img/1561758033-d89a9ad46330.jpg" alt="Burger va fri"><figcaption>Opus Double + fri</figcaption></figure>
+        <figure class="polaroid p2"><img src="assets/img/1513104890138-7c749659a591.jpg" alt="Pitsa"><figcaption>Tandirdan yangi</figcaption></figure>
+        <figure class="polaroid p3"><img src="assets/img/1567620832903-9fc6debc209f.jpg" alt="Tovuq qanotchalari"><figcaption>Achchiq qanotchalar</figcaption></figure>
+      </div>
+      <div class="kitchen__text">
+        <span class="tag tag--mustard">Bizning oshxona</span>
+        <h2>Muzlatkich emas — <span class="hl">olov.</span></h2>
+        <ul class="facts">
+          <li><b>01</b><div><h4>Har kuni yangi go'sht</h4><p>Mol go'shti ertalab keladi, kotletlar qo'lda yasaladi. Muzlatilgan mahsulot yo'q.</p></div></li>
+          <li><b>02</b><div><h4>Ochiq olovli grill</h4><p>Har bir kotlet haqiqiy olovda pishadi — o'sha "dudlangan" ta'm shundan.</p></div></li>
+          <li><b>03</b><div><h4>Halol va toza</h4><p>Halol sertifikati, ochiq oshxona va har kuni sanitariya nazorati.</p></div></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== KUZATISH ===== -->
+    <section class="track" id="track">
+      <div class="track__box">
+        <div>
+          <span class="tag">📍 Jonli kuzatish</span>
+          <h2>Buyurtmangiz <span class="hl">qayerda?</span></h2>
+          <p>Buyurtma raqamini kiriting yoki pastdagi oxirgi buyurtmalaringizdan birini tanlang.</p>
+        </div>
+        <form class="track__form" id="trackForm">
+          <input id="trackInput" placeholder="OP-123456" autocomplete="off">
+          <button class="btn btn--ink" type="submit">Kuzatish</button>
+        </form>
+        <div class="track__recent" id="trackRecent"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer__big" aria-hidden="true">OPUS FOOD</div>
+    <div class="footer__cols">
+      <div>
+        <h4>Manzil</h4>
+        <p>Toshkent sh., Amir Temur ko'chasi, 1<br>Har kuni 10:00 – 03:00</p>
+      </div>
+      <div>
+        <h4>Aloqa</h4>
+        <p><a href="tel:+998901234567">+998 90 123 45 67</a><br><a href="#">Telegram</a> · <a href="#">Instagram</a></p>
+      </div>
+      <div>
+        <h4>To'lov usullari</h4>
+        <div class="footer__pay" id="footerPay"></div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© <span id="year"></span> OPUS FOOD</span>
+      <span>Olov bilan tayyorlangan 🔥</span>
+    </div>
+  </footer>
+
+  <!-- Mobil savat paneli -->
+  <button class="cartbar" id="cartbar" hidden>
+    <span class="cartbar__count" id="cartbarCount">0</span>
+    <span>Savatni ko'rish</span>
+    <b id="cartbarTotal">0 so'm</b>
+  </button>
+  <div class="scrim" id="scrim"></div>
+
+  <!-- Taom oynasi -->
+  <div class="sheet" id="dishSheet" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="sheet__box sheet__box--dish" id="dishBox"></div>
+  </div>
+
+  <!-- Checkout -->
+  <div class="checkout" id="checkout" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="checkout__inner" id="checkoutInner"></div>
+  </div>
+
+  <!-- To'lov oynasi (SMS / ilova) -->
+  <div class="sheet" id="paySheet" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="sheet__box sheet__box--pay" id="payBox"></div>
+  </div>
+
+  <!-- Kuzatuvchi -->
+  <div class="sheet" id="trackerSheet" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="sheet__box sheet__box--tracker" id="trackerBox"></div>
+  </div>
+
+  <div class="toasts" id="toasts"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
