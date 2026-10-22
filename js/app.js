@@ -721,6 +721,7 @@
       status: "new",
     };
     Store.saveOrder(order);
+    notifyTelegram(order);
     Store.set("opus_bonus", bonusBalance() - t.bonusUsed + earned);
     state.cart = [];
     state.promo = null;
@@ -732,6 +733,76 @@
     closeSheet($("#checkout"));
     confetti();
     openTracker(order.id, true);
+  }
+
+  /* =========================================================
+     TELEGRAM — yangi buyurtma haqida xabar
+     Yuborilmay qolsa (internet yo'q), navbatga qo'yiladi va keyingi
+     safar sayt ochilganda qayta yuboriladi.
+     ========================================================= */
+  const tgEsc = (s) => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+  function orderMessage(o) {
+    const c = o.customer;
+    const pickup = c.type === "pickup";
+    const addr = [c.address, c.flat && `${c.flat}-xonadon`, c.floor && `${c.floor}-qavat`].filter(Boolean).join(", ");
+    const map = "https://yandex.uz/maps/?text=" + encodeURIComponent("Toshkent, " + c.address);
+    const lines = [
+      `🔔 <b>Yangi buyurtma ${tgEsc(o.id)}</b>`,
+      `🕒 ${new Date(o.createdAt).toLocaleString("ru-RU", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}`,
+      "",
+      `👤 <b>${tgEsc(c.name)}</b>`,
+      `📞 ${tgEsc(c.phone)}`,
+      pickup ? "🏪 <b>Olib ketadi</b>" : `🛵 <b>Yetkazib berish:</b> ${tgEsc(addr)}\n🗺 <a href="${map}">Xaritada ochish</a>`,
+      `⏰ ${tgEsc(c.time || "Imkon qadar tez")}`,
+      c.note ? `📝 <i>${tgEsc(c.note)}</i>` : "",
+      "",
+      "🍔 <b>Taomlar:</b>",
+      ...o.items.map((i) => `• ${tgEsc(i.name)} × ${i.qty} — ${fmt(i.price * i.qty)}${i.sub ? `\n   <i>${tgEsc(i.sub)}</i>` : ""}`),
+      "",
+      `Taomlar: ${som(o.subtotal)}`,
+      o.discount ? `Chegirma (${tgEsc(o.promo)}): −${som(o.discount)}` : "",
+      o.bonusUsed ? `Bonusdan: −${som(o.bonusUsed)}` : "",
+      `Yetkazish: ${o.delivery ? som(o.delivery) : "bepul"}`,
+      `💰 <b>JAMI: ${som(o.total)}</b>`,
+      `💳 ${tgEsc(o.payment.label)} — ${o.payment.paid ? "✅ to'langan" : "💵 yetkazilganda to'lanadi"}`,
+    ];
+    return lines.filter((l) => l !== "").join("\n").replace(/\n{3,}/g, "\n\n");
+  }
+
+  function sendTelegram(text) {
+    return fetch(`https://api.telegram.org/bot${TELEGRAM.token}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: TELEGRAM.chatId, text, parse_mode: "HTML", disable_web_page_preview: true }),
+      keepalive: true,
+    }).then((r) => r.json()).then((j) => { if (!j.ok) throw new Error(j.description || "Telegram xatosi"); });
+  }
+
+  function notifyTelegram(order) {
+    if (!TELEGRAM.token || !TELEGRAM.chatId) return;
+    const queue = Store.get("opus_tg_queue", []);
+    queue.push(orderMessage(order));
+    Store.set("opus_tg_queue", queue);
+    flushTelegram();
+  }
+
+  let flushing = false;
+  async function flushTelegram() {
+    if (flushing || !TELEGRAM.token || !TELEGRAM.chatId) return;
+    flushing = true;
+    try {
+      let queue = Store.get("opus_tg_queue", []);
+      while (queue.length) {
+        await sendTelegram(queue[0]);
+        queue = Store.get("opus_tg_queue", []).slice(1);
+        Store.set("opus_tg_queue", queue);
+      }
+    } catch (e) {
+      console.warn("Telegram'ga yuborilmadi, keyinroq qayta urinamiz:", e.message);
+    } finally {
+      flushing = false;
+    }
   }
 
   function confetti() {
@@ -1140,4 +1211,6 @@
   renderWheel();
   renderReviews();
   renderBranches();
+  flushTelegram(); // avval yuborilmay qolgan buyurtmalar bo'lsa
+  window.addEventListener("online", flushTelegram);
 })();
