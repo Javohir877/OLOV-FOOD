@@ -38,8 +38,9 @@
 
     <nav class="nav__links" id="navLinks">
       <a href="#menu">Menyu</a>
-      <a href="#combo">Kombo yig'ish</a>
-      <a href="#kitchen">Oshxona</a>
+      <a href="#combo">Kombo</a>
+      <a href="#wheel">🎡 Omad</a>
+      <a href="#branches">Filiallar</a>
       <a href="#track">Kuzatish</a>
     </nav>
 
@@ -169,7 +170,27 @@
         <nav class="rail__cats" id="railCats"></nav>
       </aside>
 
-      <div class="menu__list" id="menuList"></div>
+      <div class="menu__main">
+        <div class="menu-tools" id="menuTools">
+          <div class="tags" id="tagFilter" role="group" aria-label="Filtr">
+            <button class="tag-btn is-on" data-tag="">Hammasi</button>
+            <button class="tag-btn" data-tag="hit">🔥 Hit</button>
+            <button class="tag-btn" data-tag="new">✨ Yangi</button>
+            <button class="tag-btn" data-tag="hot">🌶 Achchiq</button>
+            <button class="tag-btn" data-tag="light">🥗 600 kkal gacha</button>
+          </div>
+          <label class="sort">
+            <span>Saralash:</span>
+            <select id="sortSelect">
+              <option value="">Tavsiya etilgan</option>
+              <option value="rating">⭐ Reyting bo'yicha</option>
+              <option value="cheap">Arzonroq avval</option>
+              <option value="pricey">Qimmatroq avval</option>
+            </select>
+          </label>
+        </div>
+        <div class="menu__list" id="menuList"></div>
+      </div>
 
       <aside class="ticket" id="ticket" aria-label="Savat">
         <div class="ticket__paper">
@@ -177,10 +198,12 @@
             <div>
               <h3>Sizning chek</h3>
               <small id="ticketDate"></small>
+              <span class="bonus-chip" id="bonusChip" title="Opus Bonus balansi"></span>
             </div>
             <button class="x-btn ticket__close" id="cartClose" aria-label="Yopish">✕</button>
           </div>
           <div class="ticket__items" id="ticketItems"></div>
+          <div class="upsell" id="ticketUpsell" hidden></div>
           <div class="ticket__foot" id="ticketFoot">
             <form class="promo" id="promoForm">
               <input id="promoInput" placeholder="PROMOKOD" autocomplete="off">
@@ -209,6 +232,51 @@
           <li><b>03</b><div><h4>Halol va toza</h4><p>Halol sertifikati, ochiq oshxona va har kuni sanitariya nazorati.</p></div></li>
         </ul>
       </div>
+    </section>
+
+    <!-- ===== OMAD G'ILDIRAGI ===== -->
+    <section class="wheel" id="wheel">
+      <div class="wheel__text">
+        <span class="tag">🎁 Har kuni bepul</span>
+        <h2>Omad <span class="hl">g'ildiragi</span></h2>
+        <p>Kuniga bir marta aylantiring va chegirma yoki Opus Bonus yuting. Yutgan chegirmangiz savatga avtomatik qo'llanadi.</p>
+        <div class="bonus-card">
+          <div><small>Opus Bonus balansingiz</small><b id="bonusBalance">0 so'm</b></div>
+          <p>Har buyurtmadan <b id="bonusRate">5%</b> keshbek. Bonus bilan buyurtmaning yarmigacha to'lash mumkin.</p>
+        </div>
+      </div>
+      <div class="wheel__stage">
+        <div class="wheel__pointer" aria-hidden="true"></div>
+        <div class="wheel__disc" id="wheelDisc"></div>
+        <button class="wheel__btn" id="spinBtn">AYLANTIR</button>
+        <p class="wheel__note" id="wheelNote"></p>
+      </div>
+    </section>
+
+    <!-- ===== MIJOZLAR FIKRI ===== -->
+    <section class="reviews" id="reviews">
+      <div class="reviews__head">
+        <div>
+          <span class="tag">⭐ Mijozlar fikri</span>
+          <h2>Ular allaqachon <span class="hl">sevib qolishdi</span></h2>
+        </div>
+        <div class="rating" id="ratingBox"></div>
+      </div>
+      <div class="reviews__track" id="reviewsTrack"></div>
+      <div class="reviews__nav">
+        <button class="x-btn" data-rev="-1" aria-label="Oldingi">←</button>
+        <button class="x-btn" data-rev="1" aria-label="Keyingi">→</button>
+      </div>
+    </section>
+
+    <!-- ===== FILIALLAR ===== -->
+    <section class="branches" id="branches">
+      <div class="section-title">
+        <span class="tag">📍 Filiallar</span>
+        <h2>Bizni <span class="hl">mehmonga</span> kuting</h2>
+        <p>Toshkent bo'ylab 3 ta filial. Yetkazib berish butun shahar bo'ylab — o'rtacha 30 daqiqa.</p>
+      </div>
+      <div class="branches__grid" id="branchesGrid"></div>
     </section>
 
     <!-- ===== KUZATISH ===== -->
