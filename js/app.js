@@ -8,7 +8,7 @@
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
   const fmt = (n) => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
   const som = (n) => `${fmt(n)} so'm`;
-  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
   const BADGES = { hit: ["badge--hit", "🔥 Hit"], new: ["badge--new", "Yangi"], hot: ["badge--hot", "🌶 Achchiq"] };
@@ -608,7 +608,7 @@
       ok = setErr($("#cExp"), expOk ? "" : "Muddat noto'g'ri") && ok;
       card = { last4: d.slice(-4), brand };
     }
-    if (!ok) { $(".field.bad input", form)?.focus(); return; }
+    if (!ok) { const bad = $(".field.bad input", form); if (bad) bad.focus(); return; }
 
     const customer = { type: data.type, name: data.name.trim(), phone: data.phone, address: data.address || "", flat: data.flat || "", floor: data.floor || "", time: data.time, note: data.note || "" };
     Store.set("opus_customer", customer);
