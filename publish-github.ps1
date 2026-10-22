@@ -1,4 +1,4 @@
-# OPUS FOOD — saytni GitHub'ga yuklaydi va GitHub Pages'ni yoqadi (Git kerak emas, GitHub CLI yetarli).
+﻿# OPUS FOOD — saytni GitHub'ga yuklaydi va GitHub Pages'ni yoqadi (Git kerak emas, GitHub CLI yetarli).
 # Ishlatish: powershell -ExecutionPolicy Bypass -File publish-github.ps1 [-Repo OPUS-FOOD] [-Message "O'zgarish tavsifi"]
 param(
   [string]$Repo = "OPUS-FOOD",
@@ -25,11 +25,17 @@ if ($LASTEXITCODE -ne 0) {
   Start-Sleep -Seconds 3
 }
 
-# 2) Yuklanadigan fayllar (yordamchi papkalarsiz)
-$skip = @(".claude", ".git")
+# 2) Yuklanadigan fayllar. admin-src — admin panelning shifrlanmagan manbasi, u HECH QACHON yuklanmaydi.
+$skip = @(".claude", ".git", "admin-src")
 $files = Get-ChildItem -Path $root -Recurse -File -Force | Where-Object {
   $rel = $_.FullName.Substring($root.Length + 1)
   -not ($skip | Where-Object { $rel -like "$_\*" })
+}
+$adminFile = Join-Path $root "admin.html"
+if (-not (Test-Path $adminFile)) {
+  Write-Warning "admin.html yo'q — saytda admin panel bo'lmaydi. Uni yoqish uchun: lock-admin.ps1 -Publish"
+} elseif (-not (Select-String -Path $adminFile -Pattern '"v":1,"n":' -SimpleMatch -Quiet)) {
+  throw "admin.html shifrlanmagan ko'rinadi — yuklash to'xtatildi. Avval lock-admin.ps1 ni ishga tushiring."
 }
 
 # Mavjud fayllarning sha'lari (yangilash uchun kerak)
@@ -59,8 +65,23 @@ foreach ($f in $files) {
   $done++
   Write-Host "  yuklandi: $rel"
 }
+
+# Lokalda o'chirilgan fayllarni repodan ham o'chiramiz (masalan, eski ochiq admin fayllari)
+$local = @{}
+foreach ($f in $files) { $local[($f.FullName.Substring($root.Length + 1) -replace '\\', '/')] = $true }
+$removed = 0
+foreach ($rel in @($existing.Keys)) {
+  if ($local.ContainsKey($rel)) { continue }
+  $body = @{ message = "$Message`: $rel o'chirildi"; sha = $existing[$rel] }
+  [IO.File]::WriteAllText($tmp, ($body | ConvertTo-Json -Compress), (New-Object Text.UTF8Encoding($false)))
+  $path = ($rel -split '/' | ForEach-Object { [Uri]::EscapeDataString($_) }) -join '/'
+  & $gh api "repos/$full/contents/$path" -X DELETE --input $tmp --silent
+  if ($LASTEXITCODE -ne 0) { throw "O'chirilmadi: $rel" }
+  $removed++
+  Write-Host "  o'chirildi: $rel"
+}
 Remove-Item $tmp -ErrorAction SilentlyContinue
-Write-Host "$done ta fayl yuklandi."
+Write-Host "$done ta fayl yuklandi, $removed ta fayl o'chirildi."
 
 # 3) GitHub Pages'ni yoqamiz (main / root)
 & $gh api "repos/$full/pages" --silent 2>$null
