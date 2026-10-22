@@ -12,7 +12,13 @@ Build kerak emas: oddiy HTML, CSS va JavaScript.
 - 🧾 **Chek ko'rinishidagi savat** — kompyuterda doim o'ng tomonda, telefonda pastdan chiqadi
 - 🎟 **Promokodlar** — `OPUS10` (−10%), `FIRE20` (−20%, 200 000 so'mdan), `BEPUL` (bepul yetkazish)
 - 💳 **To'lov** — Click, Payme, Uzum Bank (QR kod oynasi), Uzcard/Humo/Visa/Mastercard karta (SMS kod), naqd
-- 📍 **Jonli kuzatish** — buyurtma raqami bo'yicha: Qabul qilindi → Oshxonada → Yo'lda → Yetkazildi
+- 📍 **Jonli kuzatish** — buyurtma raqami bo'yicha: Qabul qilindi → Oshxonada → Yo'lda → Yetkazildi; tugagan buyurtmani 🔁 bir bosishda qayta buyurtma qilish
+- 🔎 **Filtr va saralash** — Hit / Yangi / Achchiq / 600 kkal gacha; reyting yoki narx bo'yicha
+- 👌 **"Bunga mos keladi"** — savatda yetishmayotgan ichimlik, gazak yoki desert taklif qilinadi
+- 🎡 **Omad g'ildiragi** — kuniga 1 marta: chegirma (savatga avtomatik qo'llanadi) yoki bonus
+- 💎 **Opus Bonus** — har buyurtmadan 5% keshbek, keyingi buyurtmaning 50% gacha to'lash mumkin
+- ⭐ **Mijozlar fikri** — reyting taqsimoti va suriladigan fikrlar
+- 🏪 **Filiallar** — 3 ta filial, "hozir ochiq/yopiq" holati, qo'ng'iroq va xarita havolasi
 
 ## 🛠 Admin panel — `admin.html`
 
