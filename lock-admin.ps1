@@ -7,7 +7,8 @@
 # Parol hech qayerga saqlanmaydi. Uni unutsangiz — skriptni qayta ishga tushirib yangi parol qo'ying.
 param(
   [switch]$Publish,
-  [string]$Password  # faqat avtomatik sinov uchun; odatda bo'sh qoldiring — skript o'zi so'raydi
+  [string]$Password,  # faqat avtomatik sinov uchun; odatda bo'sh qoldiring — skript o'zi so'raydi
+  [string]$Out        # faqat sinov uchun: natijani boshqa faylga yozish (asl admin.html'ga tegmaydi)
 )
 $ErrorActionPreference = "Stop"
 $root = $PSScriptRoot
@@ -165,7 +166,7 @@ $gate = @'
 </html>
 '@
 
-$out = Join-Path $root "admin.html"
+$out = if ($Out) { $Out } else { Join-Path $root "admin.html" }
 [IO.File]::WriteAllText($out, $gate.Replace("__PAYLOAD__", $payload), $utf8)
 $Password = $null; $a = $null; $b = $null
 Write-Host ""
