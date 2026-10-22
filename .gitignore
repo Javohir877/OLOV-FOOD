@@ -1,0 +1,10 @@
+node_modules/
+dist/
+dist-admin/
+.claude/
+_old/
+# Admin panel manbasi va shifrlangan natija GitHub'dagi manba tarmog'iga yuklanmaydi
+src/admin/
+admin.html
+admin.locked.html
+lock-admin.log
