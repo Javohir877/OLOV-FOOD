@@ -96,6 +96,11 @@ const PROMO_CODES = {
 
 const DELIVERY = { fee: 12000, freeFrom: 150000, minOrder: 30000 };
 
+// Yangi buyurtmalar shu Telegram chatga xabar bo'lib keladi.
+// token — @BotFather bergan bot kaliti, chatId — xabar boradigan chat (bo'sh bo'lsa, yuborilmaydi).
+// Diqqat: bu qiymatlar sayt kodida hammaga ko'rinadi; kalit oshkor bo'lsa, @BotFather'da /revoke qiling.
+const TELEGRAM = { token: "8906044907:AAFOLF-r-gv3TmeI6j5ACjUa5KuONW3NKno", chatId: "5402486152" };
+
 // Opus Bonus: har buyurtmadan keshbek; bonus bilan buyurtmaning ko'pi bilan maxShare foizini to'lash mumkin
 const BONUS = { rate: 5, maxShare: 50 };
 
