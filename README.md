@@ -1,90 +1,84 @@
 # 🍔 OPUS FOOD
 
-"Issiq. Shirali. Tez." — fast food do'koni uchun ko'cha-afishasi uslubidagi veb-sayt.
-Build kerak emas: oddiy HTML, CSS va JavaScript.
+"Issiq. Shirali. Tez." — fast food do'koni uchun veb-sayt va admin panel. **React 18 + Vite** da yozilgan.
+
+- Sayt: https://javohir877.github.io/OPUS-FOOD/
+- Admin: https://javohir877.github.io/OPUS-FOOD/admin.html (parol bilan shifrlangan)
+- Manba kodi: shu repozitoriyning **`source`** tarmog'i (`main` tarmog'ida yig'ilgan tayyor sayt turadi)
 
 ## Imkoniyatlar
 
-- 🍔 **Jonli burger** — qatlamlari "nafas oladi", ko'z qisadi, sichqonchaga ergashadi, bosilsa sakraydi va ingredientlar sochiladi
-- 🧩 **Kombo yig'uvchi** — asosiy taom + gazak + ichimlik tanlang, −15% chegirma avtomatik
-- 📋 **Menyu** — chap tomonda kategoriyalar paneli (scroll bilan avtomatik belgilanadi), qidiruv
-- ⚙️ **Taomni sozlash** — o'lcham (XL, 35 sm...) va qo'shimchalar (pishloq, bekon...) narxi bilan
-- 🧾 **Chek ko'rinishidagi savat** — kompyuterda doim o'ng tomonda, telefonda pastdan chiqadi
-- 🎟 **Promokodlar** — `OPUS10` (−10%), `FIRE20` (−20%, 200 000 so'mdan), `BEPUL` (bepul yetkazish)
-- 💳 **To'lov** — Click, Payme, Uzum Bank (QR kod oynasi), Uzcard/Humo/Visa/Mastercard karta (SMS kod), naqd
-- 📍 **Jonli kuzatish** — buyurtma raqami bo'yicha: Qabul qilindi → Oshxonada → Yo'lda → Yetkazildi; tugagan buyurtmani 🔁 bir bosishda qayta buyurtma qilish
-- 🔎 **Filtr va saralash** — Hit / Yangi / Achchiq / 600 kkal gacha; reyting yoki narx bo'yicha
-- 👌 **"Bunga mos keladi"** — savatda yetishmayotgan ichimlik, gazak yoki desert taklif qilinadi
-- 🎡 **Omad g'ildiragi** — kuniga 1 marta: chegirma (savatga avtomatik qo'llanadi) yoki bonus
-- 💎 **Opus Bonus** — har buyurtmadan 5% keshbek, keyingi buyurtmaning 50% gacha to'lash mumkin
-- ⭐ **Mijozlar fikri** — reyting taqsimoti va suriladigan fikrlar
-- 🏪 **Filiallar** — 3 ta filial, "hozir ochiq/yopiq" holati, qo'ng'iroq va xarita havolasi
+- 🍔 **Jonli burger** — qatlamlari "nafas oladi", ko'z qisadi, sichqonchaga ergashadi, bosilsa sakraydi
+- 🧩 **Kombo yig'uvchi** — asosiy taom + gazak + ichimlik, chegirma avtomatik
+- 📋 **Menyu** — kategoriyalar paneli, qidiruv, filtr (Hit / Yangi / Achchiq / 600 kkal gacha) va saralash
+- ⚙️ **Taomni sozlash** — o'lcham va qo'shimchalar narxi bilan
+- 🧾 **Savat** — kompyuterda o'ngda, telefonda pastdan chiqadi; "Bunga mos keladi" takliflari
+- 🎟 **Promokodlar** — `OPUS10`, `FIRE20`, `BEPUL` (admin'da yangisini qo'shish mumkin)
+- 💳 **To'lov** — Click, Payme, Uzum (QR oynasi), Uzcard/Humo/Visa/Mastercard (SMS kod), naqd — *namuna rejimida*
+- 📍 **Jonli kuzatish** va 🔁 **qayta buyurtma**
+- 🎡 **Omad g'ildiragi** va 💎 **Opus Bonus** (5% keshbek)
+- ⭐ **Mijozlar fikri**, 🏪 **filiallar** (hozir ochiq/yopiq)
+- 🔔 **Telegram** — har yangi buyurtma @opusfoodbot orqali egasiga xabar bo'lib keladi
 
-## 🛠 Admin panel — `admin.html`
-
-🔒 **Panel shifrlangan.** Saytdagi `admin.html` ichida panelning o'zi emas, faqat parol so'raydigan oyna va
-AES-256 bilan shifrlangan ma'lumot bor. Parolsiz panelning na ko'rinishi, na kodi ochiladi; parol hech qayerda
-(repoda ham) saqlanmaydi. Panelning ochiq manbasi `admin-src/` papkasida — u faqat egasining kompyuterida turadi
-va GitHub'ga **hech qachon yuklanmaydi**.
-
-**Parol qo'yish yoki almashtirish** (loyiha papkasida; parolni so'raydi, shifrlaydi va saytga yuklaydi):
+## Ishga tushirish (dasturchi uchun)
 
 ```
-powershell -ExecutionPolicy Bypass -File lock-admin.ps1 -Publish
-```
-
-Parolni unutsangiz — shu buyruqni qayta ishga tushirib yangisini qo'ying.
-
-| Bo'lim | Imkoniyatlar |
-|---|---|
-| 📊 Dashboard | Tushum, buyurtmalar soni, o'rtacha chek, bekor qilinganlar; kunlik tushum grafigi (jadval ko'rinishi ham bor); eng ko'p sotilgan taomlar; holatlar; to'lov usullari |
-| 🧾 Buyurtmalar | Holat bo'yicha filtr, qidiruv; holatni o'zgartirish (mijoz saytda jonli ko'radi); tafsilot paneli; bekor qilish; yangi buyurtmada 🔔 ovoz va bildirishnoma |
-| 🍔 Menyu | Taom qo'shish/tahrirlash/o'chirish, narx, rasm (galereyadan, yuklash yoki havola), belgi (Hit/Yangi/Achchiq), stop-list |
-| 🎟 Promokodlar | Foizli yoki bepul yetkazish kodlari, minimal summa, necha marta ishlatilgani |
-| ⚙️ Sozlamalar | Yetkazish narxi, bepul yetkazish chegarasi, minimal buyurtma, kombo chegirmasi, demo rejim, zaxira (JSON eksport/import), demo buyurtmalar |
-
-> ⚠️ Hozircha ma'lumotlar **brauzer xotirasida** (localStorage) saqlanadi: admin panel va sayt **bitta brauzerda** ochilganda
-> to'liq ishlaydi. Boshqa qurilmalardagi mijozlar buyurtmalarini qabul qilish uchun backend (masalan, Firebase yoki
-> Supabase) ulash kerak.
-
-## 🌐 Sayt manzili
-
-- Sayt: https://javohir877.github.io/OPUS-FOOD/
-- Admin: https://javohir877.github.io/OPUS-FOOD/admin.html
-
-**Yangilash** (fayllarni o'zgartirgandan keyin, faqat o'zgargan fayllar yuklanadi; Git kerak emas, GitHub CLI yetarli):
-
-```
-powershell -ExecutionPolicy Bypass -File publish-github.ps1 -Message "Nima o'zgardi"
+npm install
+npm run dev          # sayt: http://localhost:5173
+npm run dev:admin    # admin panel: http://localhost:5174/admin.html
+npm run build        # dist/ (sayt) va dist-admin/ (admin) yig'iladi
 ```
 
 ## Tuzilma
 
 ```
-index.html          — sahifa
-admin.html          — shifrlangan boshqaruv paneli (lock-admin.ps1 yasaydi)
-css/style.css       — sayt dizayni
-js/data.js          — menyu, sozlamalar, kombo, promokodlar, to'lov usullari, Store (sayt va admin uchun umumiy)
-js/app.js           — savat, checkout, to'lov, kuzatish, animatsiyalar
-admin-src/          — panelning ochiq manbasi (faqat lokal, GitHub'ga yuklanmaydi)
-lock-admin.ps1      — panelni parol bilan shifrlaydi
-publish-github.ps1  — saytni GitHub'ga yuklaydi
-assets/img/         — taom rasmlari
-assets/pay/         — Click va Uzcard logotiplari (SVG)
+index.html              — saytning kirish nuqtasi
+src/site/               — sayt: App, holat (shop.jsx) va komponentlar
+src/shared/             — sayt va admin uchun umumiy: menyu ma'lumotlari, savat hisobi, Store, Telegram
+src/styles/site.css     — sayt dizayni
+public/assets/          — taom rasmlari, to'lov logotiplari, brend logotiplari
+src/admin/, admin.html  — admin panel manbasi (faqat egasining kompyuterida, GitHub'ga yuklanmaydi)
+lock-admin.ps1          — admin panelni yig'ib, parol bilan shifrlaydi (admin.locked.html)
+publish-github.ps1      — saytni yig'ib main'ga, manba kodini source tarmog'iga yuklaydi
 ```
+
+Menyu, narxlar, filiallar va fikrlar: `src/shared/data.js`.
+
+## Yangilash
+
+Saytni o'zgartirgandan keyin (loyiha papkasida):
+
+```
+powershell -ExecutionPolicy Bypass -File publish-github.ps1 -Message "Nima o'zgardi"
+```
+
+Admin panelni o'zgartirgandan keyin yoki parolni almashtirish uchun (parol so'raydi, shifrlaydi va saytni yuklaydi):
+
+```
+powershell -ExecutionPolicy Bypass -File lock-admin.ps1 -Publish
+```
+
+## 🔒 Admin panel himoyasi
+
+Saytdagi `admin.html` ichida panelning o'zi emas, faqat parol oynasi va AES-256 bilan shifrlangan ma'lumot bor.
+Parolsiz panelning na ko'rinishi, na kodi ochiladi; parol hech qayerda saqlanmaydi.
+
+| Bo'lim | Imkoniyatlar |
+|---|---|
+| 📊 Dashboard | Tushum, buyurtmalar, o'rtacha chek; kunlik tushum grafigi; eng ko'p sotilganlar; holatlar; to'lov usullari |
+| 🧾 Buyurtmalar | Filtr, qidiruv, holatni o'zgartirish, tafsilot paneli, yangi buyurtmada 🔔 ovoz |
+| 🍔 Menyu | Taom qo'shish/tahrirlash/o'chirish, rasm yuklash, belgi, stop-list |
+| 🎟 Promokodlar | Foizli yoki bepul yetkazish kodlari, minimal summa |
+| ⚙️ Sozlamalar | Yetkazish narxlari, kombo chegirmasi, demo rejim, zaxira (JSON) |
+
+> ⚠️ Ma'lumotlar **brauzer xotirasida** (localStorage) saqlanadi: admin panel faqat o'zi ochilgan brauzerdagi
+> buyurtmalarni ko'radi. Barcha qurilmalardan kelgan buyurtmalar Telegram'ga keladi. Ularni admin panelda ham
+> ko'rish uchun backend (Firebase yoki Supabase) kerak.
 
 ## Eslatmalar
 
-- To'lovlar **demo rejimida** — pul yechilmaydi. Haqiqiy Click/Payme/Uzum uchun merchant ID va backend kerak.
-- Buyurtmalar brauzerning `localStorage`'ida (`opus_orders`) saqlanadi. Kuzatuvdagi holat demo uchun vaqt bilan
-  o'zgaradi; admin panel `status` + `statusManual: true` orqali uni qo'lda boshqaradi.
-- Barcha rasmlar loyiha ichida: taomlar `assets/img/` ([Unsplash](https://unsplash.com) suratlari), logotiplar `assets/pay/`
-  (Payme, Uzum, Visa, Mastercard — Wikimedia Commons; Click, Uzcard, Humo — rasmiy saytlaridan). Logotiplar tegishli
-  kompaniyalarning savdo belgilari. Mahalliy rasm topilmasa, sayt avtomatik Unsplash'dagi nusxasini yuklaydi.
+- To'lovlar **namuna rejimida** — pul yechilmaydi. Haqiqiy Click/Payme/Uzum uchun merchant ID va backend kerak.
+- Telegram bot kaliti sayt kodida ochiq turadi; suiiste'mol bo'lsa @BotFather'da `/revoke` qiling va `src/shared/data.js` dagi `TELEGRAM` ni yangilang.
+- Taom rasmlari — [Unsplash](https://unsplash.com). Payme, Uzum, Visa, Mastercard logotiplari — Wikimedia Commons;
+  Click, Uzcard, Humo — rasmiy saytlaridan. Logotiplar tegishli kompaniyalarning savdo belgilari.
 - Shriftlar: Bricolage Grotesque (sarlavhalar), Bebas Neue (narxlar), Plus Jakarta Sans (matn).
-
-## Keyingi qadamlar
-
-- [x] Admin panel (mahsulotlar, buyurtmalar holati, statistika)
-- [ ] GitHub Pages'ga joylash
-- [ ] Backend (Firebase/Supabase) — buyurtmalarni barcha qurilmalardan qabul qilish
