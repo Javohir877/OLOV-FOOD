@@ -780,6 +780,11 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; line-height: 1.02; m
 
 /* ---------- Ilovani o'rnatish ---------- */
 .install-btn { white-space: nowrap; }
+.sound-btn { flex: none; width: 44px; height: 44px; border-radius: 14px; background: var(--glass-2); border: 1px solid var(--stroke); display: grid; place-items: center; font-size: 17px; transition: border-color .2s, transform .15s; }
+.sound-btn:hover { border-color: var(--stroke-2); }
+.sound-btn:active { transform: scale(.92); }
+.sound-btn.is-off { opacity: .65; }
+@media (max-width: 380px) { .sound-btn { width: 40px; height: 40px; font-size: 15px; } }
 @media (max-width: 1180px) { .install-btn .hide-sm { display: none; } }
 
 /* ---------- Moslashuvchanlik ---------- */
