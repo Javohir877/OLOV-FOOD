@@ -6,6 +6,7 @@ import { dishUnit, defaultSize } from "../../shared/cart.js";
 import { fmt, som } from "../../shared/format.js";
 import { Img } from "../../shared/Img.jsx";
 import { useShop } from "../shop.jsx";
+import { sound } from "../../shared/sound.js";
 import { BADGES } from "./Menu.jsx";
 
 /* Har doim joyida turadigan oyna — ochilish/yopilish animatsiyasi CSS orqali */
@@ -113,7 +114,7 @@ function RateBox({ o }) {
       <b>Taom sizga yoqdimi?</b>
       <div className="rate__stars" onMouseLeave={() => setHover(0)}>
         {[1, 2, 3, 4, 5].map((n) => (
-          <button key={n} type="button" className={n <= shown ? "is-on" : ""} onMouseEnter={() => setHover(n)} onClick={() => setStars(n)} aria-label={`${n} yulduz`}>★</button>
+          <button key={n} type="button" className={n <= shown ? "is-on" : ""} onMouseEnter={() => setHover(n)} onClick={() => { setStars(n); sound.play("star", n); }} aria-label={`${n} yulduz`}>★</button>
         ))}
         <span>{labels[shown]}</span>
       </div>
