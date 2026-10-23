@@ -97,6 +97,36 @@ const STAGES = [
 ];
 const PICKUP_STAGES = { delivering: { icon: "🏪", name: "Tayyor", note: "Buyurtmani olib ketishingiz mumkin" }, done: { icon: "🎉", name: "Topshirildi", note: "Yoqimli ishtaha!" } };
 
+/* Yetkazilgandan keyin baho: 1–5 yulduz va izoh */
+function RateBox({ o }) {
+  const { rateOrder } = useShop();
+  const [stars, setStars] = useState(0);
+  const [hover, setHover] = useState(0);
+  const [comment, setComment] = useState("");
+  if (o.rating) {
+    return <div className="rate rate--done">Bahoyingiz: <b>{"★".repeat(o.rating.stars)}{"☆".repeat(5 - o.rating.stars)}</b> — rahmat! 🧡</div>;
+  }
+  const labels = ["", "Yomon 😞", "Qoniqarsiz 😕", "Yaxshi 🙂", "Juda yaxshi 😋", "Zo'r! 🔥"];
+  const shown = hover || stars;
+  return (
+    <div className="rate">
+      <b>Taom sizga yoqdimi?</b>
+      <div className="rate__stars" onMouseLeave={() => setHover(0)}>
+        {[1, 2, 3, 4, 5].map((n) => (
+          <button key={n} type="button" className={n <= shown ? "is-on" : ""} onMouseEnter={() => setHover(n)} onClick={() => setStars(n)} aria-label={`${n} yulduz`}>★</button>
+        ))}
+        <span>{labels[shown]}</span>
+      </div>
+      {stars > 0 && (
+        <>
+          <textarea placeholder={stars >= 4 ? "Nima ayniqsa yoqdi? (ixtiyoriy)" : "Nimani yaxshilashimiz kerak?"} value={comment} onChange={(e) => setComment(e.target.value)} maxLength={300} />
+          <button className="btn btn--fire btn--block" type="button" onClick={() => rateOrder(o.id, stars, comment)}>Bahoni yuborish</button>
+        </>
+      )}
+    </div>
+  );
+}
+
 function TrackerBody({ id, fresh, onClose }) {
   const { reorder, ORDER_FLOW } = useShop();
   const [, tick] = useState(0);
@@ -122,7 +152,7 @@ function TrackerBody({ id, fresh, onClose }) {
       <div className="tr-head">
         <span className="tr-id">{o.id}</span>
         <h3>{fresh && idx === 0 ? "Rahmat! Buyurtma qabul qilindi" : stages[idx].name}</h3>
-        <p>{idx < 3 ? `Taxminan ${[30, 22, 10][idx]} daqiqada ${pickup ? "tayyor bo'ladi" : "yetib boradi"}` : stages[3].note}</p>
+        <p>{o.preorder && idx === 0 ? `🌙 Oldindan buyurtma — ochilishimiz bilan (${SETTINGS.open}) tayyorlaymiz` : idx < 3 ? `Taxminan ${[30, 22, 10][idx]} daqiqada ${pickup ? "tayyor bo'ladi" : "yetib boradi"}` : stages[3].note}</p>
       </div>
       <div className="road">
         <span className="road__shop">🏪</span><span className="road__home">{pickup ? "🙋" : "🏠"}</span>
@@ -133,8 +163,10 @@ function TrackerBody({ id, fresh, onClose }) {
           <li key={s.id} className={i < idx ? "done" : i === idx ? "now" : ""}><i>{i < idx ? "✓" : s.icon}</i><div>{s.name}<small>{s.note}</small></div></li>
         ))}
       </ol>
+      {idx === 3 && <RateBox o={o} />}
       <div className="tr-sum">
         {o.items.map((i, k) => <div key={k}><span>{i.name} × {i.qty}</span><b>{som(i.price * i.qty)}</b></div>)}
+        {o.tip > 0 && <div><span>💝 Choy puli</span><b>{som(o.tip)}</b></div>}
         <div className="tr-sum__total"><span>{o.payment.label}</span><b>{som(o.total)}</b></div>
       </div>
       <div className="tr-actions">
