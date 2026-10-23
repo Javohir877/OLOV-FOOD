@@ -729,6 +729,59 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; line-height: 1.02; m
 
 .tr-actions { flex-wrap: wrap; }
 
+/* ---------- Ochiq / yopiq ---------- */
+.dot--off { background: var(--red); box-shadow: 0 0 0 4px rgba(255, 82, 82, .15); animation: none; }
+.co-closed { margin: -12px 0 20px; background: rgba(90, 169, 255, .08); border-color: rgba(90, 169, 255, .3); color: #CFE3FF; }
+
+/* ---------- Kun taklifi ---------- */
+.deal { max-width: 1200px; margin: 0 auto; padding: 70px 24px 10px; }
+.deal__card {
+  position: relative; display: grid; grid-template-columns: 1fr 1.2fr; align-items: center; gap: 36px; padding: 26px; border-radius: 32px; overflow: hidden;
+  background: radial-gradient(500px 300px at 15% 50%, rgba(255, 90, 26, .28), transparent 70%), linear-gradient(160deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .02));
+  border: 1px solid rgba(255, 106, 26, .4); box-shadow: 0 30px 70px -30px rgba(255, 90, 26, .5);
+}
+.deal__img { position: relative; aspect-ratio: 1; border-radius: 24px; overflow: hidden; cursor: pointer; background: var(--bg-2); }
+.deal__img img, .deal__img .img-fallback { width: 100%; height: 100%; object-fit: cover; transition: transform .6s; font-size: 90px; }
+.deal__img:hover img { transform: scale(1.06); }
+.deal__pct { position: absolute; z-index: 1; top: 16px; left: 16px; padding: 8px 14px; border-radius: 14px; background: var(--flame); font-family: var(--money); font-size: 34px; line-height: 1; letter-spacing: .03em; box-shadow: var(--glow); transform: rotate(-6deg); }
+.deal__body { display: grid; gap: 14px; justify-items: start; }
+.deal__body h2 { font-size: clamp(32px, 4.4vw, 54px); }
+.deal__body > p { margin: 0; color: var(--muted); font-size: 16px; max-width: 460px; }
+.deal__price { display: flex; align-items: baseline; flex-wrap: wrap; gap: 12px; }
+.deal__price s { color: var(--muted); font-weight: 600; font-size: 18px; }
+.deal__price .money { font-size: 54px; line-height: 1; background: var(--money-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.deal__price .money small { font-family: var(--body); font-size: 15px; -webkit-text-fill-color: var(--muted); }
+.deal__timer { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; color: var(--muted); font-weight: 600; font-size: 13px; }
+.deal__timer > span { margin-right: 4px; }
+.deal__timer div { display: grid; justify-items: center; min-width: 58px; padding: 8px 6px; border-radius: 14px; background: rgba(0, 0, 0, .35); border: 1px solid var(--stroke-2); }
+.deal__timer b { font-family: var(--money); font-size: 30px; font-weight: 400; line-height: 1; color: var(--text); }
+.deal__timer small { font-size: 10.5px; }
+.deal__timer i { font-style: normal; font-family: var(--money); font-size: 26px; color: var(--fire-2); }
+.price__old { display: block; font-size: 15px; color: var(--muted); -webkit-text-fill-color: var(--muted); text-decoration: line-through; line-height: 1; }
+
+/* ---------- Choy puli ---------- */
+.co-tip h3 small { font-family: var(--body); font-weight: 500; font-size: 13px; }
+.tips { display: flex; flex-wrap: wrap; gap: 8px; }
+.tip-btn { padding: 11px 16px; border-radius: 14px; background: rgba(0, 0, 0, .22); border: 1px solid var(--stroke); font-weight: 700; transition: .2s; }
+.tip-btn:hover { border-color: var(--stroke-2); }
+.tip-btn.is-on { border-color: var(--fire); background: rgba(255, 90, 26, .12); box-shadow: 0 0 0 1px var(--fire); }
+
+/* ---------- Baholash ---------- */
+.rate { display: grid; gap: 10px; margin-top: 16px; padding: 16px; border-radius: 18px; background: rgba(255, 181, 71, .07); border: 1px solid rgba(255, 181, 71, .28); }
+.rate--done { color: var(--muted); font-weight: 600; text-align: center; }
+.rate--done b { color: var(--amber); letter-spacing: 2px; }
+.rate__stars { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.rate__stars button { font-size: 34px; line-height: 1; color: rgba(255, 255, 255, .2); transition: transform .15s, color .15s; padding: 0 2px; }
+.rate__stars button.is-on { color: var(--amber); text-shadow: 0 0 14px rgba(255, 181, 71, .6); }
+.rate__stars button:hover { transform: scale(1.15); }
+.rate__stars span { margin-left: 8px; font-weight: 700; color: var(--text-2, #D6CBC3); }
+.rate textarea { min-height: 70px; padding: 10px 12px; border-radius: 12px; background: rgba(0, 0, 0, .3); border: 1px solid var(--stroke); outline: 0; resize: vertical; font-size: 15px; }
+.rate textarea:focus { border-color: var(--fire); }
+
+/* ---------- Ilovani o'rnatish ---------- */
+.install-btn { white-space: nowrap; }
+@media (max-width: 1180px) { .install-btn .hide-sm { display: none; } }
+
 /* ---------- Moslashuvchanlik ---------- */
 @media (max-width: 1280px) {
   .menu { grid-template-columns: 210px minmax(0, 1fr); }
@@ -749,6 +802,8 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; line-height: 1.02; m
   .kitchen__photos { height: 420px; max-width: 560px; width: 100%; margin: 0 auto; }
   .co-grid { grid-template-columns: 1fr; }
   .co-side { position: static; }
+  .deal__card { grid-template-columns: 1fr; gap: 20px; padding: 18px; }
+  .deal__img { aspect-ratio: 16 / 10; }
   .wheel { grid-template-columns: 1fr; text-align: center; padding: 70px 24px; gap: 30px; }
   .wheel__text > p, .bonus-card { margin-left: auto; margin-right: auto; }
   .bonus-card { text-align: left; }
@@ -843,6 +898,12 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; line-height: 1.02; m
   .branches { padding: 60px 14px 20px; }
   .branches__grid { grid-template-columns: 1fr; }
   .tr-actions .btn { flex: 1 1 40%; }
+  .deal { padding: 50px 14px 0; }
+  .deal__price .money { font-size: 44px; }
+  .deal__timer div { min-width: 50px; }
+  .deal__timer b { font-size: 26px; }
+  .deal .btn { width: 100%; }
+  .tip-btn { flex: 1 1 40%; }
   .toasts { left: 12px; right: 12px; bottom: 84px; width: auto; }
 }
 @media (max-width: 400px) {
