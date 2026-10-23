@@ -8,6 +8,7 @@ import { som } from "../shared/format.js";
 import { addToCart, bonusBalance, comboLine, defaultSize, dishLine, earnedFor, lineInfo, sanitizeCart, setDeal, totals as calcTotals } from "../shared/cart.js";
 import { notifyRating, notifyTelegram } from "../shared/telegram.js";
 import { dealToday, isOpenNow } from "../shared/hours.js";
+import { sound } from "../shared/sound.js";
 
 const ShopContext = createContext(null);
 export const useShop = () => useContext(ShopContext);
@@ -52,6 +53,7 @@ export function ShopProvider({ children }) {
   const toast = useCallback((msg, bad) => {
     const id = ++toastId.current;
     setToasts((t) => [...t, { id, msg, bad }]);
+    if (bad) sound.play("error");
     setTimeout(() => setToasts((t) => t.map((x) => (x.id === id ? { ...x, out: true } : x))), 2400);
     setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 2700);
   }, []);
@@ -60,6 +62,7 @@ export function ShopProvider({ children }) {
   const addLine = useCallback((line, name) => {
     setCart((c) => addToCart(c, line));
     setBumpKey((k) => k + 1);
+    sound.play("add");
     toast(`${name} savatga qo'shildi`);
   }, [toast]);
 
@@ -71,6 +74,7 @@ export function ShopProvider({ children }) {
   const addCombo = useCallback((ids) => addLine(comboLine(ids, byId), "Kombo 🔥"), [byId, addLine]);
 
   const changeQty = useCallback((key, delta) => {
+    sound.play(delta > 0 ? "plus" : "minus");
     setCart((c) => c.map((l) => (l.key === key ? { ...l, qty: l.qty + delta } : l)).filter((l) => l.qty > 0));
   }, []);
 
@@ -80,6 +84,7 @@ export function ShopProvider({ children }) {
   const openTicket = useCallback(() => {
     if (isDocked()) { document.getElementById("menu").scrollIntoView({ behavior: "smooth" }); return; }
     setTicketOpen(true);
+    sound.play("open");
   }, []);
 
   const openCheckout = useCallback(() => {
@@ -124,6 +129,7 @@ export function ShopProvider({ children }) {
     setPay(null);
     setCheckoutOpen(false);
     setConfettiKey((k) => k + 1);
+    sound.play("order");
     setTracker({ id: order.id, fresh: true });
     setTimeout(() => toast(`💎 +${som(earned)} bonus hisobingizga tushdi`), 1200);
   }, [cart, promo, orderType, useBonus, tip, payMethod, byId, toast]);
@@ -134,6 +140,7 @@ export function ShopProvider({ children }) {
     const o = Store.orders().find((x) => x.id === id);
     if (o) notifyRating(o);
     setOrders(Store.orders());
+    sound.play(stars >= 4 ? "win" : "success");
     toast(stars >= 4 ? "Rahmat! Bahoyingiz biz uchun muhim 🧡" : "Rahmat! Kamchilikni albatta tuzatamiz 🙏");
   }, [toast]);
 
