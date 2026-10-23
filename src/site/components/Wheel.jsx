@@ -53,9 +53,9 @@ export default function Wheel() {
       <div className="wheel__text">
         <span className="tag">🎁 Har kuni bepul</span>
         <h2>Omad <span className="hl">g'ildiragi</span></h2>
-        <p>Kuniga bir marta aylantiring va chegirma yoki Opus Bonus yuting. Yutgan chegirmangiz savatga avtomatik qo'llanadi.</p>
+        <p>Kuniga bir marta aylantiring va chegirma yoki Olov Bonus yuting. Yutgan chegirmangiz savatga avtomatik qo'llanadi.</p>
         <div className="bonus-card">
-          <div><small>Opus Bonus balansingiz</small><b id="bonusBalance">{som(bonus)}</b></div>
+          <div><small>Olov Bonus balansingiz</small><b id="bonusBalance">{som(bonus)}</b></div>
           <p>Har buyurtmadan <b>{BONUS.rate}%</b> keshbek. Bonus bilan buyurtmaning yarmigacha to'lash mumkin.</p>
         </div>
       </div>
