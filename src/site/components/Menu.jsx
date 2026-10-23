@@ -15,8 +15,9 @@ const SORTS = {
 };
 
 function DishCard({ p, i, inCart }) {
-  const { setDishId, addDish } = useShop();
-  const b = BADGES[p.badge];
+  const { setDishId, addDish, deal } = useShop();
+  const isDeal = deal && deal.product.id === p.id;
+  const b = isDeal ? ["badge--hot", `🔥 −${deal.percent}%`] : BADGES[p.badge];
   return (
     <article
       className="dish" style={{ animationDelay: `${i * 50}ms` }} tabIndex={0} aria-label={p.name}
@@ -29,7 +30,7 @@ function DishCard({ p, i, inCart }) {
         <p>{p.desc}</p>
         <span className="dish__meta"><b>★ {p.rating.toFixed(1)}</b> · {p.weight} · {p.kcal} kkal</span>
         <div className="dish__buy">
-          <span className="price">{fmt(p.price)} <small>so'm</small></span>
+          <span className="price">{isDeal && <s className="price__old">{fmt(p.price)}</s>}{fmt(isDeal ? deal.price : p.price)} <small>so'm</small></span>
           {/* "+" standart variantni darhol qo'shadi; kartochkani bosish sozlash oynasini ochadi */}
           <button className="plus" aria-label={`${p.name} — savatga qo'shish`} onClick={(e) => { e.stopPropagation(); addDish(p.id); }}>+</button>
         </div>
