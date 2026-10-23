@@ -1,5 +1,5 @@
 /* =========================================================
-   OPUS FOOD — menyu va sozlamalar (sayt + admin uchun umumiy)
+   OLOV FOOD — menyu va sozlamalar (sayt + admin uchun umumiy)
    Admin paneldagi o'zgarishlar localStorage orqali shu qiymatlar
    ustiga yoziladi (pastdagi applyOverrides).
    ========================================================= */
@@ -47,8 +47,8 @@ export const OPTIONS = {
 
 // badge: "hit" | "new" | "hot"
 export const DEFAULT_PRODUCTS = [
-  { id: "burger-classic", cat: "burger", name: "Classic Burger", desc: "Mol go'shti kotleti, cheddar, pomidor, salat bargi va OPUS sousi.", price: 32000, weight: "260 g", kcal: 610, rating: 4.8, badge: "hit", img: img("1568901346375-23c9450c58cd") },
-  { id: "burger-double", cat: "burger", name: "Opus Double", desc: "Ikki qavat mol go'shti, ikki barobar cheddar, karamellangan piyoz.", price: 48000, weight: "380 g", kcal: 940, rating: 4.9, badge: "hit", img: img("1553979459-d2229ba7433b") },
+  { id: "burger-classic", cat: "burger", name: "Classic Burger", desc: "Mol go'shti kotleti, cheddar, pomidor, salat bargi va OLOV sousi.", price: 32000, weight: "260 g", kcal: 610, rating: 4.8, badge: "hit", img: img("1568901346375-23c9450c58cd") },
+  { id: "burger-double", cat: "burger", name: "Olov Double", desc: "Ikki qavat mol go'shti, ikki barobar cheddar, karamellangan piyoz.", price: 48000, weight: "380 g", kcal: 940, rating: 4.9, badge: "hit", img: img("1553979459-d2229ba7433b") },
   { id: "burger-bbq", cat: "burger", name: "BBQ Bacon Burger", desc: "Dudlangan mol bekoni, BBQ sousi, piyoz halqalari va cheddar.", price: 44000, weight: "320 g", kcal: 820, rating: 4.7, badge: "new", img: img("1550547660-d9450f859349") },
   { id: "burger-chicken", cat: "burger", name: "Crispy Chicken", desc: "Qarsildoq tovuq filesi, kole-slou va sarimsoqli mayonez.", price: 36000, weight: "280 g", kcal: 640, rating: 4.6, img: img("1606755962773-d324e0a13086") },
   { id: "burger-fire", cat: "burger", name: "Fire Burger", desc: "Jalapeño, chili sousi va pepper jack pishlog'i. Faqat jasurlar uchun!", price: 42000, weight: "300 g", kcal: 720, rating: 4.8, badge: "hot", img: img("1571091718767-18b5b1457add") },
@@ -59,11 +59,11 @@ export const DEFAULT_PRODUCTS = [
 
   { id: "lavash-classic", cat: "lavash", name: "Lavash Classic", desc: "Mol go'shti, pomidor, bodring, chips va maxfiy sous.", price: 34000, weight: "350 g", kcal: 690, rating: 4.8, badge: "hit", img: img("1626700051175-6818013e1d4f") },
   { id: "lavash-cheese", cat: "lavash", name: "Pishloqli Lavash", desc: "Tovuq go'shti, ikki xil pishloq va sarimsoqli sous.", price: 37000, weight: "370 g", kcal: 740, rating: 4.7, img: img("1529006557810-274b9b2fc783") },
-  { id: "shaurma", cat: "lavash", name: "Shaurma Opus", desc: "Grilda pishgan tovuq, tandir noni, qizil karam va sous.", price: 30000, weight: "320 g", kcal: 580, rating: 4.6, img: img("1561651823-34feb02250e4") },
+  { id: "shaurma", cat: "lavash", name: "Shaurma Olov", desc: "Grilda pishgan tovuq, tandir noni, qizil karam va sous.", price: 30000, weight: "320 g", kcal: 580, rating: 4.6, img: img("1561651823-34feb02250e4") },
 
   { id: "wings-hot", cat: "chicken", name: "Achchiq Qanotchalar", desc: "8 dona buffalo qanotchalar, sarimsoqli sous bilan.", price: 45000, weight: "8 dona", kcal: 760, rating: 4.8, badge: "hot", img: img("1567620832903-9fc6debc209f") },
   { id: "strips", cat: "chicken", name: "Tovuq Strips", desc: "6 dona qarsildoq tovuq bo'lakchalari va BBQ sousi.", price: 38000, weight: "6 dona", kcal: 540, rating: 4.7, img: img("1562967914-608f82629710") },
-  { id: "bucket", cat: "chicken", name: "Opus Bucket", desc: "12 bo'lak qovurilgan tovuq — butun oila uchun.", price: 115000, weight: "12 dona", kcal: 2400, rating: 4.9, badge: "new", img: img("1626082927389-6cd097cdc6ec") },
+  { id: "bucket", cat: "chicken", name: "Olov Bucket", desc: "12 bo'lak qovurilgan tovuq — butun oila uchun.", price: 115000, weight: "12 dona", kcal: 2400, rating: 4.9, badge: "new", img: img("1626082927389-6cd097cdc6ec") },
 
   { id: "hotdog-classic", cat: "hotdog", name: "Classic Hot-dog", desc: "Mol sosiskasi, xantal, ketchup va qovurilgan piyoz.", price: 22000, weight: "200 g", kcal: 420, rating: 4.5, img: img("1541214113241-21578d2d9b62") },
   { id: "hotdog-cheese", cat: "hotdog", name: "Cheese Dog", desc: "Mol sosiskasi, eritilgan cheddar va jalapeño.", price: 26000, weight: "230 g", kcal: 510, rating: 4.6, badge: "new", img: img("1619740455993-9e612b1af08a") },
@@ -91,7 +91,7 @@ export const COMBO = {
 };
 
 export const DEFAULT_PROMO_CODES = {
-  OPUS10: { type: "percent", value: 10, label: "−10%" },
+  OLOV10: { type: "percent", value: 10, label: "−10%" },
   FIRE20: { type: "percent", value: 20, label: "−20%", min: 200000 },
   BEPUL: { type: "delivery", label: "Bepul yetkazish" },
 };
@@ -105,7 +105,7 @@ export const DELIVERY = { ...DEFAULT_DELIVERY };
 // Diqqat: bu qiymatlar sayt kodida hammaga ko'rinadi; kalit oshkor bo'lsa, @BotFather'da /revoke qiling.
 export const TELEGRAM = { token: "8906044907:AAFOLF-r-gv3TmeI6j5ACjUa5KuONW3NKno", chatId: "5402486152" };
 
-// Opus Bonus: har buyurtmadan keshbek; bonus bilan buyurtmaning ko'pi bilan maxShare foizini to'lash mumkin
+// Olov Bonus: har buyurtmadan keshbek; bonus bilan buyurtmaning ko'pi bilan maxShare foizini to'lash mumkin
 export const BONUS = { rate: 5, maxShare: 50 };
 
 // Omad g'ildiragi — kuniga bir marta. weight: tushish ehtimoli (kattasi — tez-tez tushadi)
@@ -130,17 +130,17 @@ export const WHEEL_PROMOS = {
 
 // open/close: "HH:MM"; yopilish vaqti ochilishdan kichik bo'lsa — yarim tundan keyin yopiladi
 export const BRANCHES = [
-  { id: "markaz", name: "OPUS Markaz", area: "Yunusobod / Markaz", address: "Amir Temur ko'chasi, 1", phone: "+998 90 123 45 67", open: "10:00", close: "03:00", img: img("1561758033-d89a9ad46330"), perks: ["Ochiq oshxona", "Drive-thru", "Wi-Fi"] },
-  { id: "chilonzor", name: "OPUS Chilonzor", area: "Chilonzor", address: "Bunyodkor shoh ko'chasi, 42", phone: "+998 90 123 45 68", open: "09:00", close: "02:00", img: img("1513104890138-7c749659a591"), perks: ["Bolalar burchagi", "Avtoturargoh"] },
-  { id: "yunusobod", name: "OPUS Sergeli", area: "Sergeli", address: "Yangi Sergeli ko'chasi, 7", phone: "+998 90 123 45 69", open: "10:00", close: "00:00", img: img("1567620832903-9fc6debc209f"), perks: ["Yozgi terassa", "Karaoke juma kuni"] },
+  { id: "markaz", name: "OLOV Markaz", area: "Yunusobod / Markaz", address: "Amir Temur ko'chasi, 1", phone: "+998 90 123 45 67", open: "10:00", close: "03:00", img: img("1561758033-d89a9ad46330"), perks: ["Ochiq oshxona", "Drive-thru", "Wi-Fi"] },
+  { id: "chilonzor", name: "OLOV Chilonzor", area: "Chilonzor", address: "Bunyodkor shoh ko'chasi, 42", phone: "+998 90 123 45 68", open: "09:00", close: "02:00", img: img("1513104890138-7c749659a591"), perks: ["Bolalar burchagi", "Avtoturargoh"] },
+  { id: "yunusobod", name: "OLOV Sergeli", area: "Sergeli", address: "Yangi Sergeli ko'chasi, 7", phone: "+998 90 123 45 69", open: "10:00", close: "00:00", img: img("1567620832903-9fc6debc209f"), perks: ["Yozgi terassa", "Karaoke juma kuni"] },
 ];
 
 export const REVIEWS = [
-  { name: "Aziz R.", area: "Chilonzor", stars: 5, dish: "burger-double", text: "Toshkentdagi eng shirali burger! Opus Double'ni bir marta yeb ko'rgandan keyin boshqasiga qaramayman." },
+  { name: "Aziz R.", area: "Chilonzor", stars: 5, dish: "burger-double", text: "Toshkentdagi eng shirali burger! Olov Double'ni bir marta yeb ko'rgandan keyin boshqasiga qaramayman." },
   { name: "Madina K.", area: "Yunusobod", stars: 5, dish: "pizza-pepperoni", text: "25 daqiqada yetib keldi, pitsa hali issiq edi. Payme orqali to'lash juda qulay." },
   { name: "Jasur T.", area: "Mirzo Ulug'bek", stars: 5, dish: "wings-hot", text: "Achchiq qanotchalar — ofisdagi hamma uchun har juma kuni buyurtma qilamiz. Sous zo'r!" },
   { name: "Dilnoza A.", area: "Sergeli", stars: 4, dish: "lavash-cheese", text: "Pishloqli lavash juda to'yimli. Faqat ba'zan kuryer biroz kechikadi, lekin taom baribir issiq." },
-  { name: "Sardor M.", area: "Yakkasaroy", stars: 5, dish: "bucket", text: "Oilaviy kechaga Opus Bucket oldik — bolalar xursand. Kombo yig'ish funksiyasi juda qulay ekan." },
+  { name: "Sardor M.", area: "Yakkasaroy", stars: 5, dish: "bucket", text: "Oilaviy kechaga Olov Bucket oldik — bolalar xursand. Kombo yig'ish funksiyasi juda qulay ekan." },
   { name: "Kamola U.", area: "Shayxontohur", stars: 5, dish: "milkshake", text: "Milksheyk qalin va mazali, desertlar ham yaxshi. Omad g'ildiragidan −10% yutdim 😄" },
   { name: "Otabek N.", area: "Olmazor", stars: 5, dish: "burger-fire", text: "Fire Burger haqiqatan ham olovdek! Achchiqni yaxshi ko'radiganlarga tavsiya qilaman." },
   { name: "Nilufar S.", area: "Mirobod", stars: 4, dish: "fries", text: "Fri har doim qarsildoq. Bonus tizimi yoqdi — har buyurtmadan keshbek tushib turadi." },
