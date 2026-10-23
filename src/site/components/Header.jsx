@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useShop } from "../shop.jsx";
+import { SETTINGS } from "../../shared/data.js";
 
 /* OLOV FOOD belgisi — olov tili */
 export function BrandIcon() {
@@ -15,9 +16,20 @@ export function BrandIcon() {
 const LINKS = [["#menu", "Menyu"], ["#combo", "Kombo"], ["#wheel", "🎡 Omad"], ["#branches", "Filiallar"], ["#track", "Kuzatish"]];
 
 export default function Header() {
-  const { totals, openTicket, bumpKey } = useShop();
+  const { totals, openTicket, bumpKey, open } = useShop();
   const [navOpen, setNavOpen] = useState(false);
   const btn = useRef(null);
+
+  // Brauzer ilovani o'rnatishni taklif qila olsa — tugma ko'rsatamiz
+  const [installEvt, setInstallEvt] = useState(null);
+  useEffect(() => {
+    const onPrompt = (e) => { e.preventDefault(); setInstallEvt(e); };
+    const onInstalled = () => setInstallEvt(null);
+    window.addEventListener("beforeinstallprompt", onPrompt);
+    window.addEventListener("appinstalled", onInstalled);
+    return () => { window.removeEventListener("beforeinstallprompt", onPrompt); window.removeEventListener("appinstalled", onInstalled); };
+  }, []);
+  const install = () => { installEvt.prompt(); installEvt.userChoice.finally(() => setInstallEvt(null)); };
 
   // Savatga qo'shilganda tugma "sakraydi"
   useEffect(() => {
@@ -30,9 +42,9 @@ export default function Header() {
   return (
     <>
       <div className="topbar">
-        <span><i className="dot" /> Hozir ochiq · 10:00–03:00</span>
-        <span className="topbar__mid">🛵 30 daqiqada yetkazamiz · 150 000 so'mdan bepul</span>
-        <a href="tel:+998901234567">☎ +998 90 123 45 67</a>
+        <span><i className={"dot" + (open ? "" : " dot--off")} /> {open ? "Hozir ochiq" : "Hozir yopiq"} · {SETTINGS.open}–{SETTINGS.close}</span>
+        {SETTINGS.announce && <span className="topbar__mid">{SETTINGS.announce}</span>}
+        <a href={"tel:" + SETTINGS.phone.replace(/\s/g, "")}>☎ {SETTINGS.phone}</a>
       </div>
 
       <header className="nav">
@@ -46,6 +58,7 @@ export default function Header() {
         </nav>
 
         <div className="nav__actions">
+          {installEvt && <button className="chip-btn chip-btn--ghost install-btn" onClick={install} title="Telefoningizga ilova sifatida o'rnating">📲<span className="hide-sm"> Ilovani o'rnatish</span></button>}
           <a href="#track" className="chip-btn chip-btn--ghost nav__track">📍 Buyurtmam qayerda?</a>
           <button className="chip-btn" ref={btn} onClick={openTicket} aria-label="Savat">
             <span>🛒</span><span className="hide-sm">Savat</span><b>{totals.count}</b>
