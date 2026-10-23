@@ -16,6 +16,7 @@ export function orderMessage(o) {
   const map = "https://yandex.uz/maps/?text=" + encodeURIComponent("Toshkent, " + c.address);
   const lines = [
     `🔔 <b>Yangi buyurtma ${esc(o.id)}</b>`,
+    o.preorder ? "🌙 <b>Oldindan buyurtma</b> — ish vaqtidan tashqarida berildi, ochilgach tayyorlang" : "",
     `🕒 ${new Date(o.createdAt).toLocaleString("ru-RU", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}`,
     "",
     `👤 <b>${esc(c.name)}</b>`,
@@ -31,6 +32,7 @@ export function orderMessage(o) {
     o.discount ? `Chegirma (${esc(o.promo)}): −${som(o.discount)}` : "",
     o.bonusUsed ? `Bonusdan: −${som(o.bonusUsed)}` : "",
     `Yetkazish: ${o.delivery ? som(o.delivery) : "bepul"}`,
+    o.tip ? `💝 Kuryerga choy puli: ${som(o.tip)}` : "",
     `💰 <b>JAMI: ${som(o.total)}</b>`,
     `💳 ${esc(o.payment.label)} — ${o.payment.paid ? "✅ to'langan" : "💵 yetkazilganda to'lanadi"}`,
   ];
@@ -64,8 +66,21 @@ export async function flushTelegram() {
   }
 }
 
-export function notifyTelegram(order) {
+function enqueue(text) {
   if (!TELEGRAM.token || !TELEGRAM.chatId) return;
-  Store.set("opus_tg_queue", [...Store.get("opus_tg_queue", []), orderMessage(order)]);
+  Store.set("opus_tg_queue", [...Store.get("opus_tg_queue", []), text]);
   flushTelegram();
+}
+
+export function notifyTelegram(order) { enqueue(orderMessage(order)); }
+
+// Mijoz yetkazilgan buyurtmani baholaganda
+export function notifyRating(o) {
+  const r = o.rating;
+  const stars = "★".repeat(r.stars) + "☆".repeat(5 - r.stars);
+  enqueue([
+    `${r.stars >= 4 ? "⭐" : "⚠️"} <b>Baho: ${stars}</b> (${r.stars}/5)`,
+    `🧾 ${esc(o.id)} · ${esc(o.customer.name)} · ${esc(o.customer.phone)}`,
+    r.comment ? `💬 <i>${esc(r.comment)}</i>` : "",
+  ].filter(Boolean).join("\n"));
 }
