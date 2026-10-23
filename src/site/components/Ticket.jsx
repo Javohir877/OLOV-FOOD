@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { DELIVERY, catIcon } from "../../shared/data.js";
 import { fmt, som } from "../../shared/format.js";
-import { lineInfo, promoOf } from "../../shared/cart.js";
+import { lineInfo, priceOf, promoOf } from "../../shared/cart.js";
 import { Img } from "../../shared/Img.jsx";
 import { useShop } from "../shop.jsx";
 
@@ -25,7 +25,7 @@ function Upsell() {
           <div className="upsell__item" key={p.id}>
             <div className="upsell__img"><Img src={p.img} alt={p.name} emoji={catIcon(p.cat)} /></div>
             <b>{p.name}</b>
-            <span>{fmt(p.price)} so'm</span>
+            <span>{fmt(priceOf(p))} so'm</span>
             <button className="upsell__add" aria-label={`${p.name} qo'shish`} onClick={() => addDish(p.id)}>+</button>
           </div>
         ))}
@@ -99,6 +99,7 @@ export default function Ticket() {
               )}
               {t.bonusUsed > 0 && <div className="is-green"><span>💎 Bonusdan</span><span>−{som(t.bonusUsed)}</span></div>}
               <div><span>Yetkazib berish</span><span>{t.delivery ? som(t.delivery) : "Bepul"}</span></div>
+              {t.tip > 0 && <div><span>💝 Choy puli</span><span>{som(t.tip)}</span></div>}
               <div className="grand"><span>Jami</span><b>{som(t.total)}</b></div>
             </div>
             <button className="btn btn--fire btn--block" onClick={openCheckout}>Buyurtma berish →</button>
