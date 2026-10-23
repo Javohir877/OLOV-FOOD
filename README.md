@@ -18,7 +18,7 @@
 - 📍 **Jonli kuzatish** va 🔁 **qayta buyurtma**
 - 🎡 **Omad g'ildiragi** va 💎 **Olov Bonus** (5% keshbek)
 - ⭐ **Mijozlar fikri**, 🏪 **filiallar** (hozir ochiq/yopiq)
-- 🔔 **Telegram** — har yangi buyurtma @opusfoodbot orqali egasiga xabar bo'lib keladi
+- 🔔 **Telegram** — har yangi buyurtma @olovfoodbot orqali egasiga xabar bo'lib keladi
 
 ## Ishga tushirish (dasturchi uchun)
 
