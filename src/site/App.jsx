@@ -3,6 +3,7 @@ import { ShopProvider, useShop, isDocked } from "./shop.jsx";
 import Header from "./components/Header.jsx";
 import Hero from "./components/Hero.jsx";
 import Combo from "./components/Combo.jsx";
+import Deal from "./components/Deal.jsx";
 import Menu from "./components/Menu.jsx";
 import Wheel from "./components/Wheel.jsx";
 import { Kitchen, Reviews, Branches, Track, Footer, Cartbar } from "./components/Sections.jsx";
@@ -41,6 +42,7 @@ function Shell() {
       <Header />
       <main>
         <Hero />
+        <Deal />
         <Combo />
         <Menu />
         <Kitchen />
