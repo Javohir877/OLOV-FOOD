@@ -1,9 +1,9 @@
 ﻿# OLOV FOOD — React saytni yig'ib GitHub'ga yuklaydi (Git kerak emas, GitHub CLI yetarli).
 #   main tarmog'i   — yig'ilgan (build) tayyor sayt; GitHub Pages shuni ko'rsatadi
 #   source tarmog'i — saytning React manba kodi (admin panel manbasi YUKLANMAYDI)
-# Ishlatish: powershell -ExecutionPolicy Bypass -File publish-github.ps1 [-Message "O'zgarish tavsifi"] [-Repo OPUS-FOOD]
+# Ishlatish: powershell -ExecutionPolicy Bypass -File publish-github.ps1 [-Message "O'zgarish tavsifi"] [-Repo OLOV-FOOD]
 param(
-  [string]$Repo = "OPUS-FOOD",
+  [string]$Repo = "OLOV-FOOD",
   [string]$Message = "Saytni yangilash"
 )
 # "Continue": gh'ning stderr chiqishi PowerShell 5.1'da xato deb to'xtatib qo'ymasligi uchun; xatolar $LASTEXITCODE orqali tekshiriladi
@@ -13,7 +13,7 @@ $gh = "C:\Program Files\GitHub CLI\gh.exe"
 if (-not (Test-Path $gh)) { $gh = "gh" }
 $root = $PSScriptRoot
 $utf8 = New-Object Text.UTF8Encoding($false)
-$tmp = Join-Path $env:TEMP "opus-food-upload.json"
+$tmp = Join-Path $env:TEMP "olov-food-upload.json"
 
 $owner = (& $gh api user --jq .login).Trim()
 if (-not $owner) { throw "GitHub'ga kirilmagan. Avval: gh auth login" }
