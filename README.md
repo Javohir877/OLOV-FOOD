@@ -2,8 +2,8 @@
 
 "Issiq. Shirali. Tez." — fast food do'koni uchun veb-sayt va admin panel. **React 18 + Vite** da yozilgan.
 
-- Sayt: https://javohir877.github.io/OPUS-FOOD/
-- Admin: https://javohir877.github.io/OPUS-FOOD/admin.html (parol bilan shifrlangan)
+- Sayt: https://javohir877.github.io/OLOV-FOOD/
+- Admin: https://javohir877.github.io/OLOV-FOOD/admin.html (parol bilan shifrlangan)
 - Manba kodi: shu repozitoriyning **`source`** tarmog'i (`main` tarmog'ida yig'ilgan tayyor sayt turadi)
 
 ## Imkoniyatlar
