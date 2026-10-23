@@ -1,15 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useShop } from "../shop.jsx";
 
+/* OLOV FOOD belgisi — olov tili */
 export function BrandIcon() {
   return (
     <svg viewBox="0 0 64 64" aria-hidden="true">
-      <path d="M10 30 Q10 10 32 9 Q54 10 54 30 Q54 33 51 33 H13 Q10 33 10 30Z" fill="#F2A541" stroke="#1A1210" strokeWidth="3" />
-      <path d="M8 37 Q14 33 20 37 T32 37 T44 37 T56 37 V40 H8Z" fill="#7BC94C" stroke="#1A1210" strokeWidth="3" strokeLinejoin="round" />
-      <rect x="9" y="40" width="46" height="8" rx="4" fill="#6E3B1F" stroke="#1A1210" strokeWidth="3" />
-      <path d="M11 51 H53 Q52 58 44 58 H20 Q12 58 11 51Z" fill="#F2A541" stroke="#1A1210" strokeWidth="3" />
-      <circle cx="25" cy="22" r="2.6" fill="#1A1210" /><circle cx="39" cy="22" r="2.6" fill="#1A1210" />
-      <path d="M28 27 Q32 30 36 27" stroke="#1A1210" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+      <path d="M32 58 C16 56 10 44 14 32 C16 26 20 22 22 18 C23 26 27 28 29 25 C27 16 32 8 40 4 C38 14 46 20 47 30 C50 26 49 22 52 20 C58 30 56 54 32 58Z" fill="#FFF3E3" />
+      <path d="M32 54 C24 52 21 45 23 39 C25 34 28 32 29 28 C31 33 33 34 34 31 C34 26 37 22 41 20 C40 27 44 31 44 37 C45 35 46 33 47 32 C50 40 46 53 32 54Z" fill="#FFC229" />
+      <path d="M32 50 C28 49 27 45 28 42 C29 39 31 38 32 35 C33 38 35 39 35 37 C37 40 37 48 32 50Z" fill="#FF7A1A" />
     </svg>
   );
 }
@@ -38,9 +36,9 @@ export default function Header() {
       </div>
 
       <header className="nav">
-        <a href="#" className="brand" aria-label="OPUS FOOD">
+        <a href="#" className="brand" aria-label="OLOV FOOD">
           <span className="brand__sticker"><BrandIcon /></span>
-          <span className="brand__name">OPUS<em>FOOD</em></span>
+          <span className="brand__name">OLOV<em>FOOD</em></span>
         </a>
 
         <nav className={"nav__links" + (navOpen ? " is-open" : "")}>
