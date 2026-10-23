@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useShop } from "../shop.jsx";
 import { SETTINGS } from "../../shared/data.js";
+import { sound } from "../../shared/sound.js";
 
 /* OLOV FOOD belgisi — olov tili */
 export function BrandIcon() {
@@ -31,6 +32,9 @@ export default function Header() {
   }, []);
   const install = () => { installEvt.prompt(); installEvt.userChoice.finally(() => setInstallEvt(null)); };
 
+  const [soundOn, setSoundOn] = useState(sound.on);
+  const toggleSound = () => { sound.set(!soundOn); setSoundOn(!soundOn); };
+
   // Savatga qo'shilganda tugma "sakraydi"
   useEffect(() => {
     if (!bumpKey || !btn.current) return;
@@ -59,6 +63,7 @@ export default function Header() {
 
         <div className="nav__actions">
           {installEvt && <button className="chip-btn chip-btn--ghost install-btn" onClick={install} title="Telefoningizga ilova sifatida o'rnating">📲<span className="hide-sm"> Ilovani o'rnatish</span></button>}
+          <button className={"sound-btn" + (soundOn ? "" : " is-off")} onClick={toggleSound} aria-pressed={soundOn} aria-label={soundOn ? "Ovozni o'chirish" : "Ovozni yoqish"} title={soundOn ? "Ovozni o'chirish" : "Ovozni yoqish"}>{soundOn ? "🔊" : "🔇"}</button>
           <a href="#track" className="chip-btn chip-btn--ghost nav__track">📍 Buyurtmam qayerda?</a>
           <button className="chip-btn" ref={btn} onClick={openTicket} aria-label="Savat">
             <span>🛒</span><span className="hide-sm">Savat</span><b>{totals.count}</b>
