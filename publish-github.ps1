@@ -56,7 +56,8 @@ function Ensure-Branch([string]$branch) {
 }
 
 # Tarmoqdagi fayllarni lokal ro'yxat bilan bir xil qiladi: o'zgarganini yuklaydi, ortiqchasini o'chiradi
-function Sync-Branch([string]$branch, [hashtable]$files) {
+#   $keep — saytda turib qolishi kerak bo'lgan fayllar (masalan, admin "Saytga chiqarish" yozgan config.json)
+function Sync-Branch([string]$branch, [hashtable]$files, [string[]]$keep = @()) {
   Write-Host ""
   Write-Host "== $branch tarmog'i ==" -ForegroundColor Yellow
   $existing = @{}
@@ -78,7 +79,7 @@ function Sync-Branch([string]$branch, [hashtable]$files) {
     Write-Host "  yuklandi: $rel"
   }
   foreach ($rel in @($existing.Keys)) {
-    if ($files.ContainsKey($rel)) { continue }
+    if ($files.ContainsKey($rel) -or $keep -contains $rel) { continue }
     $body = @{ message = "$Message`: $rel o'chirildi"; sha = $existing[$rel]; branch = $branch }
     [IO.File]::WriteAllText($tmp, ($body | ConvertTo-Json -Compress), $utf8)
     $path = ($rel -split '/' | ForEach-Object { [Uri]::EscapeDataString($_) }) -join '/'
@@ -107,7 +108,7 @@ function Collect([string]$base, [string[]]$include, [string[]]$exclude) {
 
 # 3) main — tayyor sayt
 $siteFiles = Collect $dist @(".") @()
-Sync-Branch "main" $siteFiles
+Sync-Branch "main" $siteFiles @("config.json")
 
 # 4) source — React manba kodi (admin manbasi, yig'ilgan fayllar va yordamchi papkalarsiz)
 Ensure-Branch "source"
