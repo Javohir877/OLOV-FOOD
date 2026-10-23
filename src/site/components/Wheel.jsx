@@ -4,10 +4,19 @@ import { Store } from "../../shared/store.js";
 import { bonusBalance } from "../../shared/cart.js";
 import { som } from "../../shared/format.js";
 import { useShop } from "../shop.jsx";
+import { sound } from "../../shared/sound.js";
 
 const todayKey = () => new Date().toDateString();
 const N = WHEEL_PRIZES.length, STEP = 360 / N, R = 150, C = 160;
 const COLORS = ["#FF5A1A", "#2A1D17", "#FFB547", "#3A2418"];
+// cubic-bezier(.12,.75,.1,1) — g'ildirak animatsiyasining egri chizig'i (vaqt -> aylanish ulushi)
+const bez = (a, b) => (s) => 3 * a * s * (1 - s) * (1 - s) + 3 * b * s * s * (1 - s) + s * s * s;
+const bx = bez(0.12, 0.1), by = bez(0.75, 1);
+const SPIN_EASE = (x) => {
+  let lo = 0, hi = 1;
+  for (let i = 0; i < 24; i++) { const mid = (lo + hi) / 2; if (bx(mid) < x) lo = mid; else hi = mid; }
+  return by((lo + hi) / 2);
+};
 const pt = (deg, rad) => [C + rad * Math.sin((deg * Math.PI) / 180), C - rad * Math.cos((deg * Math.PI) / 180)];
 
 export default function Wheel() {
@@ -27,9 +36,22 @@ export default function Wheel() {
     // Ko'rsatkich tepada: tanlangan bo'lak markazi 0° ga kelishi kerak (+ bo'lak ichida kichik tasodifiy siljish)
     const target = 360 - (idx * STEP + STEP / 2) + (Math.random() - .5) * STEP * .6;
     const next = angleRef.current + 360 * 6 + (((target - (angleRef.current % 360)) + 360) % 360);
+    const prevAngle = angleRef.current;
     angleRef.current = next;
     setAngle(next);
     setSpinning(true);
+    sound.play("whoosh");
+    // Har bir bo'lak ko'rsatkich ostidan o'tganda "chiq" etadi — g'ildirak sekinlashgani eshitiladi.
+    // Burchak CSS animatsiyasi bilan bir xil egri chiziqdan hisoblanadi
+    const from = prevAngle, t0 = Date.now();
+    let lastSeg = Math.floor(from / STEP);
+    const follow = setInterval(() => {
+      const p = Math.min(1, (Date.now() - t0) / 5000);
+      const seg = Math.floor((from + (next - from) * SPIN_EASE(p)) / STEP);
+      if (seg !== lastSeg) sound.play("tick");
+      lastSeg = seg;
+      if (p >= 1) clearInterval(follow);
+    }, 25);
     const record = { day: todayKey(), label: prize.label + (prize.sub ? " " + prize.sub : "") };
     Store.set("opus_spin", record);
     setTimeout(() => {
@@ -43,6 +65,7 @@ export default function Wheel() {
         toast(`🎉 ${WHEEL_PROMOS[prize.code].label} — savatga qo'llandi!`);
       }
       setConfettiKey((k) => k + 1);
+      sound.play("win");
       setSpinning(false);
       setLast(record);
     }, 5200);
