@@ -194,7 +194,7 @@ if ($Publish) {
   "$(Get-Date -Format s)  yuklash: $(if ($ok) { 'muvaffaqiyatli' } else { 'XATO' })" | Out-File $log -Append -Encoding utf8
   Write-Host ""
   if ($ok) {
-    Write-Host "TAYYOR! 1-2 daqiqadan keyin oching: https://javohir877.github.io/OPUS-FOOD/admin.html" -ForegroundColor Green
+    Write-Host "TAYYOR! 1-2 daqiqadan keyin oching: https://javohir877.github.io/OLOV-FOOD/admin.html" -ForegroundColor Green
     Write-Host "Bu oynani yopishingiz mumkin."
   } else {
     Write-Host "Yuklashda xato bo'ldi — yuqoridagi yozuvni ko'ring." -ForegroundColor Red
