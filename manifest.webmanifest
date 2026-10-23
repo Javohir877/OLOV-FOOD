@@ -1,0 +1,16 @@
+{
+  "name": "OLOV FOOD — Issiq. Shirali. Tez.",
+  "short_name": "OLOV FOOD",
+  "description": "Burgerlar, pitsa, lavash va tovuq — 30 daqiqada yetkazib beramiz.",
+  "lang": "uz",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0C0A09",
+  "theme_color": "#0C0A09",
+  "icons": [
+    { "src": "assets/brand/olov-food-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/brand/olov-food-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/brand/olov-food-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
