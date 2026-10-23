@@ -1,4 +1,4 @@
-﻿# OPUS FOOD — admin panelni parol bilan SHIFRLAYDI.
+﻿# OLOV FOOD — admin panelni parol bilan SHIFRLAYDI.
 # React admin panelni (src/admin) yig'adi, bitta HTML'ga joylaydi, AES-256 bilan shifrlaydi va
 # admin.locked.html'ga faqat parol so'raydigan "eshik" sahifasini yozadi (publish uni saytga admin.html qilib qo'yadi).
 # Parolsiz panelning na ko'rinishi, na kodi ochiladi.
@@ -25,7 +25,7 @@ trap {
 
 if (-not $Password) {
   Write-Host ""
-  Write-Host "OPUS FOOD admin paneli uchun parol o'rnatish" -ForegroundColor Yellow
+  Write-Host "OLOV FOOD admin paneli uchun parol o'rnatish" -ForegroundColor Yellow
   Write-Host "(kiritayotganingizda belgilar ko'rinmaydi — bu normal, yozib Enter bosing)"
   $plain = { param($s) [Runtime.InteropServices.Marshal]::PtrToStringBSTR([Runtime.InteropServices.Marshal]::SecureStringToBSTR($s)) }
   while ($true) {
@@ -89,7 +89,7 @@ $gate = @'
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OPUS FOOD</title>
+<title>OLOV FOOD</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#0C0A09">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
