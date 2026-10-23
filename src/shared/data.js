@@ -167,4 +167,21 @@ export const PAY_METHODS = [
 ];
 
 export const ORDER_FLOW = ["new", "cooking", "delivering", "done"];
-export const SETTINGS = { autoStatus: true, phone: "+998 90 123 45 67" };
+
+// deal.mode: "auto" — har kuni boshqa taom, "fixed" — admin tanlagan taom (deal.id), "off" — o'chirilgan
+export const DEFAULT_SETTINGS = {
+  autoStatus: true,
+  phone: "+998 90 123 45 67",
+  open: "10:00",
+  close: "03:00",
+  announce: "🛵 30 daqiqada yetkazamiz · 150 000 so'mdan bepul",
+  deal: { mode: "auto", id: null, percent: 20 },
+  tips: true,
+};
+export const SETTINGS = JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
+
+// Kuryerga choy puli variantlari (so'm)
+export const TIP_OPTIONS = [0, 3000, 5000, 10000];
+
+// Admin "Saytga chiqarish" tugmasi shu repoga config.json yozadi
+export const GITHUB = { owner: "Javohir877", repo: "OLOV-FOOD", branch: "main", path: "config.json" };
