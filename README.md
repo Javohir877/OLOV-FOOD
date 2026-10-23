@@ -1,4 +1,4 @@
-# 🍔 OPUS FOOD
+# 🍔 OLOV FOOD
 
 "Issiq. Shirali. Tez." — fast food do'koni uchun veb-sayt va admin panel. **React 18 + Vite** da yozilgan.
 
@@ -13,10 +13,10 @@
 - 📋 **Menyu** — kategoriyalar paneli, qidiruv, filtr (Hit / Yangi / Achchiq / 600 kkal gacha) va saralash
 - ⚙️ **Taomni sozlash** — o'lcham va qo'shimchalar narxi bilan
 - 🧾 **Savat** — kompyuterda o'ngda, telefonda pastdan chiqadi; "Bunga mos keladi" takliflari
-- 🎟 **Promokodlar** — `OPUS10`, `FIRE20`, `BEPUL` (admin'da yangisini qo'shish mumkin)
+- 🎟 **Promokodlar** — `OLOV10`, `FIRE20`, `BEPUL` (admin'da yangisini qo'shish mumkin)
 - 💳 **To'lov** — Click, Payme, Uzum (QR oynasi), Uzcard/Humo/Visa/Mastercard (SMS kod), naqd — *namuna rejimida*
 - 📍 **Jonli kuzatish** va 🔁 **qayta buyurtma**
-- 🎡 **Omad g'ildiragi** va 💎 **Opus Bonus** (5% keshbek)
+- 🎡 **Omad g'ildiragi** va 💎 **Olov Bonus** (5% keshbek)
 - ⭐ **Mijozlar fikri**, 🏪 **filiallar** (hozir ochiq/yopiq)
 - 🔔 **Telegram** — har yangi buyurtma @opusfoodbot orqali egasiga xabar bo'lib keladi
 
