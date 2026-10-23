@@ -1,4 +1,4 @@
-﻿# OPUS FOOD — React saytni yig'ib GitHub'ga yuklaydi (Git kerak emas, GitHub CLI yetarli).
+﻿# OLOV FOOD — React saytni yig'ib GitHub'ga yuklaydi (Git kerak emas, GitHub CLI yetarli).
 #   main tarmog'i   — yig'ilgan (build) tayyor sayt; GitHub Pages shuni ko'rsatadi
 #   source tarmog'i — saytning React manba kodi (admin panel manbasi YUKLANMAYDI)
 # Ishlatish: powershell -ExecutionPolicy Bypass -File publish-github.ps1 [-Message "O'zgarish tavsifi"] [-Repo OPUS-FOOD]
