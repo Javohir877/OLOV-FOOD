@@ -103,7 +103,7 @@ export const DELIVERY = { ...DEFAULT_DELIVERY };
 // Yangi buyurtmalar shu Telegram chatga xabar bo'lib keladi.
 // token — @BotFather bergan bot kaliti, chatId — xabar boradigan chat (bo'sh bo'lsa, yuborilmaydi).
 // Diqqat: bu qiymatlar sayt kodida hammaga ko'rinadi; kalit oshkor bo'lsa, @BotFather'da /revoke qiling.
-export const TELEGRAM = { token: "8906044907:AAFOLF-r-gv3TmeI6j5ACjUa5KuONW3NKno", chatId: "5402486152" };
+export const TELEGRAM = { token: "8893726166:AAGY1O8_iD80QkiFcxxak7e3SvzqcF8lBJQ", chatId: "5402486152", username: "olovfoodbot" };
 
 // Olov Bonus: har buyurtmadan keshbek; bonus bilan buyurtmaning ko'pi bilan maxShare foizini to'lash mumkin
 export const BONUS = { rate: 5, maxShare: 50 };
