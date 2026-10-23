@@ -56,8 +56,8 @@ export default function Ticket() {
         <div className="ticket__head">
           <div>
             <h3>Sizning chek</h3>
-            <small>{new Date().toLocaleDateString("ru-RU")} · OPUS FOOD</small>
-            {bonus ? <span className="bonus-chip" title="Opus Bonus balansi">💎 Bonus: {som(bonus)}</span> : null}
+            <small>{new Date().toLocaleDateString("ru-RU")} · OLOV FOOD</small>
+            {bonus ? <span className="bonus-chip" title="Olov Bonus balansi">💎 Bonus: {som(bonus)}</span> : null}
           </div>
           <button className="x-btn ticket__close" onClick={() => setTicketOpen(false)} aria-label="Yopish">✕</button>
         </div>
