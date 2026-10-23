@@ -9,7 +9,7 @@ export function Kitchen() {
   return (
     <section className="kitchen" id="kitchen">
       <div className="kitchen__photos">
-        <figure className="polaroid p1"><img src="assets/img/1561758033-d89a9ad46330.jpg" alt="Burger va fri" loading="lazy" /><figcaption>Opus Double + fri</figcaption></figure>
+        <figure className="polaroid p1"><img src="assets/img/1561758033-d89a9ad46330.jpg" alt="Burger va fri" loading="lazy" /><figcaption>Olov Double + fri</figcaption></figure>
         <figure className="polaroid p2"><img src="assets/img/1513104890138-7c749659a591.jpg" alt="Pitsa" loading="lazy" /><figcaption>Tandirdan yangi</figcaption></figure>
         <figure className="polaroid p3"><img src="assets/img/1567620832903-9fc6debc209f.jpg" alt="Tovuq qanotchalari" loading="lazy" /><figcaption>Achchiq qanotchalar</figcaption></figure>
       </div>
@@ -148,7 +148,7 @@ export function Track() {
 export function Footer() {
   return (
     <footer className="footer">
-      <div className="footer__big" aria-hidden="true">OPUS FOOD</div>
+      <div className="footer__big" aria-hidden="true">OLOV FOOD</div>
       <div className="footer__cols">
         <div>
           <h4>Manzil</h4>
@@ -164,7 +164,7 @@ export function Footer() {
         </div>
       </div>
       <div className="footer__bottom">
-        <span>© {new Date().getFullYear()} OPUS FOOD</span>
+        <span>© {new Date().getFullYear()} OLOV FOOD</span>
         <span>Olov bilan tayyorlangan 🔥</span>
       </div>
     </footer>
