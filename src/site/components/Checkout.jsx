@@ -29,7 +29,7 @@ function CardForm({ card, setCard, errors }) {
         <span className="plastic__brand">{brand && <img src={PAY_LOGOS[brand]} alt={LOGO_NAMES[brand]} data-logo={brand} />}</span>
         <span className="plastic__chip" />
         <span className="plastic__num">{(d + "•".repeat(16 - d.length)).replace(/(.{4})(?=.)/g, "$1 ")}</span>
-        <div className="plastic__row"><span>OPUS PAY</span><span>{card.exp || "MM/YY"}</span></div>
+        <div className="plastic__row"><span>OLOV PAY</span><span>{card.exp || "MM/YY"}</span></div>
       </div>
       <div className="row2">
         <Field label="Karta raqami" error={errors.num}>
@@ -150,7 +150,7 @@ export function Checkout() {
                 <section className="co-card co-bonus">
                   <label className="bonus-toggle">
                     <span className="bonus-toggle__icon">💎</span>
-                    <span><b>Opus Bonus bilan to'lash</b><small>Balans: {som(bonus)} · buyurtmaning {BONUS.maxShare}% gacha</small></span>
+                    <span><b>Olov Bonus bilan to'lash</b><small>Balans: {som(bonus)} · buyurtmaning {BONUS.maxShare}% gacha</small></span>
                     <input type="checkbox" checked={useBonus} onChange={(e) => setUseBonus(e.target.checked)} /><i className="sw" />
                   </label>
                 </section>
