@@ -4,6 +4,7 @@ import { fmt, som } from "../../shared/format.js";
 import { lineInfo, priceOf, promoOf } from "../../shared/cart.js";
 import { Img } from "../../shared/Img.jsx";
 import { useShop } from "../shop.jsx";
+import { sound } from "../../shared/sound.js";
 
 /* "Bunga mos keladi" — savatda yetishmayotgan ichimlik/gazak/desert takliflari */
 function Upsell() {
@@ -46,6 +47,7 @@ export default function Ticket() {
     const p = promoOf(c);
     if (!p) { toast("Bunday promokod yo'q", true); return; }
     setPromo(c);
+    sound.play("success");
     toast(`Promokod qo'llandi: ${p.label}`);
   };
 
