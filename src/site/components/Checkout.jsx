@@ -1,9 +1,9 @@
 /* Buyurtma berish (checkout) va to'lov oynalari: ilova QR, karta SMS, jarayon */
 import { useEffect, useMemo, useRef, useState } from "react";
-import { BONUS, PAY_LOGOS, PAY_METHODS, LOGO_NAMES } from "../../shared/data.js";
+import { BONUS, PAY_LOGOS, PAY_METHODS, LOGO_NAMES, SETTINGS, TIP_OPTIONS } from "../../shared/data.js";
 import { Store } from "../../shared/store.js";
 import { lineInfo, earnedFor } from "../../shared/cart.js";
-import { cardBrand, luhn, maskPhone, som } from "../../shared/format.js";
+import { cardBrand, fmt, luhn, maskPhone, som } from "../../shared/format.js";
 import { LogoTile } from "../../shared/Img.jsx";
 import { useShop } from "../shop.jsx";
 import { Sheet } from "./Sheets.jsx";
@@ -47,7 +47,7 @@ function CardForm({ card, setCard, errors }) {
 
 export function Checkout() {
   const shop = useShop();
-  const { checkoutOpen, setCheckoutOpen, cart, byId, totals: t, orderType, setOrderType, payMethod, setPayMethod, useBonus, setUseBonus, bonus, promo, setPay, placeOrder } = shop;
+  const { checkoutOpen, setCheckoutOpen, cart, byId, totals: t, orderType, setOrderType, payMethod, setPayMethod, useBonus, setUseBonus, bonus, promo, setPay, placeOrder, tip, setTip, open } = shop;
   const saved = useMemo(() => Store.get("opus_customer", {}) || {}, [checkoutOpen]);
   const [f, setF] = useState({});
   const [card, setCard] = useState({ num: "", exp: "" });
@@ -101,6 +101,9 @@ export function Checkout() {
             <h2>Buyurtmani <span className="hl">rasmiylashtirish</span></h2>
             <button className="x-btn" onClick={() => setCheckoutOpen(false)} aria-label="Yopish">✕</button>
           </div>
+          {!open && (
+            <p className="note co-closed">🌙 Hozir yopiqmiz (ish vaqti {SETTINGS.open}–{SETTINGS.close}). Buyurtmangizni oldindan qabul qilamiz — ochilishimiz bilan birinchi bo'lib tayyorlanadi.</p>
+          )}
           <form className="co-grid" onSubmit={submit} noValidate>
             <div className="co-form">
               <section className="co-card">
@@ -146,6 +149,20 @@ export function Checkout() {
                 </div>
               </section>
 
+              {SETTINGS.tips && (
+                <section className="co-card co-tip">
+                  <h3><i>3</i>Kuryerga choy puli <small className="muted">(ixtiyoriy)</small></h3>
+                  <div className="tips">
+                    {TIP_OPTIONS.map((v) => (
+                      <button type="button" key={v} className={"tip-btn" + (tip === v ? " is-on" : "")} onClick={() => setTip(v)}>
+                        {v ? <>💝 {fmt(v)}</> : "Kerak emas"}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="muted" style={{ margin: "10px 0 0", fontSize: 13 }}>Choy puli to'liq kuryerga beriladi. Rahmat! 🧡</p>
+                </section>
+              )}
+
               {bonus > 0 && (
                 <section className="co-card co-bonus">
                   <label className="bonus-toggle">
@@ -171,8 +188,9 @@ export function Checkout() {
                   {t.discount > 0 && <div className="is-green"><span>Chegirma {promo}</span><span>−{som(t.discount)}</span></div>}
                   {t.bonusUsed > 0 && <div className="is-green"><span>💎 Bonusdan</span><span>−{som(t.bonusUsed)}</span></div>}
                   <div><span>{orderType === "pickup" ? "Olib ketish" : "Yetkazib berish"}</span><span>{t.delivery ? som(t.delivery) : "Bepul"}</span></div>
+                  {t.tip > 0 && <div><span>💝 Choy puli</span><span>{som(t.tip)}</span></div>}
                   <div className="grand"><span>To'lov</span><b>{som(t.total)}</b></div>
-                  <div className="earn">💎 Bu buyurtmadan +{som(earnedFor(t.total))} bonus olasiz</div>
+                  <div className="earn">💎 Bu buyurtmadan +{som(earnedFor(t.total - t.tip))} bonus olasiz</div>
                 </div>
                 <button className="btn btn--fire btn--block" type="submit">{payMethod === "cash" ? "Buyurtmani tasdiqlash ✓" : `${som(t.total)} to'lash →`}</button>
                 <div className="secure">🔒 Ma'lumotlar himoyalangan ulanish orqali uzatiladi</div>
