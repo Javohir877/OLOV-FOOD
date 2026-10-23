@@ -1,6 +1,6 @@
 /* Oshxona, fikrlar, filiallar, kuzatish formasi, footer va mobil savat paneli */
 import { useEffect, useRef, useState } from "react";
-import { BRANCHES, PAY_LOGOS, RATING, REVIEWS, catIcon } from "../../shared/data.js";
+import { BRANCHES, PAY_LOGOS, RATING, REVIEWS, TELEGRAM, catIcon } from "../../shared/data.js";
 import { fmt, som } from "../../shared/format.js";
 import { Img, LogoTile } from "../../shared/Img.jsx";
 import { useShop } from "../shop.jsx";
@@ -156,7 +156,7 @@ export function Footer() {
         </div>
         <div>
           <h4>Aloqa</h4>
-          <p><a href="tel:+998901234567">+998 90 123 45 67</a><br /><a href="https://t.me/opusfoodbot" target="_blank" rel="noopener">Telegram</a> · <a href="#">Instagram</a></p>
+          <p><a href="tel:+998901234567">+998 90 123 45 67</a><br /><a href={"https://t.me/" + TELEGRAM.username} target="_blank" rel="noopener">Telegram</a> · <a href="#">Instagram</a></p>
         </div>
         <div>
           <h4>To'lov usullari</h4>
