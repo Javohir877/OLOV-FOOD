@@ -2,11 +2,16 @@
 import { OPTIONS, COMBO, PROMO_CODES, WHEEL_PROMOS, DELIVERY, BONUS } from "./data.js";
 import { Store } from "./store.js";
 
+// Bugungi "Kun taklifi" (hours.js/dealToday) — sahifa ochilganda setDeal bilan o'rnatiladi
+let DEAL = null;
+export const setDeal = (d) => { DEAL = d; };
+export const priceOf = (p) => (DEAL && DEAL.product.id === p.id ? DEAL.price : p.price);
+
 export function dishUnit(p, sizeId, extras) {
   const o = OPTIONS[p.cat] || {};
   const size = (o.sizes || []).find((s) => s.id === sizeId);
   const ex = (o.extras || []).filter((e) => extras.includes(e.id));
-  return p.price + (size ? size.add : 0) + ex.reduce((s, e) => s + e.add, 0);
+  return priceOf(p) + (size ? size.add : 0) + ex.reduce((s, e) => s + e.add, 0);
 }
 
 export function defaultSize(cat) {
@@ -61,7 +66,7 @@ export const promoOf = (code) => (code && (PROMO_CODES[code] || WHEEL_PROMOS[cod
 export const bonusBalance = () => Math.max(0, Math.round(Store.get("opus_bonus", 0)));
 export const earnedFor = (total) => Math.round((total * BONUS.rate) / 100 / 100) * 100;
 
-export function totals({ cart, promo: code, orderType, useBonus }) {
+export function totals({ cart, promo: code, orderType, useBonus, tip = 0 }) {
   const subtotal = cart.reduce((s, l) => s + l.unit * l.qty, 0);
   const count = cart.reduce((s, l) => s + l.qty, 0);
   const promo = promoOf(code);
@@ -72,5 +77,6 @@ export function totals({ cart, promo: code, orderType, useBonus }) {
   // Bonus bilan taomlar narxining ko'pi bilan BONUS.maxShare foizini to'lash mumkin (100 so'mgacha yaxlitlab)
   const bonusMax = Math.floor(((subtotal - discount) * BONUS.maxShare) / 100 / 100) * 100;
   const bonusUsed = useBonus ? Math.min(bonusBalance(), bonusMax) : 0;
-  return { subtotal, count, promo, promoOk, discount, delivery, bonusMax, bonusUsed, total: subtotal - discount - bonusUsed + delivery };
+  const tipAmt = count ? Math.max(0, +tip || 0) : 0;
+  return { subtotal, count, promo, promoOk, discount, delivery, bonusMax, bonusUsed, tip: tipAmt, total: subtotal - discount - bonusUsed + delivery + tipAmt };
 }
