@@ -100,10 +100,9 @@ export const PROMO_CODES = { ...DEFAULT_PROMO_CODES };
 export const DEFAULT_DELIVERY = { fee: 12000, freeFrom: 150000, minOrder: 30000 };
 export const DELIVERY = { ...DEFAULT_DELIVERY };
 
-// Yangi buyurtmalar shu Telegram chatga xabar bo'lib keladi.
-// token — @BotFather bergan bot kaliti, chatId — xabar boradigan chat (bo'sh bo'lsa, yuborilmaydi).
-// Diqqat: bu qiymatlar sayt kodida hammaga ko'rinadi; kalit oshkor bo'lsa, @BotFather'da /revoke qiling.
-export const TELEGRAM = { token: "8893726166:AAGY1O8_iD80QkiFcxxak7e3SvzqcF8lBJQ", chatId: "5402486152", username: "olovfoodbot" };
+// Yangi buyurtmalar bot serveri (Cloudflare Worker, bot/ papkasi) orqali egasining Telegram chatiga boradi.
+// Bot kaliti saytda YO'Q — u faqat Worker sirlarida saqlanadi. api — Worker manzili (bo'sh bo'lsa, yuborilmaydi).
+export const TELEGRAM = { api: "https://olov-food-bot.opus-market-api.workers.dev", username: "olovfoodbot" };
 
 // Olov Bonus: har buyurtmadan keshbek; bonus bilan buyurtmaning ko'pi bilan maxShare foizini to'lash mumkin
 export const BONUS = { rate: 5, maxShare: 50 };
