@@ -1,7 +1,10 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import { loadRemoteConfig } from "../shared/store.js";
+import { initTelegram } from "../shared/tg.js";
 import "../styles/site.css";
+
+initTelegram(); // bot ichida ochilgan bo'lsa — Telegram'ga moslashamiz
 
 // Admin "Saytga chiqargan" menyu va sozlamalarni (config.json) olib, keyin chizamiz.
 // config.json bo'lmasa yoki internet sekin bo'lsa — 2.5 soniyadan keyin standart qiymatlar bilan ochiladi.
