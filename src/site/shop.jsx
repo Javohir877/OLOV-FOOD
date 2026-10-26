@@ -9,6 +9,7 @@ import { addToCart, bonusBalance, comboLine, defaultSize, dishLine, earnedFor, l
 import { notifyRating, notifyTelegram } from "../shared/telegram.js";
 import { dealToday, isOpenNow } from "../shared/hours.js";
 import { sound } from "../shared/sound.js";
+import { haptic, setBackButton, tgUser } from "../shared/tg.js";
 
 const ShopContext = createContext(null);
 export const useShop = () => useContext(ShopContext);
@@ -49,11 +50,23 @@ export function ShopProvider({ children }) {
   const anyOpen = ticketOpen || !!dishId || checkoutOpen || !!pay || !!tracker;
   useEffect(() => { document.body.classList.toggle("lock", anyOpen); }, [anyOpen]);
 
+  // Telegram ichida: tepadagi "Orqaga" tugmasi eng ustki oynani yopadi
+  useEffect(() => {
+    if (!anyOpen) { setBackButton(null); return; }
+    setBackButton(() => {
+      if (pay) { if (pay.mode !== "processing") setPay(null); } // to'lov ketayotganda to'xtatmaymiz
+      else if (checkoutOpen) setCheckoutOpen(false);
+      else if (dishId) setDishId(null);
+      else if (tracker) setTracker(null);
+      else setTicketOpen(false);
+    });
+  }, [anyOpen, pay, checkoutOpen, dishId, tracker]);
+
   const toastId = useRef(0);
   const toast = useCallback((msg, bad) => {
     const id = ++toastId.current;
     setToasts((t) => [...t, { id, msg, bad }]);
-    if (bad) sound.play("error");
+    if (bad) { sound.play("error"); haptic("error"); }
     setTimeout(() => setToasts((t) => t.map((x) => (x.id === id ? { ...x, out: true } : x))), 2400);
     setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 2700);
   }, []);
@@ -63,6 +76,7 @@ export function ShopProvider({ children }) {
     setCart((c) => addToCart(c, line));
     setBumpKey((k) => k + 1);
     sound.play("add");
+    haptic("medium");
     toast(`${name} savatga qo'shildi`);
   }, [toast]);
 
@@ -75,6 +89,7 @@ export function ShopProvider({ children }) {
 
   const changeQty = useCallback((key, delta) => {
     sound.play(delta > 0 ? "plus" : "minus");
+    haptic("light");
     setCart((c) => c.map((l) => (l.key === key ? { ...l, qty: l.qty + delta } : l)).filter((l) => l.qty > 0));
   }, []);
 
@@ -114,6 +129,7 @@ export function ShopProvider({ children }) {
       promo,
       subtotal: tt.subtotal, discount: tt.discount, bonusUsed: tt.bonusUsed, bonusEarned: earned, delivery: tt.delivery, tip: tt.tip, total: tt.total,
       preorder: !isOpenNow(), // ish vaqtidan tashqari — ochilgach tayyorlanadi
+      tg: tgUser(), // Telegram bot ichidan berilgan bo'lsa — mijozning Telegram akkaunti
       status: "new",
     };
     Store.saveOrder(order);
@@ -130,6 +146,7 @@ export function ShopProvider({ children }) {
     setCheckoutOpen(false);
     setConfettiKey((k) => k + 1);
     sound.play("order");
+    haptic("success");
     setTracker({ id: order.id, fresh: true });
     setTimeout(() => toast(`💎 +${som(earned)} bonus hisobingizga tushdi`), 1200);
   }, [cart, promo, orderType, useBonus, tip, payMethod, byId, toast]);
