@@ -7,6 +7,7 @@ import { cardBrand, fmt, luhn, maskPhone, som } from "../../shared/format.js";
 import { LogoTile } from "../../shared/Img.jsx";
 import { useShop } from "../shop.jsx";
 import { Sheet } from "./Sheets.jsx";
+import { tgUser } from "../../shared/tg.js";
 
 const TIMES = ["Imkon qadar tez", "1 soatdan keyin", "2 soatdan keyin", "Kechqurun 19:00–21:00"];
 
@@ -57,7 +58,8 @@ export function Checkout() {
   // Har ochilganda avvalgi mijoz ma'lumotlari bilan to'ldiramiz
   useEffect(() => {
     if (!checkoutOpen) return;
-    setF({ name: saved.name || "", phone: saved.phone || "+998 ", address: saved.address || "", flat: saved.flat || "", floor: saved.floor || "", time: TIMES[0], note: "" });
+    const tu = tgUser(); // Telegram ichida birinchi marta — ismni Telegram'dan olamiz
+    setF({ name: saved.name || (tu && tu.name) || "", phone: saved.phone || "+998 ", address: saved.address || "", flat: saved.flat || "", floor: saved.floor || "", time: TIMES[0], note: "" });
     setErrors({});
     if (root.current) root.current.scrollTop = 0;
   }, [checkoutOpen, saved]);
