@@ -38,6 +38,9 @@ export function haptic(kind) {
   } catch (e) { /* */ }
 }
 
+/* Imzolangan initData — bot serveri undan mijozning haqiqiy Telegram akkauntini tekshiradi */
+export const tgInitData = () => (inTelegram ? W.initData : "");
+
 /* Telegram'dagi foydalanuvchi: { id, name, username } yoki null */
 export function tgUser() {
   if (!inTelegram) return null;
