@@ -6,6 +6,7 @@
 import { TELEGRAM } from "./data.js";
 import { Store } from "./store.js";
 import { fmt, som } from "./format.js";
+import { tgInitData } from "./tg.js";
 
 const esc = (s) => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
@@ -40,18 +41,23 @@ export function orderMessage(o) {
   return lines.filter((l) => l !== "").join("\n").replace(/\n{3,}/g, "\n\n");
 }
 
-function send(text) {
-  return fetch(`https://api.telegram.org/bot${TELEGRAM.token}/sendMessage`, {
+// Bot serveriga (bot/worker.js) yuboradi. 4xx — so'rov yaroqsiz, qayta urinishdan foyda yo'q.
+function send(item) {
+  if (typeof item === "string") item = { path: "/rating", body: { text: item } }; // eski navbatdagi oddiy matnlar
+  return fetch(TELEGRAM.api + item.path, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ chat_id: TELEGRAM.chatId, text, parse_mode: "HTML", disable_web_page_preview: true }),
+    body: JSON.stringify(item.body),
     keepalive: true,
-  }).then((r) => r.json()).then((j) => { if (!j.ok) throw new Error(j.description || "Telegram xatosi"); });
+  }).then((r) => r.json().catch(() => ({})).then((j) => {
+    if (r.status >= 400 && r.status < 500) { console.warn("Bot serveri qabul qilmadi:", j.error); return; }
+    if (!j.ok) throw new Error(j.error || "Bot serveri xatosi");
+  }));
 }
 
 let flushing = false;
 export async function flushTelegram() {
-  if (flushing || !TELEGRAM.token || !TELEGRAM.chatId) return;
+  if (flushing || !TELEGRAM.api) return;
   flushing = true;
   try {
     let queue = Store.get("opus_tg_queue", []);
@@ -67,21 +73,22 @@ export async function flushTelegram() {
   }
 }
 
-function enqueue(text) {
-  if (!TELEGRAM.token || !TELEGRAM.chatId) return;
-  Store.set("opus_tg_queue", [...Store.get("opus_tg_queue", []), text]);
+function enqueue(path, body) {
+  if (!TELEGRAM.api) return;
+  Store.set("opus_tg_queue", [...Store.get("opus_tg_queue", []), { path, body }]);
   flushTelegram();
 }
 
-export function notifyTelegram(order) { enqueue(orderMessage(order)); }
+// Buyurtma bot serverida ham saqlanadi: admin uni ko'radi, holati o'zgarsa mijozga bot yozadi
+export function notifyTelegram(order) { enqueue("/order", { order, text: orderMessage(order), initData: tgInitData() }); }
 
 // Mijoz yetkazilgan buyurtmani baholaganda
 export function notifyRating(o) {
   const r = o.rating;
   const stars = "★".repeat(r.stars) + "☆".repeat(5 - r.stars);
-  enqueue([
+  enqueue("/rating", { id: o.id, createdAt: o.createdAt, rating: r, text: [
     `${r.stars >= 4 ? "⭐" : "⚠️"} <b>Baho: ${stars}</b> (${r.stars}/5)`,
     `🧾 ${esc(o.id)} · ${esc(o.customer.name)} · ${esc(o.customer.phone)}`,
     r.comment ? `💬 <i>${esc(r.comment)}</i>` : "",
-  ].filter(Boolean).join("\n"));
+  ].filter(Boolean).join("\n") });
 }
