@@ -21,6 +21,7 @@ export function orderMessage(o) {
     "",
     `👤 <b>${esc(c.name)}</b>`,
     `📞 ${esc(c.phone)}`,
+    o.tg ? `📲 Telegram bot orqali: ${o.tg.username ? "@" + esc(o.tg.username) : `<a href="tg://user?id=${o.tg.id}">${esc(o.tg.name || "profil")}</a>`}` : "",
     pickup ? "🏪 <b>Olib ketadi</b>" : `🛵 <b>Yetkazib berish:</b> ${esc(addr)}\n🗺 <a href="${map}">Xaritada ochish</a>`,
     `⏰ ${esc(c.time || "Imkon qadar tez")}`,
     c.note ? `📝 <i>${esc(c.note)}</i>` : "",
