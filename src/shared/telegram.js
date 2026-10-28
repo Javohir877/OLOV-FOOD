@@ -82,6 +82,13 @@ function enqueue(path, body) {
 // Buyurtma bot serverida ham saqlanadi: admin uni ko'radi, holati o'zgarsa mijozga bot yozadi
 export function notifyTelegram(order) { enqueue("/order", { order, text: orderMessage(order), initData: tgInitData() }); }
 
+/* Buyurtmaning admin belgilagan holati (bot serveridan) → "cooking" va h.k., yoki null (hali yetib bormagan / internet yo'q) */
+export function fetchStatus(o) {
+  if (!TELEGRAM.api) return Promise.resolve(null);
+  return fetch(`${TELEGRAM.api}/status?id=${encodeURIComponent(o.id)}&createdAt=${encodeURIComponent(o.createdAt)}`, { cache: "no-store" })
+    .then((r) => r.json()).then((j) => (j.ok ? j.status : null)).catch(() => null);
+}
+
 // Mijoz yetkazilgan buyurtmani baholaganda
 export function notifyRating(o) {
   const r = o.rating;
