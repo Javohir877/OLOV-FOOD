@@ -169,7 +169,7 @@ export const ORDER_FLOW = ["new", "cooking", "delivering", "done"];
 
 // deal.mode: "auto" — har kuni boshqa taom, "fixed" — admin tanlagan taom (deal.id), "off" — o'chirilgan
 export const DEFAULT_SETTINGS = {
-  autoStatus: true,
+  autoStatus: false, // demo rejim: holat vaqt bilan o'zi siljiydi. Haqiqiy buyurtmalarda o'chiq — holatni admin belgilaydi
   phone: "+998 90 123 45 67",
   open: "10:00",
   close: "03:00",
