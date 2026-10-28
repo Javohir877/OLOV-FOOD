@@ -7,6 +7,7 @@ import { fmt, som } from "../../shared/format.js";
 import { Img } from "../../shared/Img.jsx";
 import { useShop } from "../shop.jsx";
 import { sound } from "../../shared/sound.js";
+import { fetchStatus } from "../../shared/telegram.js";
 import { BADGES } from "./Menu.jsx";
 
 /* Har doim joyida turadigan oyna — ochilish/yopilish animatsiyasi CSS orqali */
@@ -131,8 +132,20 @@ function RateBox({ o }) {
 function TrackerBody({ id, fresh, onClose }) {
   const { reorder, ORDER_FLOW } = useShop();
   const [, tick] = useState(0);
-  // Holat vaqt bilan (yoki admin tomonidan) o'zgaradi — har 2 soniyada qayta o'qiymiz
-  useEffect(() => { const t = setInterval(() => tick((x) => x + 1), 2000); return () => clearInterval(t); }, []);
+  // Holatni admin o'zgartiradi — bot serveridan har 8 soniyada so'raymiz (hamma qurilmada bir xil bo'ladi)
+  useEffect(() => {
+    let alive = true;
+    const sync = () => {
+      const cur = Store.orders().find((x) => x.id === id);
+      if (!cur || cur.status === "done" || cur.status === "cancelled") return;
+      fetchStatus(cur).then((s) => {
+        if (alive && s && s !== cur.status) { Store.updateOrder(id, { status: s, statusManual: true }); tick((x) => x + 1); }
+      });
+    };
+    sync();
+    const t = setInterval(() => { tick((x) => x + 1); sync(); }, 8000);
+    return () => { alive = false; clearInterval(t); };
+  }, [id]);
   const o = Store.orders().find((x) => x.id === id);
   if (!o) return null;
   const idx = ORDER_FLOW.indexOf(Store.statusOf(o));
