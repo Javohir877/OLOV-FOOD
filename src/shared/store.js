@@ -59,17 +59,29 @@ export function applyOverrides() {
   }
 }
 
-/* Saytdagi config.json ni yuklash (sahifa ochilganda bir marta) */
+/* Oxirgi marta olingan config.json shu brauzerda saqlanadi — keyingi safar sayt
+   uni kutmasdan darhol ochiladi, yangisi esa orqada tekshiriladi */
+const CFG_KEY = "olov_cfg";
+export const hasCachedConfig = () => !!REMOTE;
+
+/* Saytdagi config.json ni yuklash (sahifa ochilganda bir marta).
+   Natija: true — saqlangan nusxadan farqli yangi sozlamalar keldi */
 export async function loadRemoteConfig(url = "config.json") {
+  let changed = false;
   try {
     const r = await fetch(url, { cache: "no-cache" });
     if (r.ok) {
       const cfg = await r.json();
-      if (cfg && cfg.app === "olov-food") REMOTE = cfg;
+      if (cfg && cfg.app === "olov-food") {
+        changed = !REMOTE || REMOTE.version !== cfg.version || REMOTE.updatedAt !== cfg.updatedAt;
+        REMOTE = cfg;
+        Store.set(CFG_KEY, cfg);
+      }
     }
   } catch (e) { /* config.json hali yo'q yoki internet yo'q — standart qiymatlar ishlaydi */ }
   applyOverrides();
-  return REMOTE;
+  return changed;
 }
 
+(() => { const c = Store.get(CFG_KEY, null); if (c && c.app === "olov-food") REMOTE = c; })();
 applyOverrides();
