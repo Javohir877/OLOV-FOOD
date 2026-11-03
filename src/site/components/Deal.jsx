@@ -21,7 +21,7 @@ export default function Deal() {
       <div className="deal__card">
         <div className="deal__img" onClick={() => setDishId(p.id)}>
           <span className="deal__pct">−{deal.percent}%</span>
-          <Img src={p.img} alt={p.name} emoji={catIcon(p.cat)} />
+          <Img src={p.img} alt={p.name} emoji={catIcon(p.cat)} lazy={false} sizes="(max-width: 1024px) 100vw, 480px" />
         </div>
         <div className="deal__body">
           <span className="tag">🔥 Kun taklifi</span>
