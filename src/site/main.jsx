@@ -1,17 +1,32 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
-import { loadRemoteConfig } from "../shared/store.js";
+import { hasCachedConfig, loadRemoteConfig } from "../shared/store.js";
 import { initTelegram } from "../shared/tg.js";
+import { injectSeo } from "./seo.js";
 import "../styles/site.css";
 
 initTelegram(); // bot ichida ochilgan bo'lsa — Telegram'ga moslashamiz
 
-// Admin "Saytga chiqargan" menyu va sozlamalarni (config.json) olib, keyin chizamiz.
-// config.json bo'lmasa yoki internet sekin bo'lsa — 2.5 soniyadan keyin standart qiymatlar bilan ochiladi.
-const timeout = new Promise((r) => setTimeout(r, 2500));
-Promise.race([loadRemoteConfig(), timeout]).finally(() => {
-  createRoot(document.getElementById("root")).render(<App />);
-});
+const root = createRoot(document.getElementById("root"));
+let gen = 0;
+const render = () => { injectSeo(); root.render(<App key={gen} />); };
+
+// Admin "Saytga chiqargan" menyu va sozlamalar (config.json):
+// - avval kelgan bo'lsa — saqlangan nusxa bilan DARHOL ochamiz, yangisini orqada tekshiramiz
+//   (admin yangilagan bo'lsa — sahifa yangi narxlar bilan qayta chiziladi, savat saqlanib qoladi);
+// - birinchi tashrif — config.json ni 2.5 soniyagacha kutamiz (bu vaqtda olovli yuklanish belgisi turadi).
+if (hasCachedConfig()) {
+  render();
+  loadRemoteConfig().then((changed) => { if (changed) { gen += 1; render(); } });
+} else {
+  const cfg = loadRemoteConfig();
+  const timeout = new Promise((r) => setTimeout(() => r("late"), 2500));
+  Promise.race([cfg, timeout]).then((won) => {
+    render();
+    // internet sekin bo'lib config.json kechikib kelsa — kelganda qayta chizamiz
+    if (won === "late") cfg.then((changed) => { if (changed) { gen += 1; render(); } });
+  });
+}
 
 // Telefonga ilova sifatida o'rnatish va tez ochilish uchun (faqat https yoki localhost'da ishlaydi)
 if ("serviceWorker" in navigator && !import.meta.env.DEV) {
