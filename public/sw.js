@@ -2,7 +2,7 @@
    - Sahifa va config.json: avval internetdan (yangi bo'lsin), bo'lmasa — saqlangan nusxadan
    - Rasmlar, JS, CSS: avval saqlangan nusxadan (tez), bo'lmasa — internetdan olib saqlaymiz
    Admin panel (admin.html) va Telegram so'rovlari hech qachon keshlanmaydi. */
-const CACHE = "olov-food-v1";
+const CACHE = "olov-food-v2"; // v2: WebP rasmlar — eski JPG kesh tozalanadi
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(["./", "./index.html"])).catch(() => {}));
