@@ -36,7 +36,7 @@ export default function Combo() {
                   return (
                     <label className="copt" key={id}>
                       <input type="radio" name={`combo-${g.id}`} checked={pick[g.id] === id} onChange={() => setPick({ ...pick, [g.id]: id })} />
-                      <div className="copt__img"><Img src={p.img} alt={p.name} emoji={catIcon(p.cat)} /></div>
+                      <div className="copt__img"><Img src={p.img} alt={p.name} emoji={catIcon(p.cat)} sizes="(max-width: 600px) 40vw, 200px" /></div>
                       <div className="copt__body"><b>{p.name}</b><small>{som(p.price)}</small></div>
                     </label>
                   );
