@@ -41,6 +41,7 @@ body {
 }
 body.lock { overflow: hidden; }
 img { display: block; max-width: 100%; }
+picture { display: contents; } /* WebP o'rami — ichidagi rasm konteynerning to'g'ridan-to'g'ri bolasidek o'lchanadi */
 a { color: inherit; }
 button { font: inherit; color: inherit; cursor: pointer; background: none; border: 0; }
 input, select, textarea { font: inherit; color: inherit; }
@@ -331,8 +332,32 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; line-height: 1.02; m
 .price small { font-family: var(--body); font-size: 12px; font-weight: 700; letter-spacing: 0; margin-left: 2px; -webkit-text-fill-color: var(--muted); }
 .plus { width: 42px; height: 42px; border-radius: 13px; background: var(--flame); color: #fff; font-size: 22px; font-weight: 700; line-height: 1; box-shadow: var(--glow); transition: transform .25s; }
 .plus:hover { transform: rotate(90deg) scale(1.06); }
+
+/* 🛵 Faol buyurtma belgisi (ekran pastida) */
+.live-order { position: fixed; left: 50%; bottom: 18px; z-index: 55; transform: translateX(-50%); display: flex; align-items: center; gap: 12px;
+  max-width: calc(100% - 24px); padding: 8px 10px 8px 8px; border-radius: 999px; color: var(--text); text-align: left;
+  background: rgba(24, 17, 13, .94); border: 1px solid rgba(255, 138, 31, .55); box-shadow: 0 0 0 4px rgba(255, 106, 26, .12), var(--soft);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); animation: liveIn .45s cubic-bezier(.2, .9, .3, 1.2); transition: bottom .3s; }
+.live-order.is-lifted { bottom: 88px; }
+.live-order__icon { width: 40px; height: 40px; flex: none; border-radius: 50%; display: grid; place-items: center; font-size: 20px; background: var(--flame); box-shadow: var(--glow); animation: livePulse 1.6s ease-in-out infinite; }
+.live-order__txt { display: grid; min-width: 0; line-height: 1.2; }
+.live-order__txt b { font-size: 14.5px; white-space: nowrap; }
+.live-order__txt small { color: var(--muted); font-size: 12px; font-weight: 600; white-space: nowrap; }
+.live-order__go { flex: none; padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 800; background: var(--glass-2); white-space: nowrap; }
+@keyframes liveIn { from { opacity: 0; transform: translate(-50%, 20px); } }
+@keyframes livePulse { 50% { box-shadow: 0 0 0 6px rgba(255, 106, 26, .22), var(--glow); } }
+@media (max-width: 380px) { .live-order__go { display: none; } }
+
+/* ❤️ Sevimlilar va ↗ ulashish tugmalari */
+.fav-btn { position: absolute; right: 6px; bottom: 6px; z-index: 1; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-size: 17px; line-height: 1;
+  color: #fff; background: rgba(12, 10, 9, .62); border: 1px solid rgba(255, 255, 255, .18); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); transition: transform .2s, background .2s, color .2s; }
+.fav-btn:hover { transform: scale(1.1); }
+.fav-btn.is-on { color: #FF4D5E; background: rgba(255, 255, 255, .92); border-color: transparent; animation: favPop .35s cubic-bezier(.2, .9, .3, 1.4); }
+@keyframes favPop { 50% { transform: scale(1.3); } }
+.dishm__acts { position: absolute; right: 14px; bottom: 14px; z-index: 2; display: flex; gap: 8px; }
+.fav-btn--lg { position: static; width: 44px; height: 44px; font-size: 21px; }
 .in-cart { position: absolute; top: -10px; right: 14px; z-index: 2; background: var(--flame); color: #fff; border-radius: 999px; padding: 3px 10px; font-size: 11px; font-weight: 800; box-shadow: var(--glow); }
-.badge { position: absolute; left: 6px; top: 6px; z-index: 1; padding: 3px 8px; border-radius: 999px; font-size: 10.5px; font-weight: 800; background: rgba(12, 10, 9, .75); backdrop-filter: blur(6px); }
+.badge { position: absolute; left: 6px; top: 6px; z-index: 1; padding: 3px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 800; background: rgba(12, 10, 9, .75); backdrop-filter: blur(6px); }
 .badge--hit { background: var(--flame); color: #fff; }
 .badge--new { background: var(--green); color: #052E12; }
 .badge--hot { background: var(--red); color: #fff; }
@@ -755,7 +780,7 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; line-height: 1.02; m
 .deal__timer > span { margin-right: 4px; }
 .deal__timer div { display: grid; justify-items: center; min-width: 58px; padding: 8px 6px; border-radius: 14px; background: rgba(0, 0, 0, .35); border: 1px solid var(--stroke-2); }
 .deal__timer b { font-family: var(--money); font-size: 30px; font-weight: 400; line-height: 1; color: var(--text); }
-.deal__timer small { font-size: 10.5px; }
+.deal__timer small { font-size: 11.5px; }
 .deal__timer i { font-style: normal; font-family: var(--money); font-size: 26px; color: var(--fire-2); }
 .price__old { display: block; font-size: 15px; color: var(--muted); -webkit-text-fill-color: var(--muted); text-decoration: line-through; line-height: 1; }
 
@@ -911,8 +936,32 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; line-height: 1.02; m
   .tip-btn { flex: 1 1 40%; }
   .toasts { left: 12px; right: 12px; bottom: 84px; width: auto; }
 }
+@media (max-width: 600px) {
+  /* Birinchi ekran: burger kichikroq — sarlavha va "Menyuni ko'rish" tugmasi ham ko'rinsin */
+  .stage { width: min(74%, 290px); }
+  .hero h1 { margin: 14px 0 12px; }
+  .hero__text > p { margin-bottom: 18px; }
+
+  /* Kombo: har bir guruh — yonga suriladigan bitta qator (3 ekran o'rniga ~1 ekran) */
+  .cgroup__opts { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -14px; padding: 4px 14px 8px; scrollbar-width: none; gap: 10px; }
+  .cgroup__opts::-webkit-scrollbar { display: none; }
+  .copt { flex: 0 0 42%; scroll-snap-align: start; }
+
+  /* Filiallar: yonga suriladigan kartochkalar */
+  .branches__grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -14px; padding: 4px 14px 10px; gap: 12px; scrollbar-width: none; }
+  .branches__grid::-webkit-scrollbar { display: none; }
+  .branch { flex: 0 0 86%; scroll-snap-align: center; }
+
+  /* Footer havolalari — barmoq bilan bosishga qulay balandlik */
+  .footer p a { display: inline-block; padding: 6px 0; }
+}
 @media (max-width: 400px) {
-  .brand__sticker { display: none; }
+  /* Logotip tor ekranda ham ko'rinsin — faqat kichrayadi */
+  .brand__sticker { width: 34px; height: 34px; border-radius: 10px; }
+  .brand__sticker svg { width: 25px; height: 25px; }
+  .brand__name { font-size: 15px; }
+  .nav__actions { gap: 6px; }
+  .hero h1 { font-size: 46px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition: none !important; }
