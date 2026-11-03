@@ -9,7 +9,7 @@ import { addToCart, bonusBalance, comboLine, defaultSize, dishLine, earnedFor, l
 import { notifyRating, notifyTelegram } from "../shared/telegram.js";
 import { dealToday, isOpenNow } from "../shared/hours.js";
 import { sound } from "../shared/sound.js";
-import { haptic, setBackButton, tgUser } from "../shared/tg.js";
+import { haptic, setBackButton, tgStartParam, tgUser } from "../shared/tg.js";
 
 const ShopContext = createContext(null);
 export const useShop = () => useContext(ShopContext);
@@ -41,6 +41,30 @@ export function ShopProvider({ children }) {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [pay, setPay] = useState(null); // { mode: "app"|"card"|"processing", ... }
   const [tracker, setTracker] = useState(null); // { id, fresh }
+
+  // ❤️ Sevimli taomlar (shu brauzerda saqlanadi)
+  const [favs, setFavs] = useState(() => Store.get("olov_favs", []));
+  const toggleFav = useCallback((id) => {
+    setFavs((f) => {
+      const on = !f.includes(id);
+      const next = on ? [...f, id] : f.filter((x) => x !== id);
+      Store.set("olov_favs", next);
+      sound.play(on ? "plus" : "minus");
+      haptic(on ? "medium" : "light");
+      return next;
+    });
+  }, []);
+
+  // Ulashilgan havola (#dish=<id>) yoki Telegram'dagi start_param (dish_<id>) — o'sha taomni darhol ochamiz
+  useEffect(() => {
+    const m = /dish=([\w-]+)/.exec(location.hash) || /^dish_([\w-]+)$/.exec(tgStartParam());
+    if (m && byId[m[1]] && !byId[m[1]].hidden) {
+      setDishId(m[1]);
+      if (location.hash) history.replaceState(null, "", location.pathname + location.search); // qayta yuklaganda yana ochilmasin
+      const menu = document.getElementById("menu");
+      if (menu) menu.scrollIntoView();
+    }
+  }, [byId]);
 
   // Saqlash
   useEffect(() => { Store.set("opus_cart_v2", cart); }, [cart]);
@@ -191,7 +215,7 @@ export function ShopProvider({ children }) {
     bonus, setBonus, totals: t, toasts, toast, bumpKey, confettiKey, setConfettiKey, orders, setOrders,
     addDish, addCombo, changeQty, ticketOpen, setTicketOpen, openTicket, dishId, setDishId,
     checkoutOpen, setCheckoutOpen, openCheckout, pay, setPay, placeOrder, tracker, setTracker, openTracker, reorder,
-    deal, open, tip, setTip, rateOrder,
+    deal, open, tip, setTip, rateOrder, favs, toggleFav,
     BONUS, ORDER_FLOW,
   };
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;
