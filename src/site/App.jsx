@@ -10,6 +10,7 @@ import { Kitchen, Reviews, Branches, Track, Footer, Cartbar } from "./components
 import { DishSheet, TrackerSheet, Toasts, Confetti } from "./components/Sheets.jsx";
 import { Checkout, PaySheet } from "./components/Checkout.jsx";
 import { flushTelegram } from "../shared/telegram.js";
+import LiveOrder from "./components/LiveOrder.jsx";
 
 function Shell() {
   const { setTicketOpen, setDishId, setPay, pay, setTracker, setCheckoutOpen, dishId, tracker, checkoutOpen } = useShop();
@@ -53,6 +54,7 @@ function Shell() {
       </main>
       <Footer />
       <Cartbar />
+      <LiveOrder />
       <DishSheet />
       <Checkout />
       <PaySheet />
