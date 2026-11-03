@@ -1,6 +1,6 @@
 /* Oshxona, fikrlar, filiallar, kuzatish formasi, footer va mobil savat paneli */
 import { useEffect, useRef, useState } from "react";
-import { BRANCHES, PAY_LOGOS, RATING, REVIEWS, TELEGRAM, catIcon } from "../../shared/data.js";
+import { BRANCHES, PAY_LOGOS, RATING, REVIEWS, SETTINGS, TELEGRAM, catIcon } from "../../shared/data.js";
 import { fmt, som } from "../../shared/format.js";
 import { Img, LogoTile } from "../../shared/Img.jsx";
 import { useShop } from "../shop.jsx";
@@ -9,9 +9,9 @@ export function Kitchen() {
   return (
     <section className="kitchen" id="kitchen">
       <div className="kitchen__photos">
-        <figure className="polaroid p1"><img src="assets/img/1561758033-d89a9ad46330.jpg" alt="Burger va fri" loading="lazy" /><figcaption>Olov Double + fri</figcaption></figure>
-        <figure className="polaroid p2"><img src="assets/img/1513104890138-7c749659a591.jpg" alt="Pitsa" loading="lazy" /><figcaption>Tandirdan yangi</figcaption></figure>
-        <figure className="polaroid p3"><img src="assets/img/1567620832903-9fc6debc209f.jpg" alt="Tovuq qanotchalari" loading="lazy" /><figcaption>Achchiq qanotchalar</figcaption></figure>
+        <figure className="polaroid p1"><Img src="assets/img/1561758033-d89a9ad46330.jpg" alt="Burger va fri" sizes="(max-width: 600px) 60vw, 280px" /><figcaption>Olov Double + fri</figcaption></figure>
+        <figure className="polaroid p2"><Img src="assets/img/1513104890138-7c749659a591.jpg" alt="Pitsa" sizes="(max-width: 600px) 60vw, 280px" /><figcaption>Tandirdan yangi</figcaption></figure>
+        <figure className="polaroid p3"><Img src="assets/img/1567620832903-9fc6debc209f.jpg" alt="Tovuq qanotchalari" sizes="(max-width: 600px) 60vw, 280px" /><figcaption>Achchiq qanotchalar</figcaption></figure>
       </div>
       <div className="kitchen__text">
         <span className="tag tag--mustard">Bizning oshxona</span>
@@ -59,7 +59,7 @@ export function Reviews() {
               <figcaption>
                 <span className="rev__ava">{r.name[0]}</span>
                 <div><b>{r.name}</b><small>{r.area}</small></div>
-                {p && <button className="rev__dish" title={p.name} onClick={() => setDishId(p.id)}><Img src={p.img} alt={p.name} emoji={catIcon(p.cat)} /></button>}
+                {p && <button className="rev__dish" title={p.name} aria-label={p.name + " — ko'rish"} onClick={() => setDishId(p.id)}><Img src={p.img} alt={p.name} emoji={catIcon(p.cat)} /></button>}
               </figcaption>
             </figure>
           );
@@ -94,7 +94,7 @@ export function Branches() {
           const map = "https://yandex.uz/maps/?text=" + encodeURIComponent("Toshkent, " + b.address);
           return (
             <article className="branch" key={b.id}>
-              <div className="branch__img"><img src={b.img} alt="" loading="lazy" /><span className={"branch__status" + (open ? " is-open" : "")}>{open ? "● Hozir ochiq" : "● Yopiq"}</span></div>
+              <div className="branch__img"><Img src={b.img} alt={b.name + " filiali"} sizes="(max-width: 600px) 100vw, 400px" /><span className={"branch__status" + (open ? " is-open" : "")}>{open ? "● Hozir ochiq" : "● Yopiq"}</span></div>
               <div className="branch__body">
                 <small>{b.area}</small>
                 <h3>{b.name}</h3>
@@ -152,11 +152,11 @@ export function Footer() {
       <div className="footer__cols">
         <div>
           <h4>Manzil</h4>
-          <p>Toshkent sh., Amir Temur ko'chasi, 1<br />Har kuni 10:00 – 03:00</p>
+          <p>Toshkent sh., {BRANCHES[0].address}<br />Har kuni {SETTINGS.open} – {SETTINGS.close}</p>
         </div>
         <div>
           <h4>Aloqa</h4>
-          <p><a href="tel:+998901234567">+998 90 123 45 67</a><br /><a href={"https://t.me/" + TELEGRAM.username} target="_blank" rel="noopener">Telegram</a> · <a href="#">Instagram</a></p>
+          <p><a href={"tel:" + SETTINGS.phone.replace(/s/g, "")}>{SETTINGS.phone}</a><br /><a href={"https://t.me/" + TELEGRAM.username} target="_blank" rel="noopener">📲 Telegram botda buyurtma</a></p>
         </div>
         <div>
           <h4>To'lov usullari</h4>
