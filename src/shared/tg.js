@@ -41,6 +41,21 @@ export function haptic(kind) {
 /* Imzolangan initData — bot serveri undan mijozning haqiqiy Telegram akkauntini tekshiradi */
 export const tgInitData = () => (inTelegram ? W.initData : "");
 
+/* Bot havolasidagi parametr (t.me/olovfoodbot?startapp=dish_burger-classic) — "" bo'lmasa */
+export const tgStartParam = () => (inTelegram && W.initDataUnsafe && W.initDataUnsafe.start_param) || "";
+
+/* Havolani ulashish: telefon menyusi → Telegram ichida "Ulashish" → bo'lmasa nusxa olish.
+   Natija: "shared" | "copied" | "failed" */
+export async function shareLink({ title, text, url }) {
+  try {
+    if (navigator.share && !inTelegram) { await navigator.share({ title, text, url }); return "shared"; }
+  } catch (e) { if (e && e.name === "AbortError") return "shared"; }
+  if (inTelegram && atLeast("6.1")) {
+    try { W.openTelegramLink("https://t.me/share/url?url=" + encodeURIComponent(url) + "&text=" + encodeURIComponent(text)); return "shared"; } catch (e) { /* */ }
+  }
+  try { await navigator.clipboard.writeText(url); return "copied"; } catch (e) { return "failed"; }
+}
+
 /* Telegram'dagi foydalanuvchi: { id, name, username } yoki null */
 export function tgUser() {
   if (!inTelegram) return null;
