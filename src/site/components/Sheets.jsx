@@ -8,6 +8,7 @@ import { Img } from "../../shared/Img.jsx";
 import { useShop } from "../shop.jsx";
 import { sound } from "../../shared/sound.js";
 import { fetchStatus } from "../../shared/telegram.js";
+import { shareLink } from "../../shared/tg.js";
 import { BADGES } from "./Menu.jsx";
 
 /* Har doim joyida turadigan oyna — ochilish/yopilish animatsiyasi CSS orqali */
@@ -28,8 +29,15 @@ function useLast(value) {
 }
 
 /* ---------- Taom oynasi (o'lcham + qo'shimchalar) ---------- */
+const SITE = "https://javohir877.github.io/OLOV-FOOD/";
+
 function DishBody({ p, onDone }) {
-  const { addDish } = useShop();
+  const { addDish, favs, toggleFav, toast } = useShop();
+  const fav = favs.includes(p.id);
+  const share = () => {
+    shareLink({ title: p.name + " — OLOV FOOD", text: `🔥 ${p.name} — ${som(p.price)}. OLOV FOOD'da buyurtma bering:`, url: SITE + "#dish=" + p.id })
+      .then((r) => { if (r === "copied") toast("🔗 Havola nusxalandi — do'stingizga yuboring"); else if (r === "failed") toast("Ulashib bo'lmadi", true); });
+  };
   const o = OPTIONS[p.cat] || {};
   const b = BADGES[p.badge];
   const [size, setSize] = useState(defaultSize(p.cat));
@@ -40,7 +48,12 @@ function DishBody({ p, onDone }) {
     <div className="dishm">
       <div className="dishm__img">
         {b && <span className={"badge " + b[0]} style={{ left: 14, top: 14, fontSize: 13 }}>{b[1]}</span>}
-        <Img src={p.img} alt={p.name} emoji={catIcon(p.cat)} lazy={false} />
+        <Img src={p.img} alt={p.name} emoji={catIcon(p.cat)} lazy={false} sizes="(max-width: 860px) 100vw, 400px" />
+        <div className="dishm__acts">
+          <button type="button" className={"fav-btn fav-btn--lg" + (fav ? " is-on" : "")} aria-pressed={fav} onClick={() => toggleFav(p.id)}
+            aria-label={fav ? "Sevimlilardan olib tashlash" : "Sevimlilarga qo'shish"} title={fav ? "Sevimlilarda" : "Sevimlilarga qo'shish"}>{fav ? "♥" : "♡"}</button>
+          <button type="button" className="fav-btn fav-btn--lg" onClick={share} aria-label="Do'stga ulashish" title="Do'stga ulashish">↗</button>
+        </div>
       </div>
       <form className="dishm__body" onSubmit={(e) => { e.preventDefault(); addDish(p.id, size, extras, qty); onDone(); }}>
         <h3>{p.name}</h3>
