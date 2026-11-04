@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { memo, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { CATEGORIES, catIcon } from "../../shared/data.js";
 import { fmt } from "../../shared/format.js";
 import { Img } from "../../shared/Img.jsx";
@@ -14,7 +14,7 @@ const SORTS = {
   pricey: (a, b) => b.price - a.price,
 };
 
-function DishCard({ p, i, inCart }) {
+const DishCard = memo(function DishCard({ p, i, inCart }) {
   const { setDishId, addDish, deal, favs, toggleFav } = useShop();
   const fav = favs.includes(p.id);
   const isDeal = deal && deal.product.id === p.id;
@@ -43,7 +43,7 @@ function DishCard({ p, i, inCart }) {
       </div>
     </article>
   );
-}
+});
 
 export default function Menu() {
   const { products, cart, favs } = useShop();
@@ -56,11 +56,12 @@ export default function Menu() {
   // oxirgi sevimli olib tashlansa — "Sevimlilar" filtri ham yo'qoladi, to'liq menyuga qaytamiz
   useEffect(() => { if (tag === "fav" && !favs.length) setTag(""); }, [favs, tag]);
 
+  const deferredQuery = useDeferredValue(query);
   const list = useMemo(() => {
-    const q = query.trim().toLowerCase();
+    const q = deferredQuery.trim().toLowerCase();
     const tagOk = (p) => !tag || (tag === "fav" ? favs.includes(p.id) : tag === "light" ? p.kcal > 0 && p.kcal <= 600 : p.badge === tag);
     return products.filter((p) => !p.hidden && tagOk(p) && (!q || p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q)));
-  }, [products, query, tag, favs]);
+  }, [products, deferredQuery, tag, favs]);
 
   const blocks = CATEGORIES.map((c) => {
     const items = list.filter((p) => p.cat === c.id);
@@ -108,7 +109,7 @@ export default function Menu() {
         <h2 className="rail__title">Menyu</h2>
         <label className="search">
           <span>🔍</span>
-          <input type="search" placeholder="Taom qidirish..." autoComplete="off" value={query} onChange={(e) => refilter(() => setQuery(e.target.value))} />
+          <input type="search" placeholder="Taom qidirish..." autoComplete="off" value={query} onChange={(e) => setQuery(e.target.value)} />
         </label>
         <nav className="rail__cats" ref={railRef}>
           {blocks.map((c) => (
