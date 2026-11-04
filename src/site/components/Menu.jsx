@@ -4,6 +4,10 @@ import { fmt } from "../../shared/format.js";
 import { Img } from "../../shared/Img.jsx";
 import { useShop } from "../shop.jsx";
 import Ticket from "./Ticket.jsx";
+import { flyToCart } from "../motion.js";
+
+// Har bir taom turining o'z rangi: menyuda chegaralar, nurlar va sarlavhalarda ishlatiladi
+export const CAT_HUE = { burger: "#FF7A1A", pizza: "#E8253A", lavash: "#FFC94D", chicken: "#FF9F43", hotdog: "#D6457A", snack: "#F5D547", drink: "#3BC9DB", dessert: "#FF6FAE" };
 
 export const BADGES = { hit: ["badge--hit", "🔥 Hit"], new: ["badge--new", "Yangi"], hot: ["badge--hot", "🌶 Achchiq"] };
 
@@ -21,7 +25,7 @@ const DishCard = memo(function DishCard({ p, i, inCart }) {
   const b = isDeal ? ["badge--hot", `🔥 −${deal.percent}%`] : BADGES[p.badge];
   return (
     <article
-      className="dish" style={{ animationDelay: `${i * 50}ms` }} tabIndex={0} aria-label={p.name}
+      className="dish" style={{ "--cat": CAT_HUE[p.cat] }} tabIndex={0} aria-label={p.name}
       onClick={() => setDishId(p.id)} onKeyDown={(e) => { if (e.key === "Enter") setDishId(p.id); }}
     >
       {inCart ? <span className="in-cart">Savatda: {inCart}</span> : null}
@@ -38,7 +42,7 @@ const DishCard = memo(function DishCard({ p, i, inCart }) {
         <div className="dish__buy">
           <span className="price">{isDeal && <s className="price__old">{fmt(p.price)}</s>}{fmt(isDeal ? deal.price : p.price)} <small>so'm</small></span>
           {/* "+" standart variantni darhol qo'shadi; kartochkani bosish sozlash oynasini ochadi */}
-          <button className="plus" aria-label={`${p.name} — savatga qo'shish`} onClick={(e) => { e.stopPropagation(); addDish(p.id); }}>+</button>
+          <button className="plus" aria-label={`${p.name} — savatga qo'shish`} onClick={(e) => { e.stopPropagation(); flyToCart(e.currentTarget.closest(".dish").querySelector(".dish__img")); addDish(p.id); }}>+</button>
         </div>
       </div>
     </article>
@@ -113,7 +117,7 @@ export default function Menu() {
         </label>
         <nav className="rail__cats" ref={railRef}>
           {blocks.map((c) => (
-            <button key={c.id} className={"rail__cat" + (active === c.id ? " is-active" : "")} onClick={() => document.getElementById("cat-" + c.id).scrollIntoView({ behavior: "smooth" })}>
+            <button key={c.id} style={{ "--cat": CAT_HUE[c.id] }} className={"rail__cat" + (active === c.id ? " is-active" : "")} onClick={() => document.getElementById("cat-" + c.id).scrollIntoView({ behavior: "smooth" })}>
               <i><Img src={c.img} emoji={c.icon} lazy={false} /></i>{c.name}<small>{c.items.length}</small>
             </button>
           ))}
@@ -139,7 +143,7 @@ export default function Menu() {
         </div>
         <div className="menu__list" key={animKey}>
           {blocks.length ? blocks.map((c) => (
-            <section className="cat-block" id={"cat-" + c.id} key={c.id}>
+            <section className="cat-block" id={"cat-" + c.id} key={c.id} style={{ "--cat": CAT_HUE[c.id] }}>
               <div className="cat-head">
                 <Img src={c.img} emoji={c.icon} />
                 <div><h2>{c.name}</h2><small>{c.items.length} ta taom</small></div>
