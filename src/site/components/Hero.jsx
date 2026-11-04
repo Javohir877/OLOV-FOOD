@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 
 const BITS = ["🍔", "🔥", "🧀", "🍅", "🥬", "🥓", "✨"];
 const HINTS = ["Yana! 😋", "Ham-ham! 🍔", "Och qoldingizmi? 👇", "Menyuga o'ting! 🔥"];
@@ -17,7 +17,7 @@ function Patty({ y, cls }) {
   );
 }
 
-function Burger() {
+const Burger = memo(function Burger() {
   return (
     <svg viewBox="0 0 420 420" aria-hidden="true">
       <defs>
@@ -83,9 +83,9 @@ function Burger() {
       </g>
     </svg>
   );
-}
+});
 
-function Bits() {
+const Bits = memo(function Bits() {
   return (
     <>
       <svg className="bit bit--tomato" viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="25" fill="#F0452B" stroke="#1A1210" strokeWidth="4" /><circle cx="30" cy="30" r="15" fill="#FF7A5C" /><circle cx="24" cy="26" r="3" fill="#FFE1A8" /><circle cx="36" cy="27" r="3" fill="#FFE1A8" /><circle cx="30" cy="37" r="3" fill="#FFE1A8" /></svg>
@@ -96,12 +96,12 @@ function Bits() {
       <svg className="bit bit--seed" viewBox="0 0 30 30" aria-hidden="true"><ellipse cx="15" cy="15" rx="7" ry="11" fill="#FFF4DD" stroke="#1A1210" strokeWidth="3" transform="rotate(30 15 15)" /></svg>
     </>
   );
-}
+});
 
 export default function Hero() {
   const stage = useRef(null);
   const burger = useRef(null);
-  const [mouse, setMouse] = useState({ mx: 0, my: 0 });
+  const hero = useRef(null);
   const [pops, setPops] = useState([]);
   const [hint, setHint] = useState("Meni bosing! 👆");
 
@@ -111,12 +111,32 @@ export default function Hero() {
   })), []);
 
   const hover = typeof window !== "undefined" && window.matchMedia && window.matchMedia("(hover: hover)").matches;
+  // Sichqoncha ortidan burger qiyshayadi: React'ni qayta chizmasdan, to'g'ridan-to'g'ri CSS o'zgaruvchilari
+  // orqali va kadrga bir martadan ko'p emas (oldin har bir harakatda butun burger qayta chizilardi)
+  const frame = useRef(0);
+  const setTilt = (mx, my) => {
+    cancelAnimationFrame(frame.current);
+    frame.current = requestAnimationFrame(() => {
+      if (!stage.current) return;
+      stage.current.style.setProperty("--mx", mx.toFixed(3));
+      stage.current.style.setProperty("--my", my.toFixed(3));
+    });
+  };
   const onMove = (e) => {
-    if (!hover || !stage.current) return;
+    if (!hover || e.pointerType !== "mouse" || !stage.current) return;
     const r = stage.current.getBoundingClientRect();
     const clamp = (v) => Math.max(-1, Math.min(1, v));
-    setMouse({ mx: clamp((e.clientX - (r.left + r.width / 2)) / (r.width / 1.2)), my: clamp((e.clientY - (r.top + r.height / 2)) / (r.height / 1.2)) });
+    setTilt(clamp((e.clientX - (r.left + r.width / 2)) / (r.width / 1.2)), clamp((e.clientY - (r.top + r.height / 2)) / (r.height / 1.2)));
   };
+
+  // Bosh ekran ko'rinmay qolsa — uning barcha animatsiyalari to'xtaydi (CSS: .hero.is-paused)
+  useEffect(() => {
+    const el = hero.current;
+    if (!el || !("IntersectionObserver" in window)) return undefined;
+    const io = new IntersectionObserver(([en]) => el.classList.toggle("is-paused", !en.isIntersecting), { rootMargin: "80px" });
+    io.observe(el);
+    return () => { io.disconnect(); cancelAnimationFrame(frame.current); };
+  }, []);
 
   const chomp = (e) => {
     const b = burger.current;
@@ -133,7 +153,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="hero" onPointerMove={onMove} onPointerLeave={() => setMouse({ mx: 0, my: 0 })}>
+    <section className="hero" ref={hero} onPointerMove={onMove} onPointerLeave={() => setTilt(0, 0)}>
       <div className="hero__word" aria-hidden="true">OLOV</div>
       <div className="embers" aria-hidden="true">
         {embers.map((m) => <i key={m.i} style={{ left: m.left + "%", "--s": m.s + "px", "--t": m.t + "s", "--dl": m.dl + "s", "--x": m.x + "px" }} />)}
@@ -153,7 +173,7 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="stage" ref={stage} style={{ "--mx": mouse.mx.toFixed(3), "--my": mouse.my.toFixed(3) }}>
+      <div className="stage" ref={stage}>
         <div className="stage__plate" />
         <svg className="spin-badge" viewBox="0 0 200 200" aria-hidden="true">
           <defs><path id="circ" d="M100,100 m-72,0 a72,72 0 1,1 144,0 a72,72 0 1,1 -144,0" /></defs>
