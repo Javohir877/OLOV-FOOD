@@ -161,7 +161,7 @@ export default function Hero() {
 
       <div className="hero__text">
         <span className="tag tag--tilt">🔥 Grilda, olov ustida</span>
-        <h1>Issiq.<br /><span className="outline">Shirali.</span><br />Tez.</h1>
+        <h1><span className="h1-line" style={{ "--d": 0 }}>Issiq.</span><br /><span className="outline h1-line" style={{ "--d": 1 }}>Shirali.</span><br /><span className="h1-line" style={{ "--d": 2 }}>Tez.</span></h1>
         <p>Har kuni yangi mol go'shti, yumshoq bulochka va faqat bizda bor OLOV sousi. Buyurtma bering — kuryer 30 daqiqada eshigingizda.</p>
         <div className="hero__cta">
           <a href="#menu" className="btn btn--ink">Menyuni ko'rish →</a>
