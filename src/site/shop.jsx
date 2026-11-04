@@ -1,7 +1,7 @@
 /* =========================================================
    Do'kon holati (savat, promokod, bonus, oynalar) — React kontekst
    ========================================================= */
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { BONUS, DELIVERY, ORDER_FLOW } from "../shared/data.js";
 import { Store } from "../shared/store.js";
 import { som } from "../shared/format.js";
@@ -13,6 +13,16 @@ import { haptic, setBackButton, tgStartParam, tgUser } from "../shared/tg.js";
 
 const ShopContext = createContext(null);
 export const useShop = () => useContext(ShopContext);
+
+/* Bildirishnomalar (toast) alohida saqlanadi: ular paydo bo'lib-yo'qolganda faqat <Toasts />
+   qayta chiziladi, butun sayt (menyu, 24 kartochka...) emas */
+const toastStore = {
+  list: [],
+  subs: new Set(),
+  set(fn) { this.list = fn(this.list); this.subs.forEach((f) => f()); },
+};
+const subscribeToasts = (cb) => { toastStore.subs.add(cb); return () => toastStore.subs.delete(cb); };
+export const useToasts = () => useSyncExternalStore(subscribeToasts, () => toastStore.list);
 
 export const isDocked = () => window.innerWidth > 1280;
 
@@ -31,7 +41,6 @@ export function ShopProvider({ children }) {
   const [payMethod, setPayMethod] = useState("click");
   const [useBonus, setUseBonus] = useState(false);
   const [bonus, setBonus] = useState(bonusBalance);
-  const [toasts, setToasts] = useState([]);
   const [confettiKey, setConfettiKey] = useState(0);
   const [orders, setOrders] = useState(() => Store.orders());
 
@@ -89,10 +98,10 @@ export function ShopProvider({ children }) {
   const toastId = useRef(0);
   const toast = useCallback((msg, bad) => {
     const id = ++toastId.current;
-    setToasts((t) => [...t, { id, msg, bad }]);
+    toastStore.set((t) => [...t, { id, msg, bad }]);
     if (bad) { sound.play("error"); haptic("error"); }
-    setTimeout(() => setToasts((t) => t.map((x) => (x.id === id ? { ...x, out: true } : x))), 2400);
-    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 2700);
+    setTimeout(() => toastStore.set((t) => t.map((x) => (x.id === id ? { ...x, out: true } : x))), 2400);
+    setTimeout(() => toastStore.set((t) => t.filter((x) => x.id !== id)), 2700);
   }, []);
 
   const [bumpKey, setBumpKey] = useState(0);
@@ -212,7 +221,7 @@ export function ShopProvider({ children }) {
 
   const value = {
     products, byId, cart, promo, setPromo, orderType, setOrderType, payMethod, setPayMethod, useBonus, setUseBonus,
-    bonus, setBonus, totals: t, toasts, toast, bumpKey, confettiKey, setConfettiKey, orders, setOrders,
+    bonus, setBonus, totals: t, toast, bumpKey, confettiKey, setConfettiKey, orders, setOrders,
     addDish, addCombo, changeQty, ticketOpen, setTicketOpen, openTicket, dishId, setDishId,
     checkoutOpen, setCheckoutOpen, openCheckout, pay, setPay, placeOrder, tracker, setTracker, openTracker, reorder,
     deal, open, tip, setTip, rateOrder, favs, toggleFav,
