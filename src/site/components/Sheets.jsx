@@ -9,6 +9,7 @@ import { useShop, useToasts } from "../shop.jsx";
 import { sound } from "../../shared/sound.js";
 import { fetchStatus } from "../../shared/telegram.js";
 import { shareLink } from "../../shared/tg.js";
+import { flyToCart } from "../motion.js";
 import { BADGES } from "./Menu.jsx";
 
 /* Har doim joyida turadigan oyna — ochilish/yopilish animatsiyasi CSS orqali */
@@ -55,7 +56,7 @@ function DishBody({ p, onDone }) {
           <button type="button" className="fav-btn fav-btn--lg" onClick={share} aria-label="Do'stga ulashish" title="Do'stga ulashish">↗</button>
         </div>
       </div>
-      <form className="dishm__body" onSubmit={(e) => { e.preventDefault(); addDish(p.id, size, extras, qty); onDone(); }}>
+      <form className="dishm__body" onSubmit={(e) => { e.preventDefault(); flyToCart(e.currentTarget.closest(".dishm").querySelector(".dishm__img")); addDish(p.id, size, extras, qty); onDone(); }}>
         <h3>{p.name}</h3>
         <span className="dish__meta"><b>★ {p.rating.toFixed(1)}</b> · {p.weight} · {p.kcal} kkal</span>
         <p>{p.desc}</p>
