@@ -3,13 +3,20 @@ import App from "./App.jsx";
 import { hasCachedConfig, loadRemoteConfig } from "../shared/store.js";
 import { initTelegram } from "../shared/tg.js";
 import { injectSeo } from "./seo.js";
+import { initReveal } from "./motion.js";
 import "../styles/site.css";
 
 initTelegram(); // bot ichida ochilgan bo'lsa — Telegram'ga moslashamiz
 
 const root = createRoot(document.getElementById("root"));
 let gen = 0;
-const render = () => { injectSeo(); root.render(<App key={gen} />); };
+let motion = false;
+const render = () => {
+  injectSeo();
+  root.render(<App key={gen} />);
+  // bo'limlar ekranga kirganda paydo bo'lishi — birinchi chizilgandan keyin bir marta ishga tushadi
+  if (!motion) { motion = true; setTimeout(initReveal, 0); }
+};
 
 // Admin "Saytga chiqargan" menyu va sozlamalar (config.json):
 // - avval kelgan bo'lsa — saqlangan nusxa bilan DARHOL ochamiz, yangisini orqada tekshiramiz
