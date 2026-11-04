@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { ShopProvider, useShop, isDocked } from "./shop.jsx";
 import Header from "./components/Header.jsx";
 import Hero from "./components/Hero.jsx";
+import Ticker from "./components/Ticker.jsx";
 import Combo from "./components/Combo.jsx";
 import Deal from "./components/Deal.jsx";
 import Menu from "./components/Menu.jsx";
@@ -43,6 +44,7 @@ function Shell() {
       <Header />
       <main>
         <Hero />
+        <Ticker />
         <Deal />
         <Combo />
         <Menu />
