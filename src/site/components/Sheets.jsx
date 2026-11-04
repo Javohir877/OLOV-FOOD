@@ -5,7 +5,7 @@ import { Store } from "../../shared/store.js";
 import { dishUnit, defaultSize } from "../../shared/cart.js";
 import { fmt, som } from "../../shared/format.js";
 import { Img } from "../../shared/Img.jsx";
-import { useShop } from "../shop.jsx";
+import { useShop, useToasts } from "../shop.jsx";
 import { sound } from "../../shared/sound.js";
 import { fetchStatus } from "../../shared/telegram.js";
 import { shareLink } from "../../shared/tg.js";
@@ -219,7 +219,7 @@ export function TrackerSheet() {
 
 /* ---------- Bildirishnomalar ---------- */
 export function Toasts() {
-  const { toasts } = useShop();
+  const toasts = useToasts();
   return (
     <div className="toasts">
       {toasts.map((t) => (
