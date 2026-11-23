@@ -11,7 +11,7 @@ export function webpSet(src) {
 
 /* Taom rasmi: mahalliy fayl ochilmasa — Unsplash'dagi nusxa, u ham ochilmasa — emoji.
    sizes — rasm sahifada qancha joy egallashi (brauzer shunga mos faylni yuklaydi) */
-export function Img({ src, alt = "", emoji = "🍔", lazy = true, className, sizes = "160px" }) {
+export function Img({ src, alt = "", emoji = "🍔", lazy = true, priority = false, className, sizes = "160px" }) {
   const [stage, setStage] = useState(0); // 0: mahalliy, 1: Unsplash, 2: emoji
   const remote = remoteImg(src);
   if (stage === 2 || !src) return <div className="img-fallback">{emoji}</div>;
@@ -21,7 +21,8 @@ export function Img({ src, alt = "", emoji = "🍔", lazy = true, className, siz
       className={className}
       src={stage === 1 ? remote : src}
       alt={alt}
-      loading={lazy ? "lazy" : undefined}
+      loading={lazy && !priority ? "lazy" : undefined}
+      fetchpriority={priority ? "high" : undefined}
       decoding="async"
       onError={() => setStage(stage === 0 && remote ? 1 : 2)}
     />
