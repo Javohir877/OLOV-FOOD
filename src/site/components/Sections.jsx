@@ -1,5 +1,6 @@
 /* Oshxona, fikrlar, filiallar, kuzatish formasi, footer va mobil savat paneli */
 import { useEffect, useRef, useState } from "react";
+import { MapPin, Clock, Phone, ArrowLeft, ArrowRight, Send } from "lucide-react";
 import { BRANCHES, PAY_LOGOS, RATING, REVIEWS, SETTINGS, TELEGRAM, catIcon } from "../../shared/data.js";
 import { fmt, som } from "../../shared/format.js";
 import { Img, LogoTile } from "../../shared/Img.jsx";
@@ -64,8 +65,8 @@ export function Reviews() {
         })}
       </div>
       <div className="reviews__nav">
-        <button className="x-btn" onClick={() => scroll(-1)} aria-label="Oldingi">←</button>
-        <button className="x-btn" onClick={() => scroll(1)} aria-label="Keyingi">→</button>
+        <button className="x-btn" onClick={() => scroll(-1)} aria-label="Oldingi"><ArrowLeft size={18} aria-hidden="true" /></button>
+        <button className="x-btn" onClick={() => scroll(1)} aria-label="Keyingi"><ArrowRight size={18} aria-hidden="true" /></button>
       </div>
     </section>
   );
@@ -95,12 +96,12 @@ export function Branches() {
               <div className="branch__body">
                 <small>{b.area}</small>
                 <h3>{b.name}</h3>
-                <p>📍 {b.address}</p>
-                <p>🕙 {b.open} – {b.close} · har kuni</p>
+                <p className="ic-line"><MapPin size={15} aria-hidden="true" /> {b.address}</p>
+                <p className="ic-line"><Clock size={15} aria-hidden="true" /> {b.open} – {b.close} · har kuni</p>
                 <div className="branch__perks">{b.perks.map((x) => <span key={x}>{x}</span>)}</div>
                 <div className="branch__actions">
-                  <a className="btn btn--cream" href={"tel:" + b.phone.replace(/\s/g, "")}>☎ Qo'ng'iroq</a>
-                  <a className="btn btn--fire" href={map} target="_blank" rel="noopener">Xaritada →</a>
+                  <a className="btn btn--cream" href={"tel:" + b.phone.replace(/\s/g, "")}><Phone size={16} aria-hidden="true" /> Qo'ng'iroq</a>
+                  <a className="btn btn--fire" href={map} target="_blank" rel="noopener">Xaritada</a>
                 </div>
               </div>
             </article>
@@ -134,7 +135,7 @@ export function Track() {
         <div className="track__recent">
           {orders.length
             ? orders.slice(0, 5).map((o) => <button key={o.id} onClick={() => openTracker(o.id)}>{o.id} · {som(o.total)}</button>)
-            : <small style={{ fontWeight: 600 }}>Hali buyurtmalar yo'q — birinchisini bering! 🍔</small>}
+            : <small style={{ fontWeight: 600 }}>Hali buyurtmalar yo'q — birinchisini bering!</small>}
         </div>
       </div>
     </section>
@@ -152,7 +153,7 @@ export function Footer() {
         </div>
         <div>
           <h4>Aloqa</h4>
-          <p><a href={"tel:" + SETTINGS.phone.replace(/s/g, "")}>{SETTINGS.phone}</a><br /><a href={"https://t.me/" + TELEGRAM.username} target="_blank" rel="noopener">📲 Telegram botda buyurtma</a></p>
+          <p><a href={"tel:" + SETTINGS.phone.replace(/s/g, "")}>{SETTINGS.phone}</a><br /><a href={"https://t.me/" + TELEGRAM.username} target="_blank" rel="noopener"><Send size={14} aria-hidden="true" /> Telegram botda buyurtma</a></p>
         </div>
         <div>
           <h4>To'lov usullari</h4>
@@ -161,7 +162,7 @@ export function Footer() {
       </div>
       <div className="footer__bottom">
         <span>© {new Date().getFullYear()} OLOV FOOD</span>
-        <span>Olov bilan tayyorlangan 🔥</span>
+        <span>Olov bilan tayyorlangan</span>
       </div>
     </footer>
   );
