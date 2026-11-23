@@ -14,6 +14,10 @@ const REVEAL = [
 const reduced = () => window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 export function initReveal() {
+  // O'chirilgan: har bir bo'limning "pastdan chiqishi" hamma saytlarda bir xil va zerikarli.
+  // Endi faqat bitta harakat bor — bosh ekrandagi sarlavha va fotolar (CSS: hero__title, hero__slide).
+  return;
+  // eslint-disable-next-line no-unreachable
   if (reduced()) return;
   const seen = new WeakSet();
   const show = (el) => { el.classList.add("in"); if (io) io.unobserve(el); };
