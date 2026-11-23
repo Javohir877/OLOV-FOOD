@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 import { COMBO, catIcon } from "../../shared/data.js";
 import { comboItems, comboUnit } from "../../shared/cart.js";
 import { fmt, som } from "../../shared/format.js";
@@ -68,7 +69,7 @@ export default function Combo() {
 
       <div className={"sheet" + (open ? " is-open" : "")} onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }} aria-hidden={!open}>
         <div className="sheet__box combo-sheet" role="dialog" aria-label="Kombo tarkibi">
-          <button className="x-btn sheet__close" onClick={() => setOpen(false)} aria-label="Yopish">✕</button>
+          <button className="x-btn sheet__close" onClick={() => setOpen(false)} aria-label="Yopish"><X size={18} aria-hidden="true" /></button>
           <h3>Sizning kombo</h3>
           <ul className="combo-sheet__list">
             {items.map((p) => (
