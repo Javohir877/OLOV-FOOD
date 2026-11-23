@@ -1,48 +1,56 @@
 import { memo, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { Flame, Star, Heart, Search, Plus, Minus } from "lucide-react";
+import { dishLine } from "../../shared/cart.js";
 import { CATEGORIES, catIcon } from "../../shared/data.js";
 import { fmt } from "../../shared/format.js";
 import { Img } from "../../shared/Img.jsx";
 import { useShop } from "../shop.jsx";
 import Ticket from "./Ticket.jsx";
-import { flyToCart } from "../motion.js";
 
 // Har bir taom turining o'z rangi: menyuda chegaralar, nurlar va sarlavhalarda ishlatiladi
 export const CAT_HUE = { burger: "#FF7A1A", pizza: "#E8253A", lavash: "#FFC94D", chicken: "#FF9F43", hotdog: "#D6457A", snack: "#F5D547", drink: "#3BC9DB", dessert: "#FF6FAE" };
 
-export const BADGES = { hit: ["badge--hit", "🔥 Hit"], new: ["badge--new", "Yangi"], hot: ["badge--hot", "🌶 Achchiq"] };
+export const BADGES = { hit: ["badge--hit", <><Star size={12} fill="currentColor" aria-hidden="true" />Hit</>], new: ["badge--new", "Yangi"], hot: ["badge--hot", <><Flame size={12} aria-hidden="true" />Achchiq</>] };
 
-const TAGS = [["", "Hammasi"], ["hit", "🔥 Hit"], ["new", "✨ Yangi"], ["hot", "🌶 Achchiq"], ["light", "🥗 600 kkal gacha"]];
+const TAGS = [["", "Hammasi"], ["hit", "Hit"], ["new", "Yangi"], ["hot", "Achchiq"], ["light", "600 kkal gacha"]];
 const SORTS = {
   rating: (a, b) => b.rating - a.rating,
   cheap: (a, b) => a.price - b.price,
   pricey: (a, b) => b.price - a.price,
 };
 
-const DishCard = memo(function DishCard({ p, i, inCart }) {
-  const { setDishId, addDish, deal, favs, toggleFav } = useShop();
+const DishCard = memo(function DishCard({ p, qty, lineKey }) {
+  const { setDishId, addDish, changeQty, deal, favs, toggleFav } = useShop();
   const fav = favs.includes(p.id);
   const isDeal = deal && deal.product.id === p.id;
-  const b = isDeal ? ["badge--hot", `🔥 −${deal.percent}%`] : BADGES[p.badge];
+  const b = isDeal ? ["badge--hot", `−${deal.percent}%`] : BADGES[p.badge];
   return (
     <article
       className="dish" style={{ "--cat": CAT_HUE[p.cat] }} tabIndex={0} aria-label={p.name}
       onClick={() => setDishId(p.id)} onKeyDown={(e) => { if (e.key === "Enter") setDishId(p.id); }}
     >
-      {inCart ? <span className="in-cart">Savatda: {inCart}</span> : null}
       <div className="dish__img">
         {b && <span className={"badge " + b[0]}>{b[1]}</span>}
         <Img src={p.img} alt={p.name} emoji={catIcon(p.cat)} sizes="(max-width: 600px) 100px, 120px" />
         <button className={"fav-btn" + (fav ? " is-on" : "")} aria-pressed={fav} aria-label={fav ? `${p.name} — sevimlilardan olib tashlash` : `${p.name} — sevimlilarga qo'shish`}
-          onClick={(e) => { e.stopPropagation(); toggleFav(p.id); }}>{fav ? "♥" : "♡"}</button>
+          onClick={(e) => { e.stopPropagation(); toggleFav(p.id); }}><Heart size={18} fill={fav ? "currentColor" : "none"} aria-hidden="true" /></button>
       </div>
       <div className="dish__info">
         <h3>{p.name}</h3>
         <p>{p.desc}</p>
-        <span className="dish__meta"><b>★ {p.rating.toFixed(1)}</b> · {p.weight} · {p.kcal} kkal</span>
+        <span className="dish__meta"><b><Star size={12} fill="currentColor" aria-hidden="true" /> {p.rating.toFixed(1)}</b> · {p.weight} · {p.kcal} kkal</span>
         <div className="dish__buy">
           <span className="price">{isDeal && <s className="price__old">{fmt(p.price)}</s>}{fmt(isDeal ? deal.price : p.price)} <small>so'm</small></span>
           {/* "+" standart variantni darhol qo'shadi; kartochkani bosish sozlash oynasini ochadi */}
-          <button className="plus" aria-label={`${p.name} — savatga qo'shish`} onClick={(e) => { e.stopPropagation(); flyToCart(e.currentTarget.closest(".dish").querySelector(".dish__img")); addDish(p.id); }}>+</button>
+          {qty ? (
+            <div className="qty" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+              <button aria-label={`${p.name} — bittaga kamaytirish`} onClick={() => changeQty(lineKey, -1)}><Minus size={16} strokeWidth={2.5} aria-hidden="true" /></button>
+              <span aria-live="polite">{qty}</span>
+              <button aria-label={`${p.name} — yana bitta qo'shish`} onClick={() => addDish(p.id)}><Plus size={16} strokeWidth={2.5} aria-hidden="true" /></button>
+            </div>
+          ) : (
+            <button className="plus" aria-label={`${p.name} — savatga qo'shish`} onClick={(e) => { e.stopPropagation(); addDish(p.id); }}><Plus size={18} strokeWidth={2.5} aria-hidden="true" /></button>
+          )}
         </div>
       </div>
     </article>
@@ -73,8 +81,8 @@ export default function Menu() {
     return { ...c, items };
   }).filter((c) => c.items.length);
 
-  const inCart = {};
-  cart.forEach((l) => { if (l.kind === "dish") inCart[l.id] = (inCart[l.id] || 0) + l.qty; });
+  const lineQty = {};
+  cart.forEach((l) => { lineQty[l.key] = l.qty; });
 
   // Qaysi kategoriya ko'rinib turganini aniqlash (chap paneldagi belgi)
   useEffect(() => {
@@ -112,7 +120,7 @@ export default function Menu() {
       <aside className="rail">
         <h2 className="rail__title">Menyu</h2>
         <label className="search">
-          <span>🔍</span>
+          <Search size={17} aria-hidden="true" />
           <input type="search" placeholder="Taom qidirish..." autoComplete="off" value={query} onChange={(e) => setQuery(e.target.value)} />
         </label>
         <nav className="rail__cats" ref={railRef}>
@@ -127,7 +135,7 @@ export default function Menu() {
       <div className="menu__main">
         <div className="menu-tools">
           <div className="tags" role="group" aria-label="Filtr">
-            {(favs.length ? [["fav", `♥ Sevimlilar · ${favs.length}`], ...TAGS] : TAGS).map(([id, label]) => (
+            {(favs.length ? [["fav", `Sevimlilar (${favs.length})`], ...TAGS] : TAGS).map(([id, label]) => (
               <button key={id} className={"tag-btn" + (tag === id ? " is-on" : "")} onClick={() => refilter(() => setTag(id))}>{label}</button>
             ))}
           </div>
@@ -135,7 +143,7 @@ export default function Menu() {
             <span>Saralash:</span>
             <select value={sort} onChange={(e) => refilter(() => setSort(e.target.value))}>
               <option value="">Tavsiya etilgan</option>
-              <option value="rating">⭐ Reyting bo'yicha</option>
+              <option value="rating">Reyting bo'yicha</option>
               <option value="cheap">Arzonroq avval</option>
               <option value="pricey">Qimmatroq avval</option>
             </select>
@@ -149,11 +157,11 @@ export default function Menu() {
                 <div><h2>{c.name}</h2><small>{c.items.length} ta taom</small></div>
               </div>
               <div className="dishes">
-                {c.items.map((p, i) => <DishCard key={p.id} p={p} i={i} inCart={inCart[p.id]} />)}
+                {c.items.map((p) => { const k = dishLine(p).key; return <DishCard key={p.id} p={p} lineKey={k} qty={lineQty[k]} />; })}
               </div>
             </section>
           )) : (
-            <p className="empty">{tag === "fav" ? "Sevimli taomlaringiz hozir menyuda yo'q 😕" : "Bu filtr bo'yicha hech narsa topilmadi 😕"}<br /><button className="btn btn--cream" onClick={reset} style={{ marginTop: 14 }}>Filtrlarni tozalash</button></p>
+            <p className="empty">{tag === "fav" ? "Sevimli taomlaringiz hozir menyuda yo'q" : "Bu filtr bo'yicha hech narsa topilmadi"}<br /><button className="btn btn--cream" onClick={reset} style={{ marginTop: 14 }}>Filtrlarni tozalash</button></p>
           )}
         </div>
       </div>
