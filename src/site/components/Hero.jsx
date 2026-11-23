@@ -1,17 +1,14 @@
 import { useEffect, useRef, useState } from "react";
+import { CATEGORIES } from "../../shared/data.js";
 import { Img } from "../../shared/Img.jsx";
 import { fmt } from "../../shared/format.js";
 import { useShop } from "../shop.jsx";
 
-/* Bosh ekran — katta brendlar saytlari kabi: chapda sarlavha, o'ngda haqiqiy taom
-   fotolari navbat bilan almashadigan banner (oldingi chizilgan burger o'rniga). */
-const SLIDES = [
-  { id: "bucket", label: "Oila uchun", bg: "#F6D9B8" },
-  { id: "pizza-pepperoni", label: "Top savdo", bg: "#F3CBB8" },
-  { id: "lavash-classic", label: "Klassika", bg: "#EFDDB4" },
-  { id: "wings-hot", label: "Achchiq", bg: "#F2C9AE" },
-];
-const EVERY = 4500;
+/* Bosh ekran: butun kenglikdagi ko'mir rangli polosa. Chapda sarlavha,
+   o'ngda chetgacha cho'zilgan haqiqiy taom fotosi (navbat bilan almashadi).
+   Ostida — kategoriyalar qatori, xuddi katta brendlar saytlaridagidek. */
+const SLIDES = ["bucket", "pizza-pepperoni", "lavash-classic", "wings-hot"];
+const EVERY = 5000;
 
 export default function Hero() {
   const { products, setDishId } = useShop();
@@ -20,8 +17,9 @@ export default function Hero() {
   const [paused, setPaused] = useState(false);
 
   // admin taomni yashirgan yoki o'chirgan bo'lsa — u slayd ko'rsatilmaydi
-  const slides = SLIDES.map((s) => ({ ...s, p: products.find((p) => p.id === s.id && !p.hidden) })).filter((s) => s.p);
+  const slides = SLIDES.map((id) => products.find((p) => p.id === id && !p.hidden)).filter(Boolean);
   const cur = slides.length ? n % slides.length : 0;
+  const s = slides[cur];
 
   useEffect(() => {
     if (paused || slides.length < 2) return undefined;
@@ -38,50 +36,52 @@ export default function Hero() {
     return () => io.disconnect();
   }, []);
 
-  const s = slides[cur];
+  const visibleCats = CATEGORIES.filter((c) => products.some((p) => p.cat === c.id && !p.hidden));
+  const go = (id) => { const el = document.getElementById("cat-" + id); if (el) el.scrollIntoView({ behavior: "smooth" }); };
 
   return (
-    <section className="hero" ref={hero}>
-      <div className="hero__text">
-        <span className="tag">🔥 Grilda, olov ustida</span>
-        <h1><span className="h1-line" style={{ "--d": 0 }}>Issiq.</span> <span className="h1-line hero__accent" style={{ "--d": 1 }}>Shirali.</span><br /><span className="h1-line" style={{ "--d": 2 }}>Tez.</span></h1>
-        <p>Har kuni yangi go'sht, yumshoq non va faqat bizda bor OLOV sousi. Buyurtma bering — kuryer 30 daqiqada eshigingizda.</p>
-        <div className="hero__cta">
-          <a href="#menu" className="btn btn--ink">Buyurtma berish</a>
-          <a href="#combo" className="btn btn--cream">Kombo yig'ish</a>
-        </div>
-        <ul className="hero__facts">
-          <li><b>30 daq</b><span>yetkazib berish</span></li>
-          <li><b>★ 4.9</b><span>50 000+ mijoz</span></li>
-          <li><b>5%</b><span>bonus qaytadi</span></li>
-        </ul>
-      </div>
-
-      {s && (
-        <div className="showcase" style={{ "--bg": s.bg }} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-          <div className="showcase__frame">
-            {slides.map((x, i) => (
-              <button key={x.id} className={"showcase__slide" + (i === cur ? " is-on" : "")} onClick={() => setDishId(x.p.id)} tabIndex={i === cur ? 0 : -1} aria-hidden={i !== cur} aria-label={`${x.p.name} — batafsil`}>
-                <Img src={x.p.img} alt={x.p.name} lazy={i !== 0} sizes="(max-width: 1024px) 92vw, 560px" />
-              </button>
-            ))}
-            <span className="showcase__time" aria-hidden="true"><b>30</b>daqiqa</span>
-          </div>
-          <div className="showcase__card">
-            <div>
-              <small>{s.label}</small>
-              <b>{s.p.name}</b>
+    <>
+      <section className="hero" ref={hero}>
+        <div className="hero__media">
+          {slides.map((p, i) => (
+            <div key={p.id} className={"hero__slide" + (i === cur ? " is-on" : "")} aria-hidden={i !== cur}>
+              <Img src={p.img} alt={p.name} lazy={i !== 0} sizes="(max-width: 900px) 100vw, 60vw" />
             </div>
-            <span className="showcase__price">{fmt(s.p.price)} <small>so'm</small></span>
-            <button className="showcase__add" onClick={() => setDishId(s.p.id)} aria-label={`${s.p.name} — tanlash`}>+</button>
-          </div>
-          <div className="showcase__dots" role="tablist" aria-label="Taomlar">
-            {slides.map((x, i) => (
-              <button key={x.id} role="tab" aria-selected={i === cur} aria-label={x.p.name} className={i === cur ? "is-on" : ""} onClick={() => setN(i)} />
-            ))}
+          ))}
+        </div>
+
+        <div className="hero__inner">
+          <h1 className="hero__title">Olov ustida<br />pishgan</h1>
+          <p className="hero__lead">Burger, lavash, pitsa va tovuq. Toshkent bo'ylab 30 daqiqada eshigingizgacha.</p>
+          <div className="hero__cta">
+            <a href="#menu" className="btn btn--fire btn--lg">Menyuni ochish</a>
+            <a href="#combo" className="btn btn--ghost btn--lg">Kombo yig'ish</a>
           </div>
         </div>
-      )}
-    </section>
+
+        {s && (
+          <div className="hero__now" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+            <button className="hero__dish" onClick={() => setDishId(s.id)}>
+              <span className="hero__dish-name">{s.name}</span>
+              <span className="hero__dish-price">{fmt(s.price)} so'm</span>
+            </button>
+            <div className="hero__dots" role="tablist" aria-label="Taomlar">
+              {slides.map((p, i) => (
+                <button key={p.id} role="tab" aria-selected={i === cur} aria-label={p.name} className={i === cur ? "is-on" : ""} onClick={() => setN(i)} />
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
+
+      <nav className="cats wrap" aria-label="Kategoriyalar">
+        {visibleCats.map((c) => (
+          <button key={c.id} className="cats__item" onClick={() => go(c.id)}>
+            <span className="cats__img"><Img src={c.img} alt="" emoji={c.icon} sizes="96px" /></span>
+            <span>{c.name}</span>
+          </button>
+        ))}
+      </nav>
+    </>
   );
 }
