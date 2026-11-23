@@ -107,7 +107,7 @@ export default function Wheel() {
               return <circle key={i} cx={x.toFixed(1)} cy={y.toFixed(1)} r="3.5" fill={i % 2 ? "#FFB547" : "#FFF4EA"} />;
             })}
             <circle cx="160" cy="160" r="30" fill="#0C0A09" stroke="#FFB547" strokeWidth="3" />
-            <text x="160" y="168" textAnchor="middle" className="wheel__hub">🔥</text>
+            <text x="160" y="168" textAnchor="middle" className="wheel__hub">OLOV</text>
           </svg>
         </div>
         <button className="wheel__btn" onClick={spin} disabled={!!done || spinning}>{done && !spinning ? "ERTAGA" : "AYLANTIR"}</button>
