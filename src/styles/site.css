@@ -1136,13 +1136,6 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: 0; }
 .badge--new { background: var(--gold) !important; color: var(--char); }
 .fav-btn { right: 10px; bottom: 10px; background: #fff; color: var(--text); border: 0; }
 
-/* Savat — o'ng tomondan chiqadigan panel (telefonda pastdan) */
-@media (min-width: 601px) {
-  .ticket { position: fixed; top: 0; right: 0; bottom: 0; left: auto; z-index: 65; width: min(420px, 100vw); padding: 0; transform: translateX(105%); transition: transform .4s cubic-bezier(.2, .9, .2, 1); }
-  .ticket.is-open { transform: none; }
-  .ticket__paper { height: 100%; max-height: none; max-width: none; margin: 0; border-radius: 0; border: 0; background: #fff; }
-  .ticket__close { display: grid; }
-}
 .ticket__paper::before { display: none; }
 .ticket__head h3 { font-stretch: 75%; font-weight: 850; text-transform: uppercase; font-size: 28px; }
 
@@ -1253,3 +1246,17 @@ body::before { display: none; }
 .wheel__disc { filter: drop-shadow(0 24px 40px rgba(31, 25, 21, .3)); }
 .bonus-card { background: #EEF6FC; }
 @media (max-width: 860px), (hover: none) { .nav { background: #fff; } }
+
+/* Savat — markazda ochiladigan alohida oyna. Ichidagi hamma narsa (taomlar, promokod,
+   jami, tugma) bitta bo'lib suriladi — past ekranda ham hech narsa kesilib qolmaydi */
+.ticket { position: fixed; inset: 0; z-index: 65; display: grid; place-items: center; width: auto; padding: 16px;
+  transform: none; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .2s, visibility .2s; }
+.ticket.is-open { opacity: 1; visibility: visible; pointer-events: auto; transform: none; }
+.ticket__paper { width: min(520px, 100%); max-width: none; height: auto; max-height: min(88vh, 860px); max-height: min(88dvh, 860px); margin: 0;
+  overflow-y: auto; overscroll-behavior: contain; border-radius: 20px; border: 0; background: #fff; box-shadow: 0 30px 80px -20px rgba(31, 25, 21, .55);
+  transform: translateY(14px) scale(.98); transition: transform .25s cubic-bezier(.2, .9, .2, 1); }
+.ticket.is-open .ticket__paper { transform: none; }
+.ticket__items { flex: none; overflow: visible; }
+.ticket__head { position: sticky; top: 0; z-index: 2; background: #fff; }
+.ticket__close { display: grid; }
+@media (max-width: 600px) { .ticket { padding: 10px; } .ticket__paper { max-height: 92dvh; border-radius: 18px; } }
