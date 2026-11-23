@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
+import { Bike, Flame, Gem } from "lucide-react";
 import { BONUS, catIcon } from "../../shared/data.js";
-import { flyToCart } from "../motion.js";
 import { fmt } from "../../shared/format.js";
 import { Img } from "../../shared/Img.jsx";
 import { useShop } from "../shop.jsx";
@@ -26,7 +26,7 @@ export default function Deal() {
           <Img src={p.img} alt={p.name} emoji={catIcon(p.cat)} lazy={false} sizes="(max-width: 1024px) 100vw, 480px" />
         </div>
         <div className="deal__body">
-          <span className="tag">🔥 Kun taklifi</span>
+          <span className="tag">Kun taklifi</span>
           <h2>{p.name}</h2>
           <p>{p.desc}</p>
           <div className="deal__price">
@@ -35,7 +35,7 @@ export default function Deal() {
             <span className="save-badge">−{fmt(p.price - deal.price)} so'm tejaysiz</span>
           </div>
           <ul className="deal__perks">
-            <li>🛵 30 daqiqada</li><li>🔥 Grilda pishadi</li><li>💎 +{BONUS.rate}% bonus</li>
+            <li><Bike size={16} aria-hidden="true" />30 daqiqada</li><li><Flame size={16} aria-hidden="true" />Grilda pishadi</li><li><Gem size={16} aria-hidden="true" />+{BONUS.rate}% bonus</li>
           </ul>
           <div className="deal__timer" aria-label="Taklif tugashiga qolgan vaqt">
             <span>Taklif tugashiga:</span>
@@ -46,7 +46,7 @@ export default function Deal() {
           </div>
           {/* kun o'tgan sari qisqaradigan chiziq: taklif tugashiga qancha qoldi */}
           <div className="deal__bar" aria-hidden="true"><i style={{ transform: `scaleX(${Math.max(0.02, Math.min(1, left / 864e5))})` }} /></div>
-          <button className="btn btn--fire" onClick={(e) => { flyToCart(e.currentTarget.closest(".deal__card").querySelector(".deal__img")); addDish(p.id); }}>Savatga qo'shish →</button>
+          <button className="btn btn--fire" onClick={() => addDish(p.id)}>Savatga qo'shish</button>
         </div>
       </div>
     </section>
