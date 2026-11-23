@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { ShoppingBag, MapPin, Phone, Volume2, VolumeX, Download } from "lucide-react";
+import { noEmoji } from "../../shared/format.js";
 import { useShop } from "../shop.jsx";
 import { SETTINGS } from "../../shared/data.js";
 import { sound } from "../../shared/sound.js";
@@ -14,7 +16,7 @@ export function BrandIcon() {
   );
 }
 
-const LINKS = [["#menu", "Menyu"], ["#combo", "Kombo"], ["#wheel", "🎡 Omad"], ["#branches", "Filiallar"], ["#track", "Kuzatish"]];
+const LINKS = [["#menu", "Menyu"], ["#combo", "Kombo"], ["#wheel", "Omad"], ["#branches", "Filiallar"], ["#track", "Kuzatish"]];
 
 export default function Header() {
   const { totals, openTicket, bumpKey, open } = useShop();
@@ -47,8 +49,8 @@ export default function Header() {
     <>
       <div className="topbar">
         <span><i className={"dot" + (open ? "" : " dot--off")} /> {open ? "Hozir ochiq" : "Hozir yopiq"} · {SETTINGS.open}–{SETTINGS.close}</span>
-        {SETTINGS.announce && <span className="topbar__mid">{SETTINGS.announce}</span>}
-        <a href={"tel:" + SETTINGS.phone.replace(/\s/g, "")}>☎ {SETTINGS.phone}</a>
+        {SETTINGS.announce && <span className="topbar__mid">{noEmoji(SETTINGS.announce)}</span>}
+        <a href={"tel:" + SETTINGS.phone.replace(/\s/g, "")}><Phone size={13} aria-hidden="true" /> {SETTINGS.phone}</a>
       </div>
 
       <header className="nav">
@@ -62,11 +64,11 @@ export default function Header() {
         </nav>
 
         <div className="nav__actions">
-          {installEvt && <button className="chip-btn chip-btn--ghost install-btn" onClick={install} title="Telefoningizga ilova sifatida o'rnating">📲<span className="hide-sm"> Ilovani o'rnatish</span></button>}
-          <button className={"sound-btn" + (soundOn ? "" : " is-off")} onClick={toggleSound} aria-pressed={soundOn} aria-label={soundOn ? "Ovozni o'chirish" : "Ovozni yoqish"} title={soundOn ? "Ovozni o'chirish" : "Ovozni yoqish"}>{soundOn ? "🔊" : "🔇"}</button>
-          <a href="#track" className="chip-btn chip-btn--ghost nav__track">📍 Buyurtmam qayerda?</a>
+          {installEvt && <button className="chip-btn chip-btn--ghost install-btn" onClick={install} title="Telefoningizga ilova sifatida o'rnating"><Download size={17} aria-hidden="true" /><span className="hide-sm"> Ilovani o'rnatish</span></button>}
+          <button className={"sound-btn" + (soundOn ? "" : " is-off")} onClick={toggleSound} aria-pressed={soundOn} aria-label={soundOn ? "Ovozni o'chirish" : "Ovozni yoqish"} title={soundOn ? "Ovozni o'chirish" : "Ovozni yoqish"}>{soundOn ? <Volume2 size={18} aria-hidden="true" /> : <VolumeX size={18} aria-hidden="true" />}</button>
+          <a href="#track" className="chip-btn chip-btn--ghost nav__track"><MapPin size={17} aria-hidden="true" /> Buyurtmam qayerda?</a>
           <button className="chip-btn" ref={btn} onClick={openTicket} aria-label="Savat">
-            <span>🛒</span><span className="hide-sm">Savat</span><b>{totals.count}</b>
+            <ShoppingBag size={18} aria-hidden="true" /><span className="hide-sm">Savat</span><b>{totals.count}</b>
           </button>
           <button className={"hamburger" + (navOpen ? " is-open" : "")} onClick={() => setNavOpen(!navOpen)} aria-label="Menyu"><span /><span /></button>
         </div>
