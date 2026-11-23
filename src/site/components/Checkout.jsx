@@ -1,5 +1,6 @@
 /* Buyurtma berish (checkout) va to'lov oynalari: ilova QR, karta SMS, jarayon */
 import { useEffect, useMemo, useRef, useState } from "react";
+import { X, Bike, Store as StoreIcon, Wallet, Gem, Lock } from "lucide-react";
 import { BONUS, PAY_LOGOS, PAY_METHODS, LOGO_NAMES, SETTINGS, TIP_OPTIONS } from "../../shared/data.js";
 import { Store } from "../../shared/store.js";
 import { lineInfo, earnedFor } from "../../shared/cart.js";
@@ -101,18 +102,18 @@ export function Checkout() {
         <div className="checkout__inner">
           <div className="co-head">
             <h2>Buyurtmani rasmiylashtirish</h2>
-            <button className="x-btn" onClick={() => setCheckoutOpen(false)} aria-label="Yopish">✕</button>
+            <button className="x-btn" onClick={() => setCheckoutOpen(false)} aria-label="Yopish"><X size={18} aria-hidden="true" /></button>
           </div>
           {!open && (
-            <p className="note co-closed">🌙 Hozir yopiqmiz (ish vaqti {SETTINGS.open}–{SETTINGS.close}). Buyurtmangizni oldindan qabul qilamiz — ochilishimiz bilan birinchi bo'lib tayyorlanadi.</p>
+            <p className="note co-closed">Hozir yopiqmiz (ish vaqti {SETTINGS.open}–{SETTINGS.close}). Buyurtmangizni oldindan qabul qilamiz — ochilishimiz bilan birinchi bo'lib tayyorlanadi.</p>
           )}
           <form className="co-grid" onSubmit={submit} noValidate>
             <div className="co-form">
               <section className="co-card">
                 <h3><i>1</i>Qanday olasiz?</h3>
                 <div className="toggle">
-                  <label><input type="radio" name="type" checked={orderType === "delivery"} onChange={() => setOrderType("delivery")} />🛵 Yetkazib berish</label>
-                  <label><input type="radio" name="type" checked={orderType === "pickup"} onChange={() => setOrderType("pickup")} />🏪 Olib ketaman</label>
+                  <label><input type="radio" name="type" checked={orderType === "delivery"} onChange={() => setOrderType("delivery")} /><Bike size={17} aria-hidden="true" /> Yetkazib berish</label>
+                  <label><input type="radio" name="type" checked={orderType === "pickup"} onChange={() => setOrderType("pickup")} /><StoreIcon size={17} aria-hidden="true" /> Olib ketaman</label>
                 </div>
                 <div className="row2">
                   <Field label="Ismingiz" error={errors.name}><input value={f.name || ""} onChange={set("name")} placeholder="Masalan: Aziz" autoComplete="name" /></Field>
@@ -125,7 +126,7 @@ export function Checkout() {
                     <Field label="Qavat"><input value={f.floor || ""} onChange={set("floor")} placeholder="3" /></Field>
                   </div>
                 ) : (
-                  <p className="note">🏪 Olib ketish manzili: Toshkent, Amir Temur ko'chasi, 1. Buyurtma 20 daqiqada tayyor bo'ladi.</p>
+                  <p className="note">Olib ketish manzili: Toshkent, Amir Temur ko'chasi, 1. Buyurtma 20 daqiqada tayyor bo'ladi.</p>
                 )}
                 <div className="row2" style={{ marginTop: 14 }}>
                   <Field label="Qachon?"><select value={f.time || TIMES[0]} onChange={set("time")}>{TIMES.map((o) => <option key={o}>{o}</option>)}</select></Field>
@@ -139,15 +140,15 @@ export function Checkout() {
                   {PAY_METHODS.map((m) => (
                     <label key={m.id} className={"paym" + (m.logos.length === 1 ? " paym--single" : m.logos.length > 1 ? " paym--multi" : "")}>
                       <input type="radio" name="method" checked={payMethod === m.id} onChange={() => setPayMethod(m.id)} />
-                      <span className="paym__logos">{m.logos.length ? m.logos.map((l) => <LogoTile key={l} name={l} />) : <span className="paym__cash">💵</span>}</span>
+                      <span className="paym__logos">{m.logos.length ? m.logos.map((l) => <LogoTile key={l} name={l} />) : <span className="paym__cash"><Wallet size={28} aria-hidden="true" /></span>}</span>
                       <b>{m.name}</b><small>{m.note}</small>
                     </label>
                   ))}
                 </div>
                 <div className="paydetails">
                   {payMethod === "card" ? <CardForm card={card} setCard={setCard} errors={errors} />
-                    : payMethod === "cash" ? <p className="note">💵 Kuryerga naqd to'laysiz. Iloji bo'lsa, mayda pul tayyorlab qo'ying.</p>
-                      : <p className="note">📲 "To'lash" tugmasini bosganingizdan so'ng {pm.name} orqali to'lovni tasdiqlaysiz — QR kodni skanerlang yoki ilovani oching.</p>}
+                    : payMethod === "cash" ? <p className="note">Kuryerga naqd to'laysiz. Iloji bo'lsa, mayda pul tayyorlab qo'ying.</p>
+                      : <p className="note">"To'lash" tugmasini bosganingizdan so'ng {pm.name} orqali to'lovni tasdiqlaysiz — QR kodni skanerlang yoki ilovani oching.</p>}
                 </div>
               </section>
 
@@ -157,18 +158,18 @@ export function Checkout() {
                   <div className="tips">
                     {TIP_OPTIONS.map((v) => (
                       <button type="button" key={v} className={"tip-btn" + (tip === v ? " is-on" : "")} onClick={() => setTip(v)}>
-                        {v ? <>💝 {fmt(v)}</> : "Kerak emas"}
+                        {v ? <>{fmt(v)}</> : "Kerak emas"}
                       </button>
                     ))}
                   </div>
-                  <p className="muted" style={{ margin: "10px 0 0", fontSize: 13 }}>Choy puli to'liq kuryerga beriladi. Rahmat! 🧡</p>
+                  <p className="muted" style={{ margin: "10px 0 0", fontSize: 13 }}>Choy puli to'liq kuryerga beriladi. Rahmat!</p>
                 </section>
               )}
 
               {bonus > 0 && (
                 <section className="co-card co-bonus">
                   <label className="bonus-toggle">
-                    <span className="bonus-toggle__icon">💎</span>
+                    <span className="bonus-toggle__icon"><Gem size={22} aria-hidden="true" /></span>
                     <span><b>Olov Bonus bilan to'lash</b><small>Balans: {som(bonus)} · buyurtmaning {BONUS.maxShare}% gacha</small></span>
                     <input type="checkbox" checked={useBonus} onChange={(e) => setUseBonus(e.target.checked)} /><i className="sw" />
                   </label>
@@ -188,14 +189,14 @@ export function Checkout() {
                 <div className="totals">
                   <div><span>Taomlar</span><span>{som(t.subtotal)}</span></div>
                   {t.discount > 0 && <div className="is-green"><span>Chegirma {promo}</span><span>−{som(t.discount)}</span></div>}
-                  {t.bonusUsed > 0 && <div className="is-green"><span>💎 Bonusdan</span><span>−{som(t.bonusUsed)}</span></div>}
+                  {t.bonusUsed > 0 && <div className="is-green"><span>Bonusdan</span><span>−{som(t.bonusUsed)}</span></div>}
                   <div><span>{orderType === "pickup" ? "Olib ketish" : "Yetkazib berish"}</span><span>{t.delivery ? som(t.delivery) : "Bepul"}</span></div>
-                  {t.tip > 0 && <div><span>💝 Choy puli</span><span>{som(t.tip)}</span></div>}
+                  {t.tip > 0 && <div><span>Choy puli</span><span>{som(t.tip)}</span></div>}
                   <div className="grand"><span>To'lov</span><b>{som(t.total)}</b></div>
-                  <div className="earn">💎 Bu buyurtmadan +{som(earnedFor(t.total - t.tip))} bonus olasiz</div>
+                  <div className="earn">Bu buyurtmadan +{som(earnedFor(t.total - t.tip))} bonus olasiz</div>
                 </div>
-                <button className="btn btn--fire btn--block" type="submit">{payMethod === "cash" ? "Buyurtmani tasdiqlash ✓" : `${som(t.total)} to'lash →`}</button>
-                <div className="secure">🔒 Ma'lumotlar himoyalangan ulanish orqali uzatiladi</div>
+                <button className="btn btn--fire btn--block" type="submit">{payMethod === "cash" ? "Buyurtmani tasdiqlash" : `${som(t.total)} to'lash`}</button>
+                <div className="secure"><Lock size={14} aria-hidden="true" /> Ma'lumotlar himoyalangan ulanish orqali uzatiladi</div>
               </div>
             </aside>
           </form>
@@ -275,7 +276,7 @@ function CardPay({ data, onDone }) {
   };
   return (
     <>
-      <div className="pay-logo-big">{data.card.brand ? <img src={PAY_LOGOS[data.card.brand]} alt={LOGO_NAMES[data.card.brand]} data-logo={data.card.brand} /> : "💳"}</div>
+      <div className="pay-logo-big">{data.card.brand ? <img src={PAY_LOGOS[data.card.brand]} alt={LOGO_NAMES[data.card.brand]} data-logo={data.card.brand} /> : null}</div>
       <h3>SMS kodni kiriting</h3>
       <p>•••• {data.card.last4} kartasiga bog'langan {masked} raqamiga 6 xonali kod yuborildi.</p>
       <form onSubmit={submit}>
@@ -305,7 +306,7 @@ export function PaySheet() {
   };
   return (
     <Sheet open={!!pay} onClose={() => { if (pay && pay.mode !== "processing") close(); }} id="paySheet" boxClass="sheet__box--pay">
-      {pay && pay.mode !== "processing" && <button className="x-btn sheet__close" onClick={close} aria-label="Yopish">✕</button>}
+      {pay && pay.mode !== "processing" && <button className="x-btn sheet__close" onClick={close} aria-label="Yopish"><X size={18} aria-hidden="true" /></button>}
       {pay && pay.mode === "app" && <AppPay data={pay} onDone={done} onClose={close} />}
       {pay && pay.mode === "card" && <CardPay data={pay} onDone={done} />}
       {pay && pay.mode === "processing" && <><div className="spinner big-spinner" /><h3>To'lov amalga oshirilmoqda</h3><p>Iltimos, oynani yopmang...</p></>}
