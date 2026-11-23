@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Gem, X, ShoppingBag } from "lucide-react";
 import { DELIVERY, catIcon } from "../../shared/data.js";
 import { fmt, som } from "../../shared/format.js";
 import { lineInfo, priceOf, promoOf } from "../../shared/cart.js";
@@ -20,7 +21,7 @@ function Upsell() {
   if (!picks.length) return null;
   return (
     <div className="upsell">
-      <h4>Bunga juda mos keladi 👌</h4>
+      <h4>Bunga mos keladi</h4>
       <div className="upsell__row">
         {picks.map((p) => (
           <div className="upsell__item" key={p.id}>
@@ -59,14 +60,14 @@ export default function Ticket() {
           <div>
             <h3>Savat</h3>
             <small>{new Date().toLocaleDateString("ru-RU")} · OLOV FOOD</small>
-            {bonus ? <span className="bonus-chip" title="Olov Bonus balansi">💎 Bonus: {som(bonus)}</span> : null}
+            {bonus ? <span className="bonus-chip" title="Olov Bonus balansi"><Gem size={13} aria-hidden="true" /> Bonus: {som(bonus)}</span> : null}
           </div>
-          <button className="x-btn ticket__close" onClick={() => setTicketOpen(false)} aria-label="Yopish">✕</button>
+          <button className="x-btn ticket__close" onClick={() => setTicketOpen(false)} aria-label="Yopish"><X size={18} aria-hidden="true" /></button>
         </div>
 
         <div className="ticket__items">
           {!t.count ? (
-            <div className="ticket-empty"><div>🍔</div><p>Chek hali bo'sh.<br />Menyudan biror mazali narsa tanlang!</p></div>
+            <div className="ticket-empty"><div><ShoppingBag size={44} strokeWidth={1.5} aria-hidden="true" /></div><p>Chek hali bo'sh.<br />Menyudan biror mazali narsa tanlang!</p></div>
           ) : cart.map((l) => {
             const info = lineInfo(l, byId);
             return (
@@ -91,7 +92,7 @@ export default function Ticket() {
               <input placeholder="PROMOKOD" autoComplete="off" value={code} onChange={(e) => setCode(e.target.value)} />
               <button type="submit">OK</button>
             </form>
-            <div className="freebar">{left > 0 ? `Bepul yetkazishgacha yana ${som(left)}` : "🎉 Yetkazib berish bepul!"}
+            <div className="freebar">{left > 0 ? `Bepul yetkazishgacha yana ${som(left)}` : "Yetkazib berish bepul"}
               <div className="freebar__track"><div className="freebar__fill" style={{ width: Math.min(100, (t.subtotal / DELIVERY.freeFrom) * 100) + "%" }} /></div>
             </div>
             <div className="totals" style={{ marginTop: 12 }}>
@@ -99,12 +100,12 @@ export default function Ticket() {
               {t.promo && (
                 <div className="is-green"><span>{promo} {t.promo.label}</span><span>{t.discount ? "−" + som(t.discount) : t.promoOk ? "✓" : "min. " + som(t.promo.min)}</span></div>
               )}
-              {t.bonusUsed > 0 && <div className="is-green"><span>💎 Bonusdan</span><span>−{som(t.bonusUsed)}</span></div>}
+              {t.bonusUsed > 0 && <div className="is-green"><span>Bonusdan</span><span>−{som(t.bonusUsed)}</span></div>}
               <div><span>Yetkazib berish</span><span>{t.delivery ? som(t.delivery) : "Bepul"}</span></div>
-              {t.tip > 0 && <div><span>💝 Choy puli</span><span>{som(t.tip)}</span></div>}
+              {t.tip > 0 && <div><span>Choy puli</span><span>{som(t.tip)}</span></div>}
               <div className="grand"><span>Jami</span><b>{som(t.total)}</b></div>
             </div>
-            <button className="btn btn--fire btn--block" onClick={openCheckout}>Buyurtma berish →</button>
+            <button className="btn btn--fire btn--block" onClick={openCheckout}>Buyurtma berish</button>
           </div>
         )}
       </div>
