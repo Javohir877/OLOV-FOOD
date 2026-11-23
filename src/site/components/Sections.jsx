@@ -14,12 +14,11 @@ export function Kitchen() {
         <figure className="polaroid p3"><Img src="assets/img/1567620832903-9fc6debc209f.jpg" alt="Tovuq qanotchalari" sizes="(max-width: 600px) 60vw, 280px" /><figcaption>Achchiq qanotchalar</figcaption></figure>
       </div>
       <div className="kitchen__text">
-        <span className="tag tag--mustard">Bizning oshxona</span>
-        <h2>Muzlatkich emas — <span className="hl">olov.</span></h2>
+        <h2>Hammasi olovda pishadi</h2>
         <ul className="facts">
-          <li><b>01</b><div><h4>Har kuni yangi go'sht</h4><p>Mol go'shti ertalab keladi, kotletlar qo'lda yasaladi. Muzlatilgan mahsulot yo'q.</p></div></li>
-          <li><b>02</b><div><h4>Ochiq olovli grill</h4><p>Har bir kotlet haqiqiy olovda pishadi — o'sha "dudlangan" ta'm shundan.</p></div></li>
-          <li><b>03</b><div><h4>Halol va toza</h4><p>Halol sertifikati, ochiq oshxona va har kuni sanitariya nazorati.</p></div></li>
+          <li><div><h4>Har kuni yangi go'sht</h4><p>Mol go'shti ertalab keladi, kotletlar qo'lda yasaladi. Muzlatilgan mahsulot yo'q.</p></div></li>
+          <li><div><h4>Ochiq olovli grill</h4><p>Har bir kotlet haqiqiy olovda pishadi — o'sha "dudlangan" ta'm shundan.</p></div></li>
+          <li><div><h4>Halol va toza</h4><p>Halol sertifikati, ochiq oshxona va har kuni sanitariya nazorati.</p></div></li>
         </ul>
       </div>
     </section>
@@ -39,8 +38,7 @@ export function Reviews() {
     <section className="reviews" id="reviews">
       <div className="reviews__head">
         <div>
-          <span className="tag">⭐ Mijozlar fikri</span>
-          <h2>Ular allaqachon <span className="hl">sevib qolishdi</span></h2>
+          <h2>Mijozlarimiz fikri</h2>
         </div>
         <div className="rating">
           <div className="rating__big"><b>{RATING.avg}</b><span>{stars(5)}</span><small>{fmt(RATING.count)} ta baho</small></div>
@@ -84,8 +82,7 @@ export function Branches() {
   return (
     <section className="branches" id="branches">
       <div className="section-title">
-        <span className="tag">📍 Filiallar</span>
-        <h2>Bizni <span className="hl">mehmonga</span> kuting</h2>
+        <h2>Filiallarimiz</h2>
         <p>Toshkent bo'ylab 3 ta filial. Yetkazib berish butun shahar bo'ylab — o'rtacha 30 daqiqa.</p>
       </div>
       <div className="branches__grid">
@@ -127,8 +124,7 @@ export function Track() {
     <section className="track" id="track">
       <div className="track__box">
         <div>
-          <span className="tag">📍 Jonli kuzatish</span>
-          <h2>Buyurtmangiz <span className="hl">qayerda?</span></h2>
+          <h2>Buyurtmangiz qayerda?</h2>
           <p>Buyurtma raqamini kiriting yoki pastdagi oxirgi buyurtmalaringizdan birini tanlang.</p>
         </div>
         <form className="track__form" onSubmit={submit}>
