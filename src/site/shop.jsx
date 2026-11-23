@@ -24,7 +24,7 @@ const toastStore = {
 const subscribeToasts = (cb) => { toastStore.subs.add(cb); return () => toastStore.subs.delete(cb); };
 export const useToasts = () => useSyncExternalStore(subscribeToasts, () => toastStore.list);
 
-export const isDocked = () => window.innerWidth > 1280;
+export const isDocked = () => false; // savat endi har doim chiqadigan panel
 
 export function ShopProvider({ children }) {
   const products = useMemo(() => Store.products(), []);
