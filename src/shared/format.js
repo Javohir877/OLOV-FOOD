@@ -41,3 +41,6 @@ export function timeAgo(iso) {
   if (h < 24) return `${h} soat oldin`;
   return new Date(iso).toLocaleString("ru-RU", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
 }
+
+// Matndagi emojilarni olib tashlaydi (saytda ular o'rniga ikonkalar ishlatiladi)
+export const noEmoji = (s) => String(s == null ? "" : s).replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{200D}]/gu, "").replace(/\s{2,}/g, " ").trim();
