@@ -53,7 +53,7 @@ export default function Ticket() {
 
   const left = DELIVERY.freeFrom - t.subtotal;
   return (
-    <aside className={"ticket" + (ticketOpen ? " is-open" : "")} aria-label="Savat">
+    <aside className={"ticket" + (ticketOpen ? " is-open" : "")} aria-label="Savat" role="dialog" aria-hidden={!ticketOpen} onClick={(e) => { if (e.target === e.currentTarget) setTicketOpen(false); }}>
       <div className="ticket__paper">
         <div className="ticket__head">
           <div>
