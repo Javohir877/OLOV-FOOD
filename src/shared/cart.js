@@ -38,7 +38,7 @@ export function comboLine(ids, byId, qty = 1) {
 export function lineInfo(l, byId) {
   if (l.kind === "combo") {
     const items = l.items.map((id) => byId[id]);
-    return { name: "Kombo 🔥", sub: items.map((p) => p.name).join(" + "), img: items[0] };
+    return { name: "Kombo", sub: items.map((p) => p.name).join(" + "), img: items[0] };
   }
   const p = byId[l.id];
   const o = OPTIONS[p.cat] || {};
