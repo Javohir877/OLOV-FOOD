@@ -24,6 +24,11 @@ export default function Hero() {
   const prevRef = useRef(-1), lastRef = useRef(cur);
   if (lastRef.current !== cur) { prevRef.current = lastRef.current; lastRef.current = cur; }
   const prev = prevRef.current;
+  // 4 ta rasm birdaniga yuklanib bir-biriga xalaqit bermasin: avval birinchisi, keyingisi 1.5 soniyadan so'ng
+  const [warm, setWarm] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setWarm(true), 1500); return () => clearTimeout(t); }, []);
+  const mounted = useRef(new Set());
+  if (slides.length) { mounted.current.add(cur); if (warm) mounted.current.add((cur + 1) % slides.length); }
 
   useEffect(() => {
     if (paused || slides.length < 2) return undefined;
@@ -49,7 +54,7 @@ export default function Hero() {
         <div className="hero__media">
           {slides.map((p, i) => (
             <div key={p.id} className={"hero__slide" + (i === cur ? " is-on" : i === prev ? " is-prev" : "")} aria-hidden={i !== cur}>
-              <Img src={p.img} alt={p.name} lazy={i !== 0} sizes="(max-width: 900px) 100vw, 60vw" />
+              {mounted.current.has(i) && <Img src={p.img} alt={p.name} priority={i === 0} lazy={false} sizes="(max-width: 900px) 100vw, 660px" />}
             </div>
           ))}
         </div>
