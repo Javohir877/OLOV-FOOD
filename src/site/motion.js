@@ -6,7 +6,7 @@
 
 // Qaysi elementlar ekranga kirganda paydo bo'ladi. Bir ota ichidagilar navbat bilan (--i).
 const REVEAL = [
-  ".section-title", ".deal__card", ".cgroup", ".combo__ticket", ".cat-head", ".dish",
+  ".section-title", ".sec-head", ".deal__card", ".cgroup", ".cat-head", ".dish",
   ".polaroid", ".kitchen__text", ".facts li", ".wheel__text", ".wheel__stage", ".rev",
   ".rating", ".branch", ".track__box", ".footer__cols > div",
 ].join(",");
