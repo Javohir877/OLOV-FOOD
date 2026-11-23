@@ -1,5 +1,7 @@
 /* Oynalar: taom sozlash, kuzatuv, bildirishnomalar, konfetti */
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Heart, Share2, Star, X, Check, CircleAlert, Receipt, Flame, Bike, PartyPopper, Store as StoreIcon, House, PersonStanding, Phone, RotateCcw } from "lucide-react";
+import { noEmoji } from "../../shared/format.js";
 import { OPTIONS, SETTINGS, catIcon } from "../../shared/data.js";
 import { Store } from "../../shared/store.js";
 import { dishUnit, defaultSize } from "../../shared/cart.js";
@@ -9,7 +11,6 @@ import { useShop, useToasts } from "../shop.jsx";
 import { sound } from "../../shared/sound.js";
 import { fetchStatus } from "../../shared/telegram.js";
 import { shareLink } from "../../shared/tg.js";
-import { flyToCart } from "../motion.js";
 import { BADGES } from "./Menu.jsx";
 
 /* Har doim joyida turadigan oyna — ochilish/yopilish animatsiyasi CSS orqali */
@@ -36,8 +37,8 @@ function DishBody({ p, onDone }) {
   const { addDish, favs, toggleFav, toast } = useShop();
   const fav = favs.includes(p.id);
   const share = () => {
-    shareLink({ title: p.name + " — OLOV FOOD", text: `🔥 ${p.name} — ${som(p.price)}. OLOV FOOD'da buyurtma bering:`, url: SITE + "#dish=" + p.id })
-      .then((r) => { if (r === "copied") toast("🔗 Havola nusxalandi — do'stingizga yuboring"); else if (r === "failed") toast("Ulashib bo'lmadi", true); });
+    shareLink({ title: p.name + " — OLOV FOOD", text: `${p.name} — ${som(p.price)}. OLOV FOOD'da buyurtma bering:`, url: SITE + "#dish=" + p.id })
+      .then((r) => { if (r === "copied") toast("Havola nusxalandi — do'stingizga yuboring"); else if (r === "failed") toast("Ulashib bo'lmadi", true); });
   };
   const o = OPTIONS[p.cat] || {};
   const b = BADGES[p.badge];
@@ -52,13 +53,13 @@ function DishBody({ p, onDone }) {
         <Img src={p.img} alt={p.name} emoji={catIcon(p.cat)} lazy={false} sizes="(max-width: 860px) 100vw, 400px" />
         <div className="dishm__acts">
           <button type="button" className={"fav-btn fav-btn--lg" + (fav ? " is-on" : "")} aria-pressed={fav} onClick={() => toggleFav(p.id)}
-            aria-label={fav ? "Sevimlilardan olib tashlash" : "Sevimlilarga qo'shish"} title={fav ? "Sevimlilarda" : "Sevimlilarga qo'shish"}>{fav ? "♥" : "♡"}</button>
-          <button type="button" className="fav-btn fav-btn--lg" onClick={share} aria-label="Do'stga ulashish" title="Do'stga ulashish">↗</button>
+            aria-label={fav ? "Sevimlilardan olib tashlash" : "Sevimlilarga qo'shish"} title={fav ? "Sevimlilarda" : "Sevimlilarga qo'shish"}><Heart size={18} fill={fav ? "currentColor" : "none"} aria-hidden="true" /></button>
+          <button type="button" className="fav-btn fav-btn--lg" onClick={share} aria-label="Do'stga ulashish" title="Do'stga ulashish"><Share2 size={18} aria-hidden="true" /></button>
         </div>
       </div>
-      <form className="dishm__body" onSubmit={(e) => { e.preventDefault(); flyToCart(e.currentTarget.closest(".dishm").querySelector(".dishm__img")); addDish(p.id, size, extras, qty); onDone(); }}>
+      <form className="dishm__body" onSubmit={(e) => { e.preventDefault(); addDish(p.id, size, extras, qty); onDone(); }}>
         <h3>{p.name}</h3>
-        <span className="dish__meta"><b>★ {p.rating.toFixed(1)}</b> · {p.weight} · {p.kcal} kkal</span>
+        <span className="dish__meta"><b><Star size={12} fill="currentColor" aria-hidden="true" /> {p.rating.toFixed(1)}</b> · {p.weight} · {p.kcal} kkal</span>
         <p>{p.desc}</p>
         {o.sizes && (
           <div><div className="opt-title">O'lcham</div><div className="pills">
@@ -97,7 +98,7 @@ export function DishSheet() {
   const close = () => setDishId(null);
   return (
     <Sheet open={!!dishId} onClose={close} boxClass="sheet__box--dish">
-      <button className="x-btn sheet__close" onClick={close} aria-label="Yopish">✕</button>
+      <button className="x-btn sheet__close" onClick={close} aria-label="Yopish"><X size={18} aria-hidden="true" /></button>
       {/* key — har safar yangi taom ochilganda tanlovlar boshidan boshlanadi */}
       {p && <DishBody key={dishId || p.id} p={p} onDone={close} />}
     </Sheet>
@@ -106,12 +107,12 @@ export function DishSheet() {
 
 /* ---------- Buyurtmani kuzatish ---------- */
 const STAGES = [
-  { id: "new", icon: "🧾", name: "Qabul qilindi", note: "Buyurtma oshxonaga yuborildi" },
-  { id: "cooking", icon: "🔥", name: "Oshxonada", note: "Oshpazlarimiz olov ustida tayyorlamoqda" },
-  { id: "delivering", icon: "🛵", name: "Yo'lda", note: "Kuryer issiq holda olib kelmoqda" },
-  { id: "done", icon: "🎉", name: "Yetkazildi", note: "Yoqimli ishtaha!" },
+  { id: "new", icon: <Receipt size={18} />, name: "Qabul qilindi", note: "Buyurtma oshxonaga yuborildi" },
+  { id: "cooking", icon: <Flame size={18} />, name: "Oshxonada", note: "Oshpazlarimiz olov ustida tayyorlamoqda" },
+  { id: "delivering", icon: <Bike size={18} />, name: "Yo'lda", note: "Kuryer issiq holda olib kelmoqda" },
+  { id: "done", icon: <PartyPopper size={18} />, name: "Yetkazildi", note: "Yoqimli ishtaha!" },
 ];
-const PICKUP_STAGES = { delivering: { icon: "🏪", name: "Tayyor", note: "Buyurtmani olib ketishingiz mumkin" }, done: { icon: "🎉", name: "Topshirildi", note: "Yoqimli ishtaha!" } };
+const PICKUP_STAGES = { delivering: { icon: <StoreIcon size={18} />, name: "Tayyor", note: "Buyurtmani olib ketishingiz mumkin" }, done: { icon: <PartyPopper size={18} />, name: "Topshirildi", note: "Yoqimli ishtaha!" } };
 
 /* Yetkazilgandan keyin baho: 1–5 yulduz va izoh */
 function RateBox({ o }) {
@@ -120,9 +121,9 @@ function RateBox({ o }) {
   const [hover, setHover] = useState(0);
   const [comment, setComment] = useState("");
   if (o.rating) {
-    return <div className="rate rate--done">Bahoyingiz: <b>{"★".repeat(o.rating.stars)}{"☆".repeat(5 - o.rating.stars)}</b> — rahmat! 🧡</div>;
+    return <div className="rate rate--done">Bahoyingiz: <b>{"★".repeat(o.rating.stars)}{"☆".repeat(5 - o.rating.stars)}</b> — rahmat!</div>;
   }
-  const labels = ["", "Yomon 😞", "Qoniqarsiz 😕", "Yaxshi 🙂", "Juda yaxshi 😋", "Zo'r! 🔥"];
+  const labels = ["", "Yomon", "Qoniqarsiz", "Yaxshi", "Juda yaxshi", "Zo'r!"];
   const shown = hover || stars;
   return (
     <div className="rate">
@@ -180,26 +181,26 @@ function TrackerBody({ id, fresh, onClose }) {
       <div className="tr-head">
         <span className="tr-id">{o.id}</span>
         <h3>{fresh && idx === 0 ? "Rahmat! Buyurtma qabul qilindi" : stages[idx].name}</h3>
-        <p>{o.preorder && idx === 0 ? `🌙 Oldindan buyurtma — ochilishimiz bilan (${SETTINGS.open}) tayyorlaymiz` : idx < 3 ? `Taxminan ${[30, 22, 10][idx]} daqiqada ${pickup ? "tayyor bo'ladi" : "yetib boradi"}` : stages[3].note}</p>
+        <p>{o.preorder && idx === 0 ? `Oldindan buyurtma — ochilishimiz bilan (${SETTINGS.open}) tayyorlaymiz` : idx < 3 ? `Taxminan ${[30, 22, 10][idx]} daqiqada ${pickup ? "tayyor bo'ladi" : "yetib boradi"}` : stages[3].note}</p>
       </div>
       <div className="road">
-        <span className="road__shop">🏪</span><span className="road__home">{pickup ? "🙋" : "🏠"}</span>
-        <span className="road__scooter" style={{ left: [8, 30, 64, 92][idx] + "%" }}>{idx === 1 ? "🔥" : "🛵"}</span>
+        <span className="road__shop"><StoreIcon size={26} aria-hidden="true" /></span><span className="road__home">{pickup ? <PersonStanding size={26} aria-hidden="true" /> : <House size={26} aria-hidden="true" />}</span>
+        <span className="road__scooter" style={{ left: [8, 30, 64, 92][idx] + "%" }}>{idx === 1 ? <Flame size={30} aria-hidden="true" /> : <Bike size={30} aria-hidden="true" />}</span>
       </div>
       <ol className="steps">
         {stages.map((s, i) => (
-          <li key={s.id} className={i < idx ? "done" : i === idx ? "now" : ""}><i>{i < idx ? "✓" : s.icon}</i><div>{s.name}<small>{s.note}</small></div></li>
+          <li key={s.id} className={i < idx ? "done" : i === idx ? "now" : ""}><i>{i < idx ? <Check size={18} aria-hidden="true" /> : s.icon}</i><div>{s.name}<small>{s.note}</small></div></li>
         ))}
       </ol>
       {idx === 3 && <RateBox o={o} />}
       <div className="tr-sum">
         {o.items.map((i, k) => <div key={k}><span>{i.name} × {i.qty}</span><b>{som(i.price * i.qty)}</b></div>)}
-        {o.tip > 0 && <div><span>💝 Choy puli</span><b>{som(o.tip)}</b></div>}
+        {o.tip > 0 && <div><span>Choy puli</span><b>{som(o.tip)}</b></div>}
         <div className="tr-sum__total"><span>{o.payment.label}</span><b>{som(o.total)}</b></div>
       </div>
       <div className="tr-actions">
-        <a className="btn btn--cream" href="tel:+998901234567">☎ Qo'ng'iroq</a>
-        {idx === 3 && <button className="btn btn--cream" onClick={() => reorder(o.id)}>🔁 Qayta buyurtma</button>}
+        <a className="btn btn--cream" href="tel:+998901234567"><Phone size={16} aria-hidden="true" /> Qo'ng'iroq</a>
+        {idx === 3 && <button className="btn btn--cream" onClick={() => reorder(o.id)}><RotateCcw size={16} aria-hidden="true" /> Qayta buyurtma</button>}
         <button className="btn btn--ink" onClick={onClose}>Yaxshi!</button>
       </div>
     </>
@@ -212,7 +213,7 @@ export function TrackerSheet() {
   const close = () => setTracker(null);
   return (
     <Sheet open={!!tracker} onClose={close} id="trackerSheet" boxClass="sheet__box--tracker">
-      <button className="x-btn sheet__close" onClick={close} aria-label="Yopish">✕</button>
+      <button className="x-btn sheet__close" onClick={close} aria-label="Yopish"><X size={18} aria-hidden="true" /></button>
       {last && <TrackerBody key={last.id} id={last.id} fresh={last.fresh} onClose={close} />}
     </Sheet>
   );
@@ -225,7 +226,7 @@ export function Toasts() {
     <div className="toasts">
       {toasts.map((t) => (
         <div key={t.id} className={"toast" + (t.bad ? " toast--err" : "") + (t.out ? " out" : "")}>
-          <span>{t.bad ? "⚠️" : "🔥"}</span><span>{t.msg}</span>
+          <span className="toast__ic">{t.bad ? <CircleAlert size={18} aria-hidden="true" /> : <Check size={18} aria-hidden="true" />}</span><span>{noEmoji(t.msg)}</span>
         </div>
       ))}
     </div>
