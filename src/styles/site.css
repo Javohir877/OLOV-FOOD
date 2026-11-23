@@ -1260,3 +1260,84 @@ body::before { display: none; }
 .ticket__head { position: sticky; top: 0; z-index: 2; background: #fff; }
 .ticket__close { display: grid; }
 @media (max-width: 600px) { .ticket { padding: 10px; } .ticket__paper { max-height: 92dvh; border-radius: 18px; } }
+
+/* =========================================================
+   v4: emojilar o'rniga Lucide ikonkalari, kichik "+", hisoblagich,
+   bitta o'ziga xos harakat — bosh ekran
+   ========================================================= */
+/* Ikonkalar matn bilan bir chiziqda turadi */
+svg.lucide { flex: none; vertical-align: -.15em; }
+.topbar a, .chip-btn, .sound-btn, .btn, .tag, .badge, .ic-line, .secure, .bonus-chip, .toggle label, .deal__perks li, .dish__meta b { display: inline-flex; align-items: center; gap: 6px; }
+.topbar a { gap: 5px; }
+.sound-btn { justify-content: center; color: var(--text); }
+.search > svg { color: var(--muted); }
+.badge { gap: 4px; }
+.dish__meta b { gap: 3px; }
+.dish__meta b svg, .rev__stars svg { color: var(--gold); }
+.deal__perks li { gap: 7px; }
+.deal__perks li svg { color: var(--fire); }
+.ic-line { gap: 7px; }
+.ic-line svg { color: var(--muted); }
+.paym__cash { display: grid; place-items: center; width: 44px; height: 40px; color: var(--green); }
+.bonus-toggle__icon { color: #1B6CA8; }
+.ticket-empty div { animation: none; color: var(--stroke-2); display: grid; justify-items: center; font-size: 0; margin-bottom: 8px; }
+.toast { align-items: center; }
+.toast__ic { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: rgba(28, 154, 82, .12); color: var(--green); flex: none; }
+.toast--err .toast__ic { background: rgba(214, 45, 32, .12); color: var(--red); }
+.fav-btn { display: grid; place-items: center; }
+.fav-btn.is-on { color: #E0263A; }
+.x-btn { display: grid; place-items: center; }
+.steps li i { color: var(--text); }
+.steps li.now i { color: #fff; }
+.road__scooter { transform: translate(-50%, -58%); color: var(--fire); line-height: 0; }
+.road__shop, .road__home { color: var(--text); line-height: 0; }
+.live-order__icon { color: #fff; }
+.wheel__hub { font-family: var(--display); font-stretch: 75%; font-weight: 900; font-size: 13px; fill: #fff; letter-spacing: .04em; }
+
+/* "+" — kichik va ixcham; bosilgach "− 1 +" hisoblagichiga aylanadi */
+.plus { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; padding: 0; font-size: 0; }
+.qty { display: inline-flex; align-items: center; height: 34px; border-radius: 999px; background: var(--char); color: #fff; overflow: hidden;
+  animation: qtyOpen .32s cubic-bezier(.2, .9, .3, 1.15); transform-origin: right center; }
+.qty button { width: 34px; height: 34px; display: grid; place-items: center; color: #fff; padding: 0; transition: background .15s; }
+.qty button:hover { background: rgba(255, 255, 255, .12); }
+.qty button:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+.qty span { min-width: 18px; text-align: center; font-weight: 800; font-variant-numeric: tabular-nums; font-size: 15px; }
+@keyframes qtyOpen { from { max-width: 34px; background: var(--fire); } to { max-width: 120px; } }
+@media (max-width: 600px) {
+  .plus { width: 32px; height: 32px; }
+  .qty { height: 32px; }
+  .qty button { width: 30px; height: 32px; }
+  .qty span { min-width: 14px; font-size: 14px; }
+}
+
+/* Taom kartochkasi: sichqoncha ustiga kelganda sakramaydi — faqat rasm biroz yaqinlashadi */
+.dish:hover { transform: none; box-shadow: none; border-color: var(--stroke-2); }
+.cats__item:hover .cats__img { transform: none; }
+.cats__item:hover span:last-child { color: var(--fire); }
+
+/* ---------- Bosh ekrandagi yagona harakat ----------
+   1) Sarlavha qatorlari niqob ostidan ko'tariladi: avval cho'g'dek qizg'ish-sariq,
+      keyin "soviydi" va oq rangga o'tadi — olovdan chiqqan temir kabi.
+   2) Fotolar so'nmaydi — yangisi eskisining ustidan o'ngdan chapga "yopiladi". */
+.hero .hero__title { animation: none; }
+.hero__title span { display: block; padding-bottom: .04em; animation: forge 1.25s cubic-bezier(.2, .8, .2, 1) both; }
+.hero__title span:nth-child(2) { animation-delay: .16s; }
+@keyframes forge {
+  0% { clip-path: inset(100% 0 0 0); transform: translateY(.35em); color: #FFD34D; }
+  35% { clip-path: inset(0 0 0 0); transform: none; color: #FF7A1A; }
+  70% { color: #FFE2CC; }
+  100% { clip-path: inset(0 0 0 0); transform: none; color: #FFFFFF; }
+}
+.hero__lead, .hero__cta { animation: leadIn .6s ease .55s both; }
+@keyframes leadIn { from { opacity: 0; } }
+.hero__slide, .hero__slide.is-on { opacity: 1; transition: none; clip-path: inset(0 0 0 100%); z-index: 0; }
+.hero__slide.is-prev { clip-path: inset(0 0 0 0); z-index: 1; }
+.hero__slide.is-on { clip-path: inset(0 0 0 0); z-index: 2; transition: clip-path 1s cubic-bezier(.75, 0, .2, 1); }
+@starting-style { .hero__slide.is-on { clip-path: inset(0 0 0 100%); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__title span, .hero__lead, .hero__cta, .qty { animation: none; }
+  .hero__slide.is-on { transition: none; }
+}
+
+@media (max-width: 1180px) { .nav__track { display: none; } }
