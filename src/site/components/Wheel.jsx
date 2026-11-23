@@ -74,8 +74,7 @@ export default function Wheel() {
   return (
     <section className="wheel" id="wheel">
       <div className="wheel__text">
-        <span className="tag">🎁 Har kuni bepul</span>
-        <h2>Omad <span className="hl">g'ildiragi</span></h2>
+        <h2>Omad g'ildiragi</h2>
         <p>Kuniga bir marta aylantiring va chegirma yoki Olov Bonus yuting. Yutgan chegirmangiz savatga avtomatik qo'llanadi.</p>
         <div className="bonus-card">
           <div><small>Olov Bonus balansingiz</small><b id="bonusBalance">{som(bonus)}</b></div>
