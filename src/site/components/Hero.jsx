@@ -20,6 +20,10 @@ export default function Hero() {
   const slides = SLIDES.map((id) => products.find((p) => p.id === id && !p.hidden)).filter(Boolean);
   const cur = slides.length ? n % slides.length : 0;
   const s = slides[cur];
+  // oldingi slayd ostida qoladi, yangisi uning ustidan chapga qarab "suriladi"
+  const prevRef = useRef(-1), lastRef = useRef(cur);
+  if (lastRef.current !== cur) { prevRef.current = lastRef.current; lastRef.current = cur; }
+  const prev = prevRef.current;
 
   useEffect(() => {
     if (paused || slides.length < 2) return undefined;
@@ -44,14 +48,14 @@ export default function Hero() {
       <section className="hero" ref={hero}>
         <div className="hero__media">
           {slides.map((p, i) => (
-            <div key={p.id} className={"hero__slide" + (i === cur ? " is-on" : "")} aria-hidden={i !== cur}>
+            <div key={p.id} className={"hero__slide" + (i === cur ? " is-on" : i === prev ? " is-prev" : "")} aria-hidden={i !== cur}>
               <Img src={p.img} alt={p.name} lazy={i !== 0} sizes="(max-width: 900px) 100vw, 60vw" />
             </div>
           ))}
         </div>
 
         <div className="hero__inner">
-          <h1 className="hero__title">Olov ustida<br />pishgan</h1>
+          <h1 className="hero__title"><span>Olov ustida</span><span>pishgan</span></h1>
           <p className="hero__lead">Burger, lavash, pitsa va tovuq. Toshkent bo'ylab 30 daqiqada eshigingizgacha.</p>
           <div className="hero__cta">
             <a href="#menu" className="btn btn--fire btn--lg">Menyuni ochish</a>
