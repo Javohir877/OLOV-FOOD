@@ -100,7 +100,7 @@ export function Checkout() {
       {checkoutOpen && (
         <div className="checkout__inner">
           <div className="co-head">
-            <h2>Buyurtmani <span className="hl">rasmiylashtirish</span></h2>
+            <h2>Buyurtmani rasmiylashtirish</h2>
             <button className="x-btn" onClick={() => setCheckoutOpen(false)} aria-label="Yopish">✕</button>
           </div>
           {!open && (
