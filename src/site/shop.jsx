@@ -118,7 +118,7 @@ export function ShopProvider({ children }) {
     addLine(dishLine(p, size === undefined ? defaultSize(p.cat) : size, extras, qty), p.name);
   }, [byId, addLine]);
 
-  const addCombo = useCallback((ids) => addLine(comboLine(ids, byId), "Kombo 🔥"), [byId, addLine]);
+  const addCombo = useCallback((ids) => addLine(comboLine(ids, byId), "Kombo"), [byId, addLine]);
 
   const changeQty = useCallback((key, delta) => {
     sound.play(delta > 0 ? "plus" : "minus");
