@@ -1358,3 +1358,59 @@ svg.lucide { flex: none; vertical-align: -.15em; }
 .hero__slide { inset: 0; }
 .hero__media::after { inset: 0 0 0 -2px; background: linear-gradient(90deg, var(--char) 0%, rgba(31, 25, 21, .75) 12%, rgba(31, 25, 21, .25) 28%, rgba(31, 25, 21, 0) 42%), linear-gradient(0deg, rgba(31, 25, 21, .35) 0%, rgba(31, 25, 21, 0) 22%); }
 @media (max-width: 900px) { .hero__media::after { inset: 0; background: linear-gradient(0deg, var(--char) 0%, rgba(31, 25, 21, 0) 38%); } }
+
+/* =========================================================
+   v6: Omad g'ildiragi — bosh ekrandagidek ko'mir rangli to'liq kenglikdagi polosa
+   ========================================================= */
+.wheel-band { background: var(--char); color: #fff; margin-top: 24px; }
+.wheel-band .wheel { background: none; max-width: 1240px; margin: 0 auto; padding: 88px 24px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; align-items: center; text-align: left; }
+.wheel-band .wheel h2 { color: #fff; margin: 0 0 16px; }
+.wheel-band .wheel__text > p { color: rgba(255, 255, 255, .72); font-size: 17px; max-width: 46ch; margin: 0 0 24px; }
+.wheel__prizes { list-style: none; margin: 0 0 28px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; max-width: 480px; }
+.wheel__prizes li { padding: 7px 12px; border-radius: 999px; font-size: 14px; font-weight: 600; color: #fff; border: 1px solid rgba(255, 255, 255, .18); }
+.wheel__prizes li.is-top { border-color: var(--gold); color: var(--gold); }
+.wheel-band .bonus-card { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 6px 14px; max-width: 480px; margin: 0; padding: 18px 20px; border-radius: 16px; border: 0; text-align: left;
+  background: rgba(255, 255, 255, .06); }
+.bonus-card__ic { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--gold); color: var(--char); }
+.wheel-band .bonus-card small { color: rgba(255, 255, 255, .6); font-weight: 500; font-size: 13px; }
+.wheel-band .bonus-card b#bonusBalance { display: block; font-size: 34px; line-height: 1; color: #fff; }
+.wheel-band .bonus-card p { grid-column: 1 / -1; margin: 6px 0 0; color: rgba(255, 255, 255, .6); font-size: 14px; }
+
+.wheel-band .wheel__stage { position: relative; width: min(100%, 460px); justify-self: center; display: grid; justify-items: center; gap: 20px; }
+.wheel-band .wheel__disc { width: 100%; aspect-ratio: 1; filter: drop-shadow(0 30px 50px rgba(0, 0, 0, .45)); }
+.wheel-band .wheel__lbl { font-family: var(--display); font-stretch: 75%; font-weight: 800; font-size: 23px; letter-spacing: 0; }
+.wheel-band .wheel__sub { font-family: var(--display); font-weight: 700; font-size: 11px; letter-spacing: .02em; text-transform: none; }
+/* Ko'rsatkich — oq tomchi, ichida qizil nuqta */
+.wheel-band .wheel__pointer { position: absolute; top: -14px; left: 50%; z-index: 2; width: 36px; height: 46px; transform: translateX(-50%); background: #fff; clip-path: none;
+  border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .45)); }
+.wheel-band .wheel__pointer::before { content: ""; position: absolute; left: 50%; bottom: -9px; transform: translateX(-50%); border: 10px solid transparent; border-top: 12px solid #fff; border-bottom: 0; }
+.wheel-band .wheel__pointer::after { content: ""; position: absolute; left: 50%; top: 13px; width: 12px; height: 12px; transform: translateX(-50%); border-radius: 50%; background: var(--fire); }
+.wheel__bulb { fill: rgba(255, 255, 255, .35); }
+.wheel__bulb.is-run { animation: bulb .5s steps(1) infinite; }
+@keyframes bulb { 50% { fill: #fff; } }
+/* yutgan bo'lak: to'xtagach 3 marta yonib-o'chadi */
+.wheel__win { fill: #fff; opacity: 0; pointer-events: none; animation: winFlash .5s ease-in-out 3; }
+@keyframes winFlash { 50% { opacity: .55; } }
+.wheel-band .wheel__btn { min-width: 240px; font-family: var(--body); font-stretch: 100%; font-weight: 700; font-size: 17px; letter-spacing: 0; border-radius: 999px; }
+.wheel-band .wheel__btn[disabled] { opacity: 1; background: rgba(255, 255, 255, .1); color: rgba(255, 255, 255, .65); cursor: default; }
+.wheel-band .wheel__btn:not([disabled]):hover { transform: none; }
+.wheel-band .wheel__note { color: rgba(255, 255, 255, .6); font-size: 14px; margin: 0; }
+.wheel-band .wheel__note b { color: #fff; }
+
+@media (max-width: 1024px) {
+  .wheel-band .wheel { grid-template-columns: 1fr; gap: 36px; padding: 64px 24px; }
+  .wheel-band .wheel { gap: 0; }
+  .wheel-band .wheel__text { display: contents; }
+  .wheel-band .wheel h2 { order: 1; }
+  .wheel-band .wheel__text > p { order: 2; }
+  .wheel-band .wheel__stage { order: 3; margin: 12px 0 36px; }
+  .wheel__prizes { order: 4; }
+  .wheel-band .bonus-card { order: 5; }
+}
+@media (max-width: 600px) {
+  .wheel-band .wheel { padding: 52px 16px; }
+  .wheel-band .wheel__stage { width: min(100%, 360px); }
+  .wheel-band .wheel__btn { width: 100%; min-width: 0; }
+  .wheel-band .wheel__lbl { font-size: 21px; }
+}
+@media (prefers-reduced-motion: reduce) { .wheel__bulb.is-run, .wheel__win { animation: none; } }
