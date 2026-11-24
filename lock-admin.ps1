@@ -91,31 +91,28 @@ $gate = @'
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>OLOV FOOD</title>
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#0C0A09">
+<meta name="theme-color" content="#1F1915">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <style>
   *{box-sizing:border-box}
-  body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#F7F0EA;
-    background:radial-gradient(700px 500px at 80% -10%,rgba(255,90,26,.18),transparent 60%),#0C0A09}
-  .box{width:min(380px,100%);padding:34px 28px;border-radius:26px;display:grid;gap:14px;text-align:center;
-    background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.09);box-shadow:0 24px 60px -24px #000}
-  .logo{width:60px;height:60px;margin:0 auto;border-radius:18px;display:grid;place-items:center;font-size:28px;
-    background:linear-gradient(135deg,#FF9A2E,#FF5A1A 50%,#E8320A);box-shadow:0 14px 36px -12px rgba(255,90,26,.7)}
-  h1{margin:4px 0 0;font-size:24px}
-  p{margin:0;color:#9C918A;font-size:14px}
-  input{height:48px;padding:0 14px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12);color:inherit;font:inherit;outline:0}
-  input:focus{border-color:#FF5A1A;box-shadow:0 0 0 3px rgba(255,90,26,.18)}
-  button{height:48px;border:0;border-radius:12px;font:inherit;font-weight:700;color:#fff;cursor:pointer;
-    background:linear-gradient(135deg,#FF9A2E,#FF5A1A 50%,#E8320A);box-shadow:0 14px 36px -14px rgba(255,90,26,.8)}
+  body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#1F1915;background:#1F1915}
+  .box{width:min(380px,100%);padding:34px 28px;border-radius:20px;display:grid;gap:14px;text-align:center;background:#fff;box-shadow:0 30px 70px -30px #000}
+  .logo{width:56px;height:56px;margin:0 auto;border-radius:14px;display:grid;place-items:center;background:#D7261E;color:#fff}
+  h1{margin:4px 0 0;font-size:26px;font-weight:900;text-transform:uppercase;letter-spacing:0}
+  p{margin:0;color:#6B625C;font-size:14px}
+  input{height:48px;padding:0 14px;border-radius:12px;background:#F4F2EF;border:1.5px solid transparent;color:inherit;font:inherit;outline:0}
+  input:focus{background:#fff;border-color:#1F1915}
+  button{height:48px;border:0;border-radius:999px;font:inherit;font-weight:700;color:#fff;cursor:pointer;background:#D7261E}
+  button:hover{background:#B51E17}
   button[disabled]{opacity:.6;cursor:wait}
-  .err{color:#FF7A7A;font-weight:600;min-height:1em}
-  a{color:#9C918A;text-decoration:none;font-size:14px} a:hover{color:#F7F0EA}
+  .err{color:#D62D20;font-weight:600;min-height:1em}
+  a{color:#6B625C;text-decoration:none;font-size:14px} a:hover{color:#1F1915}
   .shake{animation:s .4s}@keyframes s{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 </style>
 </head>
 <body>
 <form class="box" id="gate">
-  <div class="logo">🔒</div>
+  <div class="logo"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
   <h1>Yopiq bo'lim</h1>
   <p>Bu sahifa faqat sayt egasi uchun.</p>
   <input type="password" id="pass" placeholder="Parol" autocomplete="current-password" required>
