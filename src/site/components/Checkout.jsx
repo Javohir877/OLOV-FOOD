@@ -1,11 +1,12 @@
 /* Buyurtma berish (checkout) va to'lov oynalari: ilova QR, karta SMS, jarayon */
 import { useEffect, useMemo, useRef, useState } from "react";
-import { X, Bike, Store as StoreIcon, Wallet, Gem, Lock } from "lucide-react";
+import { X, Bike, Store as StoreIcon, Wallet, Gem, Lock, ArrowLeft } from "lucide-react";
 import { BONUS, PAY_LOGOS, PAY_METHODS, LOGO_NAMES, SETTINGS, TIP_OPTIONS } from "../../shared/data.js";
 import { Store } from "../../shared/store.js";
 import { lineInfo, earnedFor } from "../../shared/cart.js";
 import { cardBrand, fmt, luhn, maskPhone, som } from "../../shared/format.js";
-import { LogoTile } from "../../shared/Img.jsx";
+import { Img, LogoTile } from "../../shared/Img.jsx";
+import { catIcon } from "../../shared/data.js";
 import { useShop } from "../shop.jsx";
 import { Sheet } from "./Sheets.jsx";
 import { tgUser } from "../../shared/tg.js";
@@ -100,10 +101,11 @@ export function Checkout() {
     <div className={"checkout" + (checkoutOpen ? " is-open" : "")} role="dialog" aria-modal="true" aria-hidden={!checkoutOpen} ref={root}>
       {checkoutOpen && (
         <div className="checkout__inner">
-          <div className="co-head">
-            <h2>Buyurtmani rasmiylashtirish</h2>
-            <button className="x-btn" onClick={() => setCheckoutOpen(false)} aria-label="Yopish"><X size={18} aria-hidden="true" /></button>
-          </div>
+          <header className="co-head">
+            <button type="button" className="co-back" onClick={() => setCheckoutOpen(false)}><ArrowLeft size={18} aria-hidden="true" /> Menyuga qaytish</button>
+            <h2>Buyurtma berish</h2>
+            <span className="co-head__sum">{t.count} ta taom · {som(t.total)}</span>
+          </header>
           {!open && (
             <p className="note co-closed">Hozir yopiqmiz (ish vaqti {SETTINGS.open}–{SETTINGS.close}). Buyurtmangizni oldindan qabul qilamiz — ochilishimiz bilan birinchi bo'lib tayyorlanadi.</p>
           )}
@@ -179,11 +181,11 @@ export function Checkout() {
 
             <aside className="co-side">
               <div className="receipt">
-                <h3>Yakuniy chek</h3>
+                <h3>Buyurtmangiz</h3>
                 <div className="co-items">
                   {cart.map((l) => {
                     const info = lineInfo(l, byId);
-                    return <div className="co-item" key={l.key}><div>{info.name} × {l.qty}{info.sub && <small>{info.sub}</small>}</div><b>{som(l.unit * l.qty)}</b></div>;
+                    return <div className="co-item" key={l.key}><span className="co-item__img"><Img src={info.img.img} alt="" emoji={catIcon(info.img.cat)} sizes="44px" /></span><div>{info.name} × {l.qty}{info.sub && <small>{info.sub}</small>}</div><b>{som(l.unit * l.qty)}</b></div>;
                   })}
                 </div>
                 <div className="totals">
