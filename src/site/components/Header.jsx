@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ShoppingBag, MapPin, Phone, Volume2, VolumeX, Download } from "lucide-react";
+import { ShoppingBag, MapPin, Phone } from "lucide-react";
 import { noEmoji } from "../../shared/format.js";
 import { useShop } from "../shop.jsx";
 import { SETTINGS } from "../../shared/data.js";
@@ -23,19 +23,9 @@ export default function Header() {
   const [navOpen, setNavOpen] = useState(false);
   const btn = useRef(null);
 
-  // Brauzer ilovani o'rnatishni taklif qila olsa — tugma ko'rsatamiz
-  const [installEvt, setInstallEvt] = useState(null);
-  useEffect(() => {
-    const onPrompt = (e) => { e.preventDefault(); setInstallEvt(e); };
-    const onInstalled = () => setInstallEvt(null);
-    window.addEventListener("beforeinstallprompt", onPrompt);
-    window.addEventListener("appinstalled", onInstalled);
-    return () => { window.removeEventListener("beforeinstallprompt", onPrompt); window.removeEventListener("appinstalled", onInstalled); };
-  }, []);
-  const install = () => { installEvt.prompt(); installEvt.userChoice.finally(() => setInstallEvt(null)); };
 
-  const [soundOn, setSoundOn] = useState(sound.on);
-  const toggleSound = () => { sound.set(!soundOn); setSoundOn(!soundOn); };
+  // Ovoz effektlari doim yoniq: tugma olib tashlandi. Avval o'chirib qo'yganlarda ham qayta yoqiladi
+  useEffect(() => { if (!sound.on) sound.set(true); }, []);
 
   // Savatga qo'shilganda tugma "sakraydi"
   useEffect(() => {
@@ -64,8 +54,6 @@ export default function Header() {
         </nav>
 
         <div className="nav__actions">
-          {installEvt && <button className="chip-btn chip-btn--ghost install-btn" onClick={install} title="Telefoningizga ilova sifatida o'rnating"><Download size={17} aria-hidden="true" /><span className="hide-sm"> Ilovani o'rnatish</span></button>}
-          <button className={"sound-btn" + (soundOn ? "" : " is-off")} onClick={toggleSound} aria-pressed={soundOn} aria-label={soundOn ? "Ovozni o'chirish" : "Ovozni yoqish"} title={soundOn ? "Ovozni o'chirish" : "Ovozni yoqish"}>{soundOn ? <Volume2 size={18} aria-hidden="true" /> : <VolumeX size={18} aria-hidden="true" />}</button>
           <a href="#track" className="chip-btn chip-btn--ghost nav__track"><MapPin size={17} aria-hidden="true" /> Buyurtmam qayerda?</a>
           <button className="chip-btn" ref={btn} onClick={openTicket} aria-label="Savat">
             <ShoppingBag size={18} aria-hidden="true" /><span className="hide-sm">Savat</span><b>{totals.count}</b>
