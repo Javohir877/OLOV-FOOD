@@ -7,9 +7,19 @@ import { Img, LogoTile } from "../../shared/Img.jsx";
 import { useShop } from "../shop.jsx";
 
 export function Kitchen() {
+  // Fotolar ekranga kirganda stol ustiga birin-ketin "tashlanadi" (bir marta)
+  const photos = useRef(null);
+  useEffect(() => {
+    const el = photos.current;
+    if (!el) return undefined;
+    if (!("IntersectionObserver" in window)) { el.classList.add("is-in"); return undefined; }
+    const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { el.classList.add("is-in"); io.disconnect(); } }, { threshold: 0.25 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
   return (
     <section className="kitchen" id="kitchen">
-      <div className="kitchen__photos">
+      <div className="kitchen__photos" ref={photos}>
         <figure className="polaroid p1"><Img src="assets/img/1561758033-d89a9ad46330.jpg" alt="Burger va fri" sizes="(max-width: 600px) 60vw, 280px" /><figcaption>Olov Double + fri</figcaption></figure>
         <figure className="polaroid p2"><Img src="assets/img/1513104890138-7c749659a591.jpg" alt="Pitsa" sizes="(max-width: 600px) 60vw, 280px" /><figcaption>Tandirdan yangi</figcaption></figure>
         <figure className="polaroid p3"><Img src="assets/img/1567620832903-9fc6debc209f.jpg" alt="Tovuq qanotchalari" sizes="(max-width: 600px) 60vw, 280px" /><figcaption>Achchiq qanotchalar</figcaption></figure>
