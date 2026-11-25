@@ -1558,3 +1558,7 @@ svg.lucide { flex: none; vertical-align: -.15em; }
   .branches__chips .tag-btn { flex: none; }
   .bitem { padding: 12px; }
 }
+/* xaritadagi oynadan tanlangan filial: kartochka bir lahza "yonadi" */
+.bitem.is-focus { border-color: var(--fire); box-shadow: 0 0 0 3px rgba(215, 38, 30, .15); animation: bitemIn .55s cubic-bezier(.2, 1.4, .4, 1); }
+@keyframes bitemIn { 0% { transform: scale(.96); background: #FFF1EF; } 60% { transform: scale(1.015); } 100% { transform: none; background: #fff; } }
+@media (prefers-reduced-motion: reduce) { .bitem.is-focus { animation: none; } }
