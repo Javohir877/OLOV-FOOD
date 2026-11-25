@@ -24,7 +24,7 @@ export function injectSeo() {
       currenciesAccepted: "UZS",
       paymentAccepted: "Naqd, Click, Payme, Uzum Bank, Uzcard, Humo, Visa, Mastercard",
       address: { "@type": "PostalAddress", streetAddress: BRANCHES[0].address, addressLocality: "Toshkent", addressCountry: "UZ" },
-      areaServed: { "@type": "City", name: "Toshkent" },
+      areaServed: { "@type": "Country", name: "O'zbekiston" },
       openingHoursSpecification: [{
         "@type": "OpeningHoursSpecification",
         dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
@@ -32,8 +32,9 @@ export function injectSeo() {
       }],
       aggregateRating: { "@type": "AggregateRating", ratingValue: RATING.avg, reviewCount: RATING.count, bestRating: 5 },
       department: BRANCHES.map((b) => ({
-        "@type": "Restaurant", name: b.name, telephone: b.phone, image: abs(b.img),
-        address: { "@type": "PostalAddress", streetAddress: b.address, addressLocality: "Toshkent", addressCountry: "UZ" },
+        "@type": "Restaurant", name: b.name, telephone: b.phone,
+        address: { "@type": "PostalAddress", streetAddress: b.address, addressLocality: b.city, addressCountry: "UZ" },
+        geo: { "@type": "GeoCoordinates", latitude: b.lat, longitude: b.lon },
         openingHours: `Mo-Su ${b.open}-${b.close}`,
       })),
       hasMenu: {
