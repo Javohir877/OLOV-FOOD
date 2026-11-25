@@ -1,6 +1,7 @@
 /* Oshxona, fikrlar, filiallar, kuzatish formasi, footer va mobil savat paneli */
 import { useEffect, useRef, useState } from "react";
-import { MapPin, Clock, Phone, ArrowLeft, ArrowRight, Send } from "lucide-react";
+import { MapPin, Clock, Phone, ArrowLeft, ArrowRight, Send, Navigation } from "lucide-react";
+import UzMap, { branchOpen, regionStats } from "../../shared/UzMap.jsx";
 import { BRANCHES, PAY_LOGOS, RATING, REVIEWS, SETTINGS, TELEGRAM, catIcon } from "../../shared/data.js";
 import { fmt, som } from "../../shared/format.js";
 import { Img, LogoTile } from "../../shared/Img.jsx";
@@ -82,41 +83,47 @@ export function Reviews() {
   );
 }
 
-export function branchOpen(b, now = new Date()) {
-  const mins = (s) => { const [h, m] = s.split(":").map(Number); return h * 60 + m; };
-  const t = now.getHours() * 60 + now.getMinutes();
-  const o = mins(b.open), c = mins(b.close);
-  return c > o ? t >= o && t < c : t >= o || t < c; // yarim tundan keyin yopiladigan filial
-}
-
 export function Branches() {
+  const [reg, setReg] = useState("");
+  const regions = regionStats(BRANCHES);
+  const list = reg ? BRANCHES.filter((b) => b.region === reg) : BRANCHES;
+  const listRef = useRef(null);
+  const pick = (r) => { setReg(r); if (listRef.current) listRef.current.scrollTop = 0; };
   return (
     <section className="branches" id="branches">
       <div className="section-title">
         <h2>Filiallarimiz</h2>
-        <p>Toshkent bo'ylab 3 ta filial. Yetkazib berish butun shahar bo'ylab — o'rtacha 30 daqiqa.</p>
+        <p>O'zbekiston bo'ylab {BRANCHES.length} ta filial, {regions.length} ta hududda. Xaritadan viloyatni tanlang.</p>
       </div>
-      <div className="branches__grid">
-        {BRANCHES.map((b) => {
-          const open = branchOpen(b);
-          const map = "https://yandex.uz/maps/?text=" + encodeURIComponent("Toshkent, " + b.address);
-          return (
-            <article className="branch" key={b.id}>
-              <div className="branch__img"><Img src={b.img} alt={b.name + " filiali"} sizes="(max-width: 600px) 100vw, 400px" /><span className={"branch__status" + (open ? " is-open" : "")}>{open ? "● Hozir ochiq" : "● Yopiq"}</span></div>
-              <div className="branch__body">
-                <small>{b.area}</small>
-                <h3>{b.name}</h3>
-                <p className="ic-line"><MapPin size={15} aria-hidden="true" /> {b.address}</p>
-                <p className="ic-line"><Clock size={15} aria-hidden="true" /> {b.open} – {b.close} · har kuni</p>
-                <div className="branch__perks">{b.perks.map((x) => <span key={x}>{x}</span>)}</div>
-                <div className="branch__actions">
-                  <a className="btn btn--cream" href={"tel:" + b.phone.replace(/\s/g, "")}><Phone size={16} aria-hidden="true" /> Qo'ng'iroq</a>
-                  <a className="btn btn--fire" href={map} target="_blank" rel="noopener">Xaritada</a>
-                </div>
-              </div>
-            </article>
-          );
-        })}
+      <div className="branches__wrap">
+        <div className="branches__map">
+          <UzMap branches={BRANCHES} value={reg} onPick={pick} label={`O'zbekiston xaritasi: ${BRANCHES.length} ta OLOV FOOD filiali`} />
+        </div>
+        <div className="branches__side">
+          <div className="branches__chips" role="group" aria-label="Hudud">
+            <button className={"tag-btn" + (!reg ? " is-on" : "")} onClick={() => pick("")}>Hammasi ({BRANCHES.length})</button>
+            {regions.map((r) => <button key={r.id} className={"tag-btn" + (reg === r.id ? " is-on" : "")} onClick={() => pick(r.id)}>{r.name} ({r.count})</button>)}
+          </div>
+          <div className="branches__list" ref={listRef}>
+            {list.map((b) => {
+              const open = branchOpen(b);
+              const map = "https://yandex.uz/maps/?text=" + encodeURIComponent(b.city + ", " + b.address);
+              return (
+                <article className="bitem" key={b.id}>
+                  <div className="bitem__info">
+                    <h3>{b.name} <span className={"bitem__st" + (open ? " is-open" : "")}>{open ? "Ochiq" : "Yopiq"}</span></h3>
+                    <p className="ic-line"><MapPin size={15} aria-hidden="true" /> {b.area}, {b.address}</p>
+                    <p className="ic-line"><Clock size={15} aria-hidden="true" /> Har kuni {b.open} – {b.close}</p>
+                  </div>
+                  <div className="bitem__acts">
+                    <a className="bitem__btn" href={"tel:" + b.phone.replace(/\s/g, "")} aria-label={`${b.name} — qo'ng'iroq qilish`}><Phone size={17} aria-hidden="true" /></a>
+                    <a className="bitem__btn bitem__btn--map" href={map} target="_blank" rel="noopener" aria-label={`${b.name} — xaritada ochish`}><Navigation size={17} aria-hidden="true" /></a>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </section>
   );
