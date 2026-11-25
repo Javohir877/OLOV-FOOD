@@ -85,10 +85,19 @@ export function Reviews() {
 
 export function Branches() {
   const [reg, setReg] = useState("");
+  const [focus, setFocus] = useState("");
   const regions = regionStats(BRANCHES);
   const list = reg ? BRANCHES.filter((b) => b.region === reg) : BRANCHES;
   const listRef = useRef(null);
-  const pick = (r) => { setReg(r); if (listRef.current) listRef.current.scrollTop = 0; };
+  const pick = (r) => { setReg(r); setFocus(""); if (listRef.current) listRef.current.scrollTop = 0; };
+  // xaritadagi oynadan filial tanlansa — o'sha hudud ochiladi, filial kartochkasi ko'rinadigan joyga suriladi va yonib turadi
+  const openBranch = (b) => { setReg(b.region); setFocus(b.id + ":" + Date.now()); };
+  useEffect(() => {
+    if (!focus) return;
+    const el = document.getElementById("branch-" + focus.split(":")[0]);
+    // telefonda ro'yxat xarita ostida — kartochkani ekran o'rtasiga olib kelamiz
+    if (el) el.scrollIntoView({ behavior: "smooth", block: window.innerWidth <= 1024 ? "center" : "nearest" });
+  }, [focus]);
   return (
     <section className="branches" id="branches">
       <div className="section-title">
@@ -97,7 +106,7 @@ export function Branches() {
       </div>
       <div className="branches__wrap">
         <div className="branches__map">
-          <UzMap branches={BRANCHES} value={reg} onPick={pick} label={`O'zbekiston xaritasi: ${BRANCHES.length} ta OLOV FOOD filiali`} />
+          <UzMap branches={BRANCHES} value={reg} onPick={pick} onBranch={openBranch} label={`O'zbekiston xaritasi: ${BRANCHES.length} ta OLOV FOOD filiali`} />
         </div>
         <div className="branches__side">
           <div className="branches__chips" role="group" aria-label="Hudud">
@@ -109,7 +118,7 @@ export function Branches() {
               const open = branchOpen(b);
               const map = "https://yandex.uz/maps/?text=" + encodeURIComponent(b.city + ", " + b.address);
               return (
-                <article className="bitem" key={b.id}>
+                <article className={"bitem" + (focus.startsWith(b.id + ":") ? " is-focus" : "")} key={b.id + (focus.startsWith(b.id + ":") ? focus : "")} id={"branch-" + b.id}>
                   <div className="bitem__info">
                     <h3>{b.name} <span className={"bitem__st" + (open ? " is-open" : "")}>{open ? "Ochiq" : "Yopiq"}</span></h3>
                     <p className="ic-line"><MapPin size={15} aria-hidden="true" /> {b.area}, {b.address}</p>
