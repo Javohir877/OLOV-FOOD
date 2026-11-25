@@ -56,3 +56,9 @@
 .uzmap__pop.is-side-l::after { left: auto; right: -7px; transform: rotate(45deg); }
 .uzmap__pop.is-side-r::after { left: -7px; transform: rotate(45deg); }
 .uzmap__pop.is-side-l .uzmap__pop-row, .uzmap__pop.is-side-r .uzmap__pop-row { padding: 3px 0; }
+/* oynadagi filial — bosiladigan qator */
+button.uzmap__pop-row { display: grid; width: calc(100% + 16px); margin: 0 -8px; padding: 6px 30px 6px 8px; border: 0; border-radius: 9px; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; position: relative; box-sizing: border-box; }
+button.uzmap__pop-row::after { content: "›"; position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 20px; line-height: 1; color: rgba(255, 255, 255, .35); transition: transform .15s, color .15s; }
+button.uzmap__pop-row:hover, button.uzmap__pop-row:focus-visible { background: rgba(255, 255, 255, .1); outline: none; }
+button.uzmap__pop-row:hover::after, button.uzmap__pop-row:focus-visible::after { color: #fff; transform: translate(3px, -50%); }
+button.uzmap__pop-row + button.uzmap__pop-row { border-top: 0; margin-top: 2px; }
