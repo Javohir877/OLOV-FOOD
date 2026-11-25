@@ -1562,3 +1562,35 @@ svg.lucide { flex: none; vertical-align: -.15em; }
 .bitem.is-focus { border-color: var(--fire); box-shadow: 0 0 0 3px rgba(215, 38, 30, .15); animation: bitemIn .55s cubic-bezier(.2, 1.4, .4, 1); }
 @keyframes bitemIn { 0% { transform: scale(.96); background: #FFF1EF; } 60% { transform: scale(1.015); } 100% { transform: none; background: #fff; } }
 @media (prefers-reduced-motion: reduce) { .bitem.is-focus { animation: none; } }
+
+/* =========================================================
+   v10: filiallar paneli faqat filial tanlangach chiqadi
+   ========================================================= */
+.branches__wrap { grid-template-columns: minmax(0, 1fr); }
+.branches__wrap:not(.is-open) .branches__map { width: 100%; max-width: 920px; margin-inline: auto; }
+.branches__wrap.is-open { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+.branches__map { view-transition-name: branches-map; }
+::view-transition-group(branches-map) { animation-duration: .55s; animation-timing-function: cubic-bezier(.2, .9, .2, 1); }
+.branches__side { align-self: stretch; padding: 22px; border-radius: 20px; background: var(--bg-2); animation: sideIn .6s cubic-bezier(.2, .9, .2, 1) both; }
+@keyframes sideIn { from { opacity: 0; transform: translateX(56px); } }
+.branches__head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; }
+.branches__head h3 { font-stretch: 75%; font-weight: 850; text-transform: uppercase; font-size: 30px; line-height: 1; }
+.branches__head small { color: var(--muted); font-weight: 600; font-size: 13px; }
+.branches__head .x-btn { background: #fff; border: 0; }
+.branches__side .bitem { animation: bitemSlide .5s cubic-bezier(.2, .9, .2, 1) both; animation-delay: calc(.18s + var(--i, 0) * 70ms); }
+@keyframes bitemSlide { from { opacity: 0; transform: translateX(28px); } }
+.branches__side .bitem.is-focus { border-color: var(--fire); box-shadow: 0 0 0 3px rgba(215, 38, 30, .15);
+  animation: bitemSlide .5s cubic-bezier(.2, .9, .2, 1) both, bitemFlash 1s ease .6s; animation-delay: calc(.18s + var(--i, 0) * 70ms), .7s; }
+@keyframes bitemFlash { 40% { box-shadow: 0 0 0 9px rgba(215, 38, 30, .12); } }
+@media (max-width: 1024px) {
+  .branches__wrap.is-open { grid-template-columns: minmax(0, 1fr); }
+  .branches__side { animation-name: sideUp; }
+  @keyframes sideUp { from { opacity: 0; transform: translateY(36px); } }
+  .branches__side .bitem { animation-name: bitemUp; }
+  .branches__side .bitem.is-focus { animation-name: bitemUp, bitemFlash; }
+  @keyframes bitemUp { from { opacity: 0; transform: translateY(18px); } }
+}
+@media (max-width: 600px) { .branches__side { padding: 16px 12px; margin: 0 -2px; } .branches__head h3 { font-size: 26px; } }
+@media (prefers-reduced-motion: reduce) { .branches__side, .branches__side .bitem { animation: none; } }
+.branches__side { align-content: start; gap: 0; }
+.branches__list { align-content: start; }
