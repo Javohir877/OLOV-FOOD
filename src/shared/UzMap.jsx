@@ -32,7 +32,7 @@ function clusters(branches, gap = 18) {
   return out;
 }
 
-export default function UzMap({ branches, value = "", onPick, label = "Filiallar xaritasi" }) {
+export default function UzMap({ branches, value = "", onPick, onBranch, label = "Filiallar xaritasi" }) {
   const counts = {};
   branches.forEach((b) => { counts[b.region] = (counts[b.region] || 0) + 1; });
   const max = Math.max(1, ...Object.values(counts));
@@ -41,8 +41,14 @@ export default function UzMap({ branches, value = "", onPick, label = "Filiallar
   const pick = (id) => onPick && onPick(value === id ? "" : id);
   const groups = clusters(branches);
 
-  // Nuqta bosilganda "pap" etib chiqadigan oyna (filial nomi, manzil, ochiq/yopiq)
-  const [pop, setPop] = useState(null); // { key, x, y, items }
+  // Nuqta ustiga sichqoncha kelganda (telefonda — bosilganda) "pap" etib chiqadigan oyna.
+  // Oynadagi filial bosilsa — onBranch: sahifadagi filial kartochkasi ochiladi.
+  const [pop, setPop] = useState(null); // { key, x, y, items, pinned }
+  const closeT = useRef(0);
+  const keep = () => clearTimeout(closeT.current);
+  // sichqoncha nuqtadan oynaga o'tguncha yopilib qolmasin — biroz kutamiz
+  const later = () => { keep(); closeT.current = setTimeout(() => setPop((p) => (p && !p.pinned ? null : p)), 260); };
+  useEffect(() => () => keep(), []);
   const stage = useRef(null);
   useEffect(() => {
     if (!pop) return undefined;
@@ -55,12 +61,14 @@ export default function UzMap({ branches, value = "", onPick, label = "Filiallar
   // tanlangan hudud o'zgarsa va oyna boshqa hududniki bo'lsa — yopamiz
   useEffect(() => { if (pop && value && !pop.items.some((b) => b.region === value)) setPop(null); }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const show = (c, pinned) => { keep(); setPop({ key: c.items[0].id, x: c.x, y: c.y, items: c.items, pinned }); };
+  const hoverPin = (c) => { if (!pop || pop.key !== c.items[0].id) show(c, false); else keep(); };
   const openPin = (c) => {
-    const key = c.items[0].id;
-    if (pop && pop.key === key) { setPop(null); return; }
-    setPop({ key, x: c.x, y: c.y, items: c.items });
-    if (onPick && value !== c.items[0].region) onPick(c.items[0].region);
+    // sichqoncha bilan ochilgan oyna bosilsa — mahkamlanadi; mahkam oyna qayta bosilsa — yopiladi
+    if (pop && pop.key === c.items[0].id && pop.pinned) { setPop(null); return; }
+    show(c, true);
   };
+  const chooseBranch = (b) => { setPop(null); if (onBranch) onBranch(b); else if (onPick) onPick(b.region); };
 
   // oyna nuqtaning tepasida; xarita chetiga yaqin bo'lsa — ichkariga suriladi, tepaga sig'masa — pastga
   const px = pop ? pop.x / UZ_VIEW.w : 0, py = pop ? pop.y / UZ_VIEW.h : 0;
@@ -94,6 +102,7 @@ export default function UzMap({ branches, value = "", onPick, label = "Filiallar
             return (
               <g key={c.items[0].id} className={"uzmap__pin" + (dim ? " is-dim" : "") + (on ? " is-on" : "")} transform={`translate(${c.x.toFixed(1)} ${c.y.toFixed(1)})`}
                 tabIndex={0} role="button" aria-label={c.items.map((b) => b.name).join(", ")} aria-expanded={!!on}
+                onPointerEnter={(e) => { if (e.pointerType === "mouse") hoverPin(c); }} onPointerLeave={(e) => { if (e.pointerType === "mouse") later(); }}
                 onClick={() => openPin(c)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openPin(c); } }}>
                 <circle className="uzmap__ring" r={many ? 16 : 8} />
                 <circle r={many ? 16 : 8} />
@@ -104,16 +113,16 @@ export default function UzMap({ branches, value = "", onPick, label = "Filiallar
         </svg>
         {pop && (
           <div key={pop.key} className={"uzmap__pop" + side + below} role="dialog" aria-label={pop.items.length > 1 ? `${pop.items.length} ta filial` : pop.items[0].name}
-            style={{ left: px * 100 + "%", top: py * 100 + "%" }}>
+            style={{ left: px * 100 + "%", top: py * 100 + "%" }} onPointerEnter={keep} onPointerLeave={(e) => { if (e.pointerType === "mouse") later(); }}>
             {pop.items.length > 1 && <small className="uzmap__pop-head">{REGION_NAME[pop.items[0].region]} · {pop.items.length} ta filial</small>}
             {pop.items.map((b) => {
               const open = branchOpen(b);
               return (
-                <div className="uzmap__pop-row" key={b.id}>
+                <button type="button" className="uzmap__pop-row" key={b.id} onClick={() => chooseBranch(b)} title="Filial ma'lumotlari">
                   <b>{b.name}</b>
                   {pop.items.length === 1 && <span className="uzmap__pop-addr">{b.address}</span>}
                   <span className={"uzmap__pop-st" + (open ? " is-open" : "")}>{open ? "Ochiq" : "Yopiq"} · {b.open}–{b.close}</span>
-                </div>
+                </button>
               );
             })}
           </div>
