@@ -1,0 +1,15 @@
+/* O'zbekiston filiallar xaritasi (sayt va admin uchun umumiy) */
+.uzmap { position: relative; margin: 0; }
+.uzmap svg { display: block; width: 100%; height: auto; overflow: visible; }
+.uzmap__reg { fill: #E9E4DE; stroke: #fff; stroke-width: 1.6; stroke-linejoin: round; transition: fill .2s, opacity .2s; }
+.uzmap__reg.has { fill: rgba(215, 38, 30, var(--a, .4)); cursor: pointer; }
+.uzmap__reg.has:hover, .uzmap__reg.has:focus-visible { fill: rgba(181, 30, 23, .95); outline: none; }
+.uzmap.has-pick .uzmap__reg:not(.is-on) { opacity: .45; }
+.uzmap__reg.is-on { fill: #B51E17; stroke: #1F1915; stroke-width: 3; opacity: 1; }
+.uzmap__pin { cursor: pointer; transition: opacity .2s; }
+.uzmap__pin circle { fill: #1F1915; stroke: #fff; stroke-width: 3; }
+.uzmap__pin text { fill: #fff; font: 800 16px/1 "Archivo", system-ui, sans-serif; pointer-events: none; }
+.uzmap__pin:hover circle { fill: #000; }
+.uzmap__pin.is-dim { opacity: .35; }
+.uzmap__src { margin-top: 8px; text-align: right; font-size: 10.5px; color: #8A817B; }
+@media (prefers-reduced-motion: reduce) { .uzmap__reg, .uzmap__pin { transition: none; } }
