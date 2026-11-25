@@ -1526,3 +1526,35 @@ svg.lucide { flex: none; vertical-align: -.15em; }
   .kitchen .kitchen__photos .polaroid figcaption { left: 14px; bottom: 14px; }
 }
 @media (prefers-reduced-motion: reduce) { .kitchen .kitchen__photos:not(.is-in) .polaroid { opacity: 1; } }
+
+/* =========================================================
+   v9: Filiallar — O'zbekiston xaritasi + hudud bo'yicha ro'yxat
+   ========================================================= */
+.branches__wrap { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.branches__map { padding: 24px 24px 14px; border-radius: 20px; background: var(--bg-2); }
+.branches__side { display: grid; gap: 14px; min-width: 0; }
+.branches__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.branches__list { display: grid; gap: 10px; max-height: 520px; overflow-y: auto; padding-right: 4px; overscroll-behavior: contain; }
+.bitem { display: flex; align-items: center; gap: 14px; padding: 14px 14px 14px 18px; border-radius: 14px; background: #fff; border: 1px solid var(--stroke); }
+.bitem__info { flex: 1; min-width: 0; display: grid; gap: 3px; }
+.bitem h3 { font-family: var(--body); font-stretch: 100%; font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.bitem p { margin: 0; color: var(--muted); font-size: 13.5px; }
+.bitem p svg { color: var(--muted); }
+.bitem__st { padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 700; background: var(--bg-2); color: var(--muted); }
+.bitem__st.is-open { background: rgba(28, 154, 82, .12); color: var(--green); }
+.bitem__acts { display: flex; gap: 8px; flex: none; }
+.bitem__btn { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: var(--bg-2); color: var(--text); transition: background .2s, color .2s; }
+.bitem__btn:hover { background: var(--char); color: #fff; }
+.bitem__btn--map { background: var(--fire); color: #fff; }
+.bitem__btn--map:hover { background: var(--fire-2); }
+@media (max-width: 1024px) {
+  .branches__wrap { grid-template-columns: 1fr; }
+  .branches__list { max-height: none; overflow: visible; }
+}
+@media (max-width: 600px) {
+  .branches__map { padding: 14px 10px 10px; margin: 0 -2px; }
+  .branches__chips { flex-wrap: nowrap; overflow-x: auto; margin: 0 -14px; padding: 0 14px 2px; scrollbar-width: none; }
+  .branches__chips::-webkit-scrollbar { display: none; }
+  .branches__chips .tag-btn { flex: none; }
+  .bitem { padding: 12px; }
+}
